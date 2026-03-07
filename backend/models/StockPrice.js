@@ -1,4 +1,4 @@
-import mongoose from 'mongoose';
+import mongoose from "mongoose";
 
 const stockPriceSchema = new mongoose.Schema({
   symbol: { type: String, required: true, unique: true },
@@ -11,7 +11,7 @@ const stockPriceSchema = new mongoose.Schema({
   change: Number,
   changePercent: Number,
   volume: Number,
-  lastUpdated: { type: Date, default: Date.now }
+  lastUpdated: { type: Date, default: Date.now },
 });
 
-export default mongoose.model('StockPrice', stockPriceSchema);
+export default mongoose.model("StockPrice", stockPriceSchema);
