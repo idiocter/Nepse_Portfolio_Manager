@@ -39,10 +39,8 @@ export const AuthProvider = ({ children }) => {
     return data
   }
 
-  const googleLogin = async (credential) => {
-    const { data } = await axios.post(`${import.meta.env.VITE_API_URL}/api/auth/google`, {
-      credential
-    })
+  const googleLogin = async (tokenData) => {
+    const { data } = await axios.post(`${import.meta.env.VITE_API_URL}/api/auth/google`, tokenData)
     localStorage.setItem('token', data.token)
     axios.defaults.headers.common['Authorization'] = `Bearer ${data.token}`
     setUser(data.user)

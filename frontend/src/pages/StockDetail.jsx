@@ -53,11 +53,11 @@ const StockDetail = () => {
             <p className="text-gray-500 mt-1">{details?.securityName}</p>
           </div>
           <div className="mt-4 md:mt-0 text-right">
-            <p className="text-3xl font-bold">Rs. {details?.lastTradedPrice?.toFixed(2)}</p>
+            <p className="text-3xl font-bold">Rs. {(details?.lastTradedPrice || 0).toFixed(2)}</p>
             <div className={`flex items-center justify-end space-x-2 ${isPositive ? 'text-green-600' : 'text-red-600'}`}>
               {isPositive ? <TrendingUp className="h-5 w-5" /> : <TrendingDown className="h-5 w-5" />}
               <span className="text-lg font-medium">
-                {isPositive ? '+' : ''}{details?.change?.toFixed(2)} ({details?.percentChange?.toFixed(2)}%)
+                {isPositive ? '+' : ''}{(details?.change || 0).toFixed(2)} ({(details?.percentChange || 0).toFixed(2)}%)
               </span>
             </div>
           </div>
@@ -70,28 +70,28 @@ const StockDetail = () => {
             <BarChart3 className="h-4 w-4" />
             <span className="text-sm">Open</span>
           </div>
-          <p className="text-xl font-semibold">Rs. {details?.openPrice?.toFixed(2)}</p>
+          <p className="text-xl font-semibold">Rs. {(details?.openPrice || 0).toFixed(2)}</p>
         </div>
         <div className="card p-4">
           <div className="flex items-center space-x-2 text-gray-500 mb-2">
             <TrendingUp className="h-4 w-4" />
             <span className="text-sm">High</span>
           </div>
-          <p className="text-xl font-semibold">Rs. {details?.highPrice?.toFixed(2)}</p>
+          <p className="text-xl font-semibold">Rs. {(details?.highPrice || 0).toFixed(2)}</p>
         </div>
         <div className="card p-4">
           <div className="flex items-center space-x-2 text-gray-500 mb-2">
             <TrendingDown className="h-4 w-4" />
             <span className="text-sm">Low</span>
           </div>
-          <p className="text-xl font-semibold">Rs. {details?.lowPrice?.toFixed(2)}</p>
+          <p className="text-xl font-semibold">Rs. {(details?.lowPrice || 0).toFixed(2)}</p>
         </div>
         <div className="card p-4">
           <div className="flex items-center space-x-2 text-gray-500 mb-2">
             <Activity className="h-4 w-4" />
             <span className="text-sm">Volume</span>
           </div>
-          <p className="text-xl font-semibold">{details?.totalTradedQuantity?.toLocaleString()}</p>
+          <p className="text-xl font-semibold">{(details?.totalTradedQuantity || 0).toLocaleString()}</p>
         </div>
       </div>
 
@@ -103,19 +103,19 @@ const StockDetail = () => {
           <div className="space-y-3">
             <div className="flex justify-between py-2 border-b border-gray-100">
               <span className="text-gray-600">Previous Close</span>
-              <span className="font-medium">Rs. {details?.previousClose?.toFixed(2)}</span>
+              <span className="font-medium">Rs. {(details?.previousClose || 0).toFixed(2)}</span>
             </div>
             <div className="flex justify-between py-2 border-b border-gray-100">
               <span className="text-gray-600">52 Week High</span>
-              <span className="font-medium">Rs. {details?.fiftyTwoWeekHigh?.toFixed(2)}</span>
+              <span className="font-medium">Rs. {(details?.fiftyTwoWeekHigh || 0).toFixed(2)}</span>
             </div>
             <div className="flex justify-between py-2 border-b border-gray-100">
               <span className="text-gray-600">52 Week Low</span>
-              <span className="font-medium">Rs. {details?.fiftyTwoWeekLow?.toFixed(2)}</span>
+              <span className="font-medium">Rs. {(details?.fiftyTwoWeekLow || 0).toFixed(2)}</span>
             </div>
             <div className="flex justify-between py-2">
               <span className="text-gray-600">Average Price</span>
-              <span className="font-medium">Rs. {details?.averageTradedPrice?.toFixed(2)}</span>
+              <span className="font-medium">Rs. {(details?.averageTradedPrice || 0).toFixed(2)}</span>
             </div>
           </div>
         </div>
@@ -125,11 +125,11 @@ const StockDetail = () => {
           <div className="space-y-3">
             <div className="flex justify-between py-2 border-b border-gray-100">
               <span className="text-gray-600">Market Cap</span>
-              <span className="font-medium">{details?.marketCapitalization?.toLocaleString()}</span>
+              <span className="font-medium">{(details?.marketCapitalization || 0).toLocaleString()}</span>
             </div>
             <div className="flex justify-between py-2 border-b border-gray-100">
               <span className="text-gray-600">Shares Outstanding</span>
-              <span className="font-medium">{details?.outstandingShares?.toLocaleString()}</span>
+              <span className="font-medium">{(details?.outstandingShares || 0).toLocaleString()}</span>
             </div>
             <div className="flex justify-between py-2 border-b border-gray-100">
               <span className="text-gray-600">Sector</span>

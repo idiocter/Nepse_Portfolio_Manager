@@ -10,7 +10,7 @@ const AllocationChart = ({ holdings }) => {
 
   if (data.length === 0) {
     return (
-      <div className="card h-96 flex items-center justify-center">
+      <div className="card h-80 flex items-center justify-center">
         <p className="text-gray-500">No holdings to display</p>
       </div>
     )
@@ -18,7 +18,7 @@ const AllocationChart = ({ holdings }) => {
 
   return (
     <div className="card">
-      <h3 className="text-lg font-semibold mb-4">Portfolio Allocation</h3>
+      <h3 className="text-lg font-semibold text-gray-900 mb-4">Portfolio Allocation</h3>
       <ResponsiveContainer width="100%" height={300}>
         <PieChart>
           <Pie

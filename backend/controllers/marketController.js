@@ -66,12 +66,20 @@ export const getStockHistory = async (req, res) => {
 
     // Timeout mechanism because Nepse API can hang on this endpoint
     const historyPromise = nepse.getSecurityPriceVolumeHistory(symbol);
-    const timeoutPromise = new Promise((resolve) => setTimeout(() => resolve([]), 5000));
+    const timeoutPromise = new Promise((resolve) => setTimeout(() => resolve({ content: [] }), 5000));
 
-    let history = await Promise.race([historyPromise, timeoutPromise]);
+    let rawHistory = await Promise.race([historyPromise, timeoutPromise]);
+    let history = [];
 
-    if (!Array.isArray(history)) {
-      history = [];
+    if (rawHistory && Array.isArray(rawHistory.content)) {
+      history = rawHistory.content.map(item => ({
+        date: item.businessDate,
+        open: item.openPrice,
+        high: item.highPrice,
+        low: item.lowPrice,
+        close: item.closePrice,
+        volume: item.totalTradedQuantity
+      })).reverse(); // Sort so the earliest date is first, as required by the chart
     }
 
     res.json(history);

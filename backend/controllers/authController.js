@@ -59,29 +59,68 @@ export const login = async (req, res) => {
 
 export const googleAuth = async (req, res) => {
   try {
-    const { credential } = req.body;
+    console.log("=== Google Auth Started ===");
+    console.log("Request body keys:", Object.keys(req.body));
 
-    const ticket = await client.verifyIdToken({
-      idToken: credential,
-      audience: process.env.GOOGLE_CLIENT_ID,
-    });
+    const { credential, accessToken } = req.body;
+    let payload;
 
-    const payload = ticket.getPayload();
+    if (credential) {
+      console.log("Using credential (ID token) flow");
+      if (!process.env.GOOGLE_CLIENT_ID) {
+        console.error("ERROR: GOOGLE_CLIENT_ID is not set in .env");
+        return res.status(500).json({ message: "Server misconfiguration: missing GOOGLE_CLIENT_ID" });
+      }
+      const ticket = await client.verifyIdToken({
+        idToken: credential,
+        audience: process.env.GOOGLE_CLIENT_ID,
+      });
+      payload = ticket.getPayload();
+      console.log("ID token verified successfully");
+    } else if (accessToken) {
+      console.log("Using accessToken flow");
+      const response = await fetch("https://www.googleapis.com/oauth2/v3/userinfo", {
+        headers: { Authorization: `Bearer ${accessToken}` },
+      });
+      if (!response.ok) {
+        const errorText = await response.text();
+        console.error("Google userinfo API error:", response.status, errorText);
+        throw new Error(`Failed to fetch user info from Google: ${response.status}`);
+      }
+      payload = await response.json();
+      console.log("Access token verified successfully");
+    } else {
+      console.error("ERROR: No credential or accessToken in request body");
+      return res.status(400).json({ message: "No token provided" });
+    }
+
     const { email, name, picture, sub: googleId } = payload;
+    console.log("Google user info:", { email, name, googleId: googleId ? "present" : "missing" });
+
+    if (!email || !name) {
+      console.error("ERROR: Missing required fields from Google payload:", { email, name });
+      return res.status(400).json({ message: "Incomplete Google profile (missing email or name)" });
+    }
 
     let user = await User.findOne({ email });
+    console.log("Existing user found:", !!user);
 
     if (!user) {
+      console.log("Creating new user...");
       user = await User.create({
         email,
         name,
         googleId,
         avatar: picture,
       });
+      console.log("New user created with ID:", user._id);
     }
 
+    const token = generateToken(user._id);
+    console.log("JWT token generated successfully");
+
     res.json({
-      token: generateToken(user._id),
+      token,
       user: {
         id: user._id,
         name: user.name,
@@ -90,7 +129,12 @@ export const googleAuth = async (req, res) => {
         holdings: user.holdings,
       },
     });
+    console.log("=== Google Auth Completed Successfully ===");
   } catch (error) {
+    console.error("=== Google Auth FAILED ===");
+    console.error("Error name:", error.name);
+    console.error("Error message:", error.message);
+    console.error("Error stack:", error.stack);
     res.status(500).json({ message: error.message });
   }
 };
