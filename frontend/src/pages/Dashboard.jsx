@@ -35,42 +35,51 @@ const Dashboard = () => {
 
   if (loading) {
     return (
-      <div className="page-enter space-y-6">
-        <div className="skeleton h-8 w-56 mb-2" />
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          {[1, 2, 3].map(i => <div key={i} className="card h-28"><div className="skeleton h-4 w-24 mb-3" /><div className="skeleton h-8 w-32" /></div>)}
+      <div className="animate-fade-in-up space-y-8 p-6">
+        <div className="h-8 w-64 bg-zinc-100 animate-pulse rounded-lg mb-2" />
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          {[1, 2, 3].map(i => (
+            <div key={i} className="bg-white border border-zinc-100 rounded-3xl p-8 shadow-sm">
+              <div className="h-4 w-24 bg-zinc-100 animate-pulse rounded mb-4" />
+              <div className="h-10 w-48 bg-zinc-100 animate-pulse rounded-lg" />
+            </div>
+          ))}
         </div>
-        <div className="card h-64"><div className="skeleton h-full w-full" /></div>
+        <div className="bg-white border border-zinc-100 rounded-3xl p-8 shadow-sm h-80">
+          <div className="h-full w-full bg-zinc-50 animate-pulse rounded-2xl" />
+        </div>
       </div>
     )
   }
 
   return (
-    <div className="page-enter space-y-6">
-      <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+    <div className="animate-fade-in-up space-y-12 pb-12">
+      <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-6">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900 flex items-center gap-3">
-            <LayoutDashboard className="h-7 w-7 text-primary-600" />
+          <h1 className="text-3xl font-black text-zinc-900 flex items-center gap-4 tracking-tighter">
+            <LayoutDashboard className="h-8 w-8 text-zinc-900" />
             Welcome back, {user?.name?.split(' ')[0]}
           </h1>
-          <div className="flex items-center gap-2 mt-1 text-sm text-gray-500">
-            <Clock className="h-3.5 w-3.5" />
-            Last updated: {lastUpdated.toLocaleTimeString()}
+          <div className="flex items-center gap-2 mt-2 text-sm font-bold text-zinc-400 uppercase tracking-widest">
+            <Clock className="h-4 w-4" />
+            Live Analytics • {lastUpdated.toLocaleTimeString()}
           </div>
         </div>
-        <button onClick={() => { fetchPortfolio(); setLastUpdated(new Date()) }}
-          className="btn-secondary flex items-center gap-2 self-start">
-          <RefreshCw className="h-4 w-4" /> Refresh
+        <button
+          onClick={() => { fetchPortfolio(); setLastUpdated(new Date()) }}
+          className="px-6 py-3 bg-white border border-zinc-200 text-zinc-700 rounded-xl font-bold text-sm hover:bg-zinc-50 hover:border-zinc-300 transition-all flex items-center gap-3 shadow-sm active:scale-95"
+        >
+          <RefreshCw className="h-4 w-4" /> Refresh Data
         </button>
       </div>
 
       <PortfolioSummary summary={portfolio.summary} />
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        <div className="lg:col-span-2 space-y-6">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        <div className="lg:col-span-2 space-y-8">
           <HoldingsTable holdings={portfolio.holdings} />
         </div>
-        <div className="space-y-6">
+        <div className="space-y-8">
           <AllocationChart holdings={portfolio.holdings} />
           <TopMovers />
         </div>

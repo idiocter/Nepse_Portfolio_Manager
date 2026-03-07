@@ -4,54 +4,56 @@ import { TrendingUp, TrendingDown, ArrowUpRight } from 'lucide-react'
 const HoldingsTable = ({ holdings }) => {
   if (!holdings || holdings.length === 0) {
     return (
-      <div className="card text-center py-16">
-        <p className="text-gray-500 text-lg mb-2">No holdings yet</p>
-        <p className="text-gray-400 text-sm">Add stocks to your portfolio to see them here</p>
+      <div className="bg-white border border-zinc-100 rounded-3xl p-16 text-center shadow-sm">
+        <p className="text-zinc-500 text-xl font-bold mb-2 tracking-tight">No holdings yet</p>
+        <p className="text-zinc-400 text-sm font-medium uppercase tracking-widest">Add stocks to your portfolio to begin tracking.</p>
       </div>
     )
   }
 
   return (
-    <div className="card p-0 overflow-hidden">
-      <div className="px-6 pt-5 pb-3">
-        <h3 className="text-lg font-semibold text-gray-900">Your Holdings</h3>
+    <div className="bg-white border border-zinc-100 rounded-3xl overflow-hidden shadow-sm">
+      <div className="px-8 pt-8 pb-3">
+        <h3 className="text-xl font-black text-zinc-900 tracking-tighter">Your Holdings</h3>
       </div>
       <div className="overflow-x-auto">
-        <table className="data-table">
+        <table className="w-full text-left border-collapse">
           <thead>
-            <tr>
-              <th>Symbol</th>
-              <th className="text-right">Qty</th>
-              <th className="text-right">Avg Price</th>
-              <th className="text-right">LTP</th>
-              <th className="text-right">P&L</th>
-              <th className="text-right">Change</th>
-              <th className="text-center">Action</th>
+            <tr className="bg-zinc-50/50 border-b border-zinc-100">
+              <th className="px-8 py-5 text-xs font-black text-zinc-400 uppercase tracking-widest">Symbol</th>
+              <th className="px-6 py-5 text-right text-xs font-black text-zinc-400 uppercase tracking-widest">Qty</th>
+              <th className="px-6 py-5 text-right text-xs font-black text-zinc-400 uppercase tracking-widest">Avg Price</th>
+              <th className="px-6 py-5 text-right text-xs font-black text-zinc-400 uppercase tracking-widest">LTP</th>
+              <th className="px-6 py-5 text-right text-xs font-black text-zinc-400 uppercase tracking-widest">P&L</th>
+              <th className="px-6 py-5 text-right text-xs font-black text-zinc-400 uppercase tracking-widest">Change</th>
+              <th className="px-8 py-5 text-center text-xs font-black text-zinc-400 uppercase tracking-widest">Action</th>
             </tr>
           </thead>
-          <tbody>
+          <tbody className="divide-y divide-zinc-100">
             {holdings.map((holding) => {
               const isProfit = holding.pnl >= 0
               const dayChangeIsProfit = holding.change >= 0
               return (
-                <tr key={holding._id}>
-                  <td className="font-medium text-gray-900">{holding.symbol}</td>
-                  <td className="text-right">{holding.quantity}</td>
-                  <td className="text-right">Rs. {holding.avgPrice?.toFixed(2)}</td>
-                  <td className="text-right font-medium">Rs. {holding.currentPrice?.toFixed(2)}</td>
-                  <td className={`text-right font-medium ${isProfit ? 'text-green-600' : 'text-red-600'}`}>
+                <tr key={holding._id} className="hover:bg-zinc-50/50 transition-colors">
+                  <td className="px-8 py-5">
+                    <p className="font-black text-zinc-900">{holding.symbol}</p>
+                  </td>
+                  <td className="px-6 py-5 text-right font-bold text-zinc-600 tabular-nums">{holding.quantity}</td>
+                  <td className="px-6 py-5 text-right text-zinc-500 tabular-nums">Rs. {holding.avgPrice?.toFixed(2)}</td>
+                  <td className="px-6 py-5 text-right font-bold text-zinc-900 tabular-nums">Rs. {holding.currentPrice?.toFixed(2)}</td>
+                  <td className={`px-6 py-5 text-right font-black tabular-nums ${isProfit ? 'text-emerald-600' : 'text-rose-600'}`}>
                     {isProfit ? '+' : ''}{holding.pnl?.toLocaleString()}
                   </td>
-                  <td className="text-right">
-                    <span className={`badge ${dayChangeIsProfit ? 'badge-success' : 'badge-danger'}`}>
-                      {dayChangeIsProfit ? <TrendingUp className="h-3 w-3 mr-1" /> : <TrendingDown className="h-3 w-3 mr-1" />}
+                  <td className="px-6 py-5 text-right">
+                    <span className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-black ${dayChangeIsProfit ? 'bg-emerald-50 text-emerald-600' : 'bg-rose-50 text-rose-600'}`}>
+                      {dayChangeIsProfit ? <TrendingUp className="h-3 w-3" /> : <TrendingDown className="h-3 w-3" />}
                       {holding.changePercent?.toFixed(2)}%
                     </span>
                   </td>
-                  <td className="text-center">
+                  <td className="px-8 py-5 text-center">
                     <Link to={`/stock/${holding.symbol}`}
-                      className="inline-flex items-center gap-1 text-primary-600 hover:text-primary-700 text-sm font-medium">
-                      View <ArrowUpRight className="h-3.5 w-3.5" />
+                      className="inline-flex items-center gap-2 text-zinc-900 hover:text-zinc-600 text-sm font-black transition-colors no-underline uppercase tracking-tight">
+                      Manage <ArrowUpRight className="h-4 w-4" />
                     </Link>
                   </td>
                 </tr>

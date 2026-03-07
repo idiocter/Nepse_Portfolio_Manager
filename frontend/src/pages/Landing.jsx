@@ -33,37 +33,37 @@ const Landing = () => {
             icon: <PieChart className="h-7 w-7" />,
             title: 'Portfolio Tracking',
             description: 'Track all your NEPSE holdings in one place with real-time profit/loss calculations.',
-            color: 'bg-indigo-100 text-indigo-600'
+            color: 'bg-neutral-100 text-neutral-700'
         },
         {
             icon: <Activity className="h-7 w-7" />,
             title: 'Live Market Data',
             description: 'Get real-time stock prices, market indices, and trading volumes during market hours.',
-            color: 'bg-cyan-100 text-cyan-600'
+            color: 'bg-neutral-100 text-neutral-700'
         },
         {
             icon: <LineChart className="h-7 w-7" />,
             title: 'Price Charts',
             description: 'Interactive candlestick charts with historical price data for informed decisions.',
-            color: 'bg-emerald-100 text-emerald-600'
+            color: 'bg-neutral-100 text-neutral-700'
         },
         {
             icon: <TrendingUp className="h-7 w-7" />,
             title: 'Top Movers',
             description: 'Track top gainers and losers in real-time to spot market opportunities.',
-            color: 'bg-amber-100 text-amber-600'
+            color: 'bg-neutral-100 text-neutral-700'
         },
         {
             icon: <Eye className="h-7 w-7" />,
             title: 'Watchlist',
             description: 'Monitor stocks you\'re interested in without adding them to your portfolio.',
-            color: 'bg-pink-100 text-pink-600'
+            color: 'bg-neutral-100 text-neutral-700'
         },
         {
             icon: <Shield className="h-7 w-7" />,
             title: 'Secure & Private',
             description: 'Your portfolio data is encrypted and protected with Google OAuth authentication.',
-            color: 'bg-violet-100 text-violet-600'
+            color: 'bg-neutral-100 text-neutral-700'
         }
     ]
 
@@ -75,49 +75,47 @@ const Landing = () => {
     ]
 
     return (
-        <div className="page-enter">
+        <div className="bg-white selection:bg-zinc-200">
             {/* Hero Section */}
-            <section className="relative min-h-[85vh] flex items-center overflow-hidden">
-                {/* Background decoration */}
+            <section className="relative min-h-[90vh] flex items-center pt-24 pb-32 overflow-hidden">
+                {/* Background decoration - subtle neutral blobs */}
                 <div className="absolute inset-0 overflow-hidden pointer-events-none">
-                    <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-indigo-100 rounded-full blur-3xl opacity-50 animate-float" />
-                    <div className="absolute bottom-1/4 right-1/4 w-80 h-80 bg-cyan-100 rounded-full blur-3xl opacity-40 animate-float" style={{ animationDelay: '1.5s' }} />
+                    <div className="absolute top-0 left-1/4 w-[500px] h-[500px] bg-zinc-50 rounded-full blur-[120px] opacity-60 animate-float" />
+                    <div className="absolute bottom-0 right-1/4 w-[400px] h-[400px] bg-neutral-100 rounded-full blur-[100px] opacity-40 animate-float" style={{ animationDelay: '2s' }} />
                 </div>
 
-                <div className="container mx-auto px-4 relative z-10">
-                    <div className="max-w-4xl mx-auto text-center">
-                        <div className="animate-fade-in-up stagger-1">
-                            <span className="badge badge-primary text-sm px-4 py-1.5 mb-6 inline-block">
-                                🚀 Nepal's #1 Portfolio Tracker
+                <div className="container mx-auto px-6 relative z-10">
+                    <div className="max-w-5xl mx-auto text-center">
+                        <div className="animate-fade-in-up stagger-1 mb-8">
+                            <span className="inline-block px-4 py-1.5 rounded-full bg-zinc-100 text-zinc-600 text-xs font-bold tracking-widest uppercase">
+                                🚀 Premium Portfolio Tracker for Nepal
                             </span>
                         </div>
 
-                        <h1 className="text-5xl md:text-7xl font-black text-gray-900 mb-6 leading-tight animate-fade-in-up stagger-2">
-                            Track Your{' '}
-                            <span className="gradient-text">NEPSE</span>
-                            <br />
-                            Portfolio Like a Pro
+                        <h1 className="text-6xl md:text-8xl font-black text-zinc-900 mb-8 leading-[1.05] tracking-tight animate-fade-in-up stagger-2">
+                            Master Your <span className="text-zinc-600">NEPSE</span><br />
+                            Assets With Precision.
                         </h1>
 
-                        <p className="text-lg md:text-xl text-gray-500 mb-10 max-w-2xl mx-auto leading-relaxed animate-fade-in-up stagger-3">
-                            Real-time stock tracking, interactive charts, portfolio analytics —
-                            everything you need to make smarter investment decisions in the Nepal Stock Exchange.
+                        <p className="text-xl md:text-2xl text-zinc-500 mb-14 max-w-3xl mx-auto leading-relaxed font-medium animate-fade-in-up stagger-3">
+                            A sophisticated, real-time analytics platform designed for the modern Nepalese investor.
+                            Track holdings, analyze trends, and grow your wealth with confidence.
                         </p>
 
-                        <div className="flex flex-col sm:flex-row items-center justify-center gap-4 animate-fade-in-up stagger-4">
+                        <div className="flex flex-col sm:flex-row items-center justify-center gap-6 animate-fade-in-up stagger-4">
                             <Link
                                 to="/register"
-                                className="btn-primary text-base px-8 py-3.5 flex items-center gap-2 no-underline"
+                                className="w-full sm:w-auto px-10 py-5 bg-zinc-900 text-white rounded-2xl font-bold text-lg hover:bg-zinc-800 hover:scale-[1.02] active:scale-[0.98] transition-all shadow-xl shadow-zinc-200 no-underline flex items-center justify-center gap-3"
                             >
                                 Get Started Free
                                 <ArrowRight className="h-5 w-5" />
                             </Link>
                             <Link
                                 to="/market"
-                                className="btn-secondary text-base px-8 py-3.5 flex items-center gap-2 no-underline"
+                                className="w-full sm:w-auto px-10 py-5 bg-white border border-zinc-200 text-zinc-700 rounded-2xl font-bold text-lg hover:bg-zinc-50 hover:border-zinc-300 hover:scale-[1.02] active:scale-[0.98] transition-all no-underline flex items-center justify-center gap-3"
                             >
                                 <BarChart3 className="h-5 w-5" />
-                                View Market
+                                Explore Market
                             </Link>
                         </div>
                     </div>
@@ -126,28 +124,28 @@ const Landing = () => {
 
             {/* Live Market Ticker */}
             {(gainers.length > 0 || losers.length > 0) && (
-                <section className="py-4 border-y border-gray-200 bg-white">
-                    <div className="container mx-auto px-4">
-                        <div className="flex items-center gap-6 overflow-x-auto py-2">
-                            <span className="text-xs font-bold text-indigo-600 uppercase tracking-wider whitespace-nowrap flex items-center gap-2">
-                                <Activity className="h-3.5 w-3.5" />
-                                Live
+                <section className="py-6 border-y border-zinc-100 bg-zinc-50/50">
+                    <div className="container mx-auto px-6">
+                        <div className="flex items-center gap-8 overflow-x-auto py-2 no-scrollbar">
+                            <span className="text-[10px] font-black text-zinc-400 uppercase tracking-[0.2em] whitespace-nowrap flex items-center gap-2">
+                                <Activity className="h-3 w-3" />
+                                Market Live
                             </span>
                             {gainers.slice(0, 3).map(stock => (
-                                <div key={stock.symbol} className="flex items-center gap-2 whitespace-nowrap text-sm">
-                                    <span className="font-semibold text-gray-800">{stock.symbol}</span>
-                                    <span className="text-gray-500">Rs. {stock.lastPrice?.toFixed(2)}</span>
-                                    <span className="text-green-600 flex items-center gap-0.5">
+                                <div key={stock.symbol} className="flex items-center gap-3 whitespace-nowrap text-sm">
+                                    <span className="font-bold text-zinc-900">{stock.symbol}</span>
+                                    <span className="text-zinc-500 font-medium">Rs. {stock.lastPrice?.toFixed(2)}</span>
+                                    <span className="text-emerald-600 font-bold flex items-center gap-0.5">
                                         <TrendingUp className="h-3 w-3" />
                                         +{stock.changePercent?.toFixed(2)}%
                                     </span>
                                 </div>
                             ))}
                             {losers.slice(0, 3).map(stock => (
-                                <div key={stock.symbol} className="flex items-center gap-2 whitespace-nowrap text-sm">
-                                    <span className="font-semibold text-gray-800">{stock.symbol}</span>
-                                    <span className="text-gray-500">Rs. {stock.lastPrice?.toFixed(2)}</span>
-                                    <span className="text-red-600 flex items-center gap-0.5">
+                                <div key={stock.symbol} className="flex items-center gap-3 whitespace-nowrap text-sm">
+                                    <span className="font-bold text-zinc-900">{stock.symbol}</span>
+                                    <span className="text-zinc-500 font-medium">Rs. {stock.lastPrice?.toFixed(2)}</span>
+                                    <span className="text-rose-600 font-bold flex items-center gap-0.5">
                                         <TrendingDown className="h-3 w-3" />
                                         {stock.changePercent?.toFixed(2)}%
                                     </span>
@@ -159,19 +157,19 @@ const Landing = () => {
             )}
 
             {/* Stats */}
-            <section className="py-20">
-                <div className="container mx-auto px-4">
-                    <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6">
+            <section className="py-32">
+                <div className="container mx-auto px-6">
+                    <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
                         {stats.map((stat, index) => (
                             <div
                                 key={stat.label}
-                                className={`card stat-card text-center animate-fade-in-up stagger-${index + 1}`}
+                                className={`p-8 rounded-3xl bg-white border border-zinc-100 shadow-sm text-center animate-fade-in-up stagger-${index + 1}`}
                             >
-                                <div className="flex items-center justify-center mb-3 text-indigo-500">
+                                <div className="flex items-center justify-center mb-4 text-zinc-400">
                                     {stat.icon}
                                 </div>
-                                <p className="text-2xl md:text-3xl font-extrabold gradient-text mb-1">{stat.value}</p>
-                                <p className="text-sm text-gray-500">{stat.label}</p>
+                                <p className="text-3xl md:text-4xl font-black text-zinc-900 mb-2 tracking-tighter">{stat.value}</p>
+                                <p className="text-xs font-bold text-zinc-400 uppercase tracking-widest">{stat.label}</p>
                             </div>
                         ))}
                     </div>
@@ -179,29 +177,28 @@ const Landing = () => {
             </section>
 
             {/* Features */}
-            <section className="py-20 bg-white">
-                <div className="container mx-auto px-4">
-                    <div className="text-center mb-16">
-                        <h2 className="text-3xl md:text-5xl font-extrabold text-gray-900 mb-4">
-                            Everything You Need to{' '}
-                            <span className="gradient-text">Invest Smarter</span>
+            <section className="py-32 bg-white">
+                <div className="container mx-auto px-6">
+                    <div className="text-center mb-24">
+                        <h2 className="text-4xl md:text-6xl font-black text-zinc-900 mb-6 tracking-tight">
+                            Everything to <span className="text-zinc-500">Invest Smarter.</span>
                         </h2>
-                        <p className="text-gray-500 text-lg max-w-2xl mx-auto">
-                            Powerful tools and real-time insights to help you manage your NEPSE portfolio with confidence.
+                        <p className="text-zinc-500 text-xl max-w-2xl mx-auto font-medium leading-relaxed">
+                            Sophisticated tools and real-time insights to help you manage your NEPSE portfolio with unparalleled clarity.
                         </p>
                     </div>
 
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                         {features.map((feature, index) => (
                             <div
                                 key={feature.title}
-                                className={`card group cursor-default animate-fade-in-up stagger-${index + 1}`}
+                                className={`p-10 rounded-3xl border border-zinc-100 bg-zinc-50/30 hover:bg-white hover:shadow-xl hover:border-transparent transition-all duration-500 animate-fade-in-up stagger-${index + 1}`}
                             >
-                                <div className={`w-14 h-14 rounded-2xl ${feature.color} flex items-center justify-center mb-5 group-hover:scale-110 transition-transform duration-300`}>
+                                <div className={`w-16 h-16 rounded-2xl ${feature.color} flex items-center justify-center mb-8`}>
                                     {feature.icon}
                                 </div>
-                                <h3 className="text-xl font-bold text-gray-900 mb-3">{feature.title}</h3>
-                                <p className="text-gray-500 leading-relaxed">{feature.description}</p>
+                                <h3 className="text-2xl font-bold text-zinc-900 mb-4 tracking-tight">{feature.title}</h3>
+                                <p className="text-zinc-500 leading-relaxed text-lg font-medium">{feature.description}</p>
                             </div>
                         ))}
                     </div>
@@ -210,37 +207,38 @@ const Landing = () => {
 
             {/* Market Preview */}
             {gainers.length > 0 && (
-                <section className="py-20">
-                    <div className="container mx-auto px-4">
-                        <div className="text-center mb-12">
-                            <h2 className="text-3xl md:text-4xl font-extrabold text-gray-900 mb-4">
-                                Today's <span className="gradient-text">Market Movers</span>
+                <section className="py-32">
+                    <div className="container mx-auto px-6">
+                        <div className="text-center mb-16">
+                            <h2 className="text-4xl md:text-5xl font-black text-zinc-900 mb-6 tracking-tight">
+                                Today's <span className="text-zinc-500">Market Dynamics.</span>
                             </h2>
-                            <p className="text-gray-500">Stay updated with the hottest stocks on NEPSE</p>
+                            <p className="text-zinc-500 text-lg font-medium">Real-time performance of NEPSE's active securities.</p>
                         </div>
 
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-4xl mx-auto">
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-5xl mx-auto">
                             {/* Top Gainers */}
-                            <div className="card">
-                                <div className="flex items-center gap-2 mb-5">
-                                    <div className="w-8 h-8 rounded-lg bg-green-100 flex items-center justify-center">
-                                        <TrendingUp className="h-4 w-4 text-green-600" />
+                            <div className="p-8 rounded-3xl bg-white border border-zinc-100 shadow-sm relative overflow-hidden">
+                                <div className="absolute top-0 right-0 w-32 h-32 bg-emerald-50 rounded-full blur-3xl opacity-40 -mr-10 -mt-10" />
+                                <div className="flex items-center gap-3 mb-8 relative z-10">
+                                    <div className="w-10 h-10 rounded-xl bg-emerald-100 flex items-center justify-center">
+                                        <TrendingUp className="h-5 w-5 text-emerald-600" />
                                     </div>
-                                    <h3 className="text-lg font-bold text-gray-900">Top Gainers</h3>
+                                    <h3 className="text-xl font-bold text-zinc-900">Top Gainers</h3>
                                 </div>
-                                <div className="space-y-3">
+                                <div className="space-y-4 relative z-10">
                                     {gainers.map((stock, i) => (
-                                        <div key={stock.symbol} className="flex items-center justify-between p-3 rounded-xl bg-gray-50 hover:bg-gray-100 transition-colors">
-                                            <div className="flex items-center gap-3">
-                                                <span className="text-xs font-bold text-gray-400 w-5">{i + 1}</span>
+                                        <div key={stock.symbol} className="flex items-center justify-between p-4 rounded-2xl bg-zinc-50 hover:bg-zinc-100 transition-colors">
+                                            <div className="flex items-center gap-4">
+                                                <span className="text-xs font-black text-zinc-300 w-4">{i + 1}</span>
                                                 <div>
-                                                    <p className="font-semibold text-sm text-gray-800">{stock.symbol}</p>
-                                                    <p className="text-xs text-gray-400 truncate max-w-[120px]">{stock.name}</p>
+                                                    <p className="font-bold text-zinc-900">{stock.symbol}</p>
+                                                    <p className="text-[10px] font-bold text-zinc-400 uppercase tracking-wider truncate max-w-[150px]">{stock.name}</p>
                                                 </div>
                                             </div>
                                             <div className="text-right">
-                                                <p className="text-sm font-semibold text-gray-800">Rs. {stock.lastPrice?.toFixed(2)}</p>
-                                                <p className="text-xs font-bold text-green-600">+{stock.changePercent?.toFixed(2)}%</p>
+                                                <p className="font-bold text-zinc-900">Rs. {stock.lastPrice?.toFixed(2)}</p>
+                                                <p className="text-sm font-black text-emerald-600">+{stock.changePercent?.toFixed(2)}%</p>
                                             </div>
                                         </div>
                                     ))}
@@ -248,26 +246,27 @@ const Landing = () => {
                             </div>
 
                             {/* Top Losers */}
-                            <div className="card">
-                                <div className="flex items-center gap-2 mb-5">
-                                    <div className="w-8 h-8 rounded-lg bg-red-100 flex items-center justify-center">
-                                        <TrendingDown className="h-4 w-4 text-red-600" />
+                            <div className="p-8 rounded-3xl bg-white border border-zinc-100 shadow-sm relative overflow-hidden">
+                                <div className="absolute top-0 right-0 w-32 h-32 bg-rose-50 rounded-full blur-3xl opacity-40 -mr-10 -mt-10" />
+                                <div className="flex items-center gap-3 mb-8 relative z-10">
+                                    <div className="w-10 h-10 rounded-xl bg-rose-100 flex items-center justify-center">
+                                        <TrendingDown className="h-5 w-5 text-rose-600" />
                                     </div>
-                                    <h3 className="text-lg font-bold text-gray-900">Top Losers</h3>
+                                    <h3 className="text-xl font-bold text-zinc-900">Top Losers</h3>
                                 </div>
-                                <div className="space-y-3">
+                                <div className="space-y-4 relative z-10">
                                     {losers.map((stock, i) => (
-                                        <div key={stock.symbol} className="flex items-center justify-between p-3 rounded-xl bg-gray-50 hover:bg-gray-100 transition-colors">
-                                            <div className="flex items-center gap-3">
-                                                <span className="text-xs font-bold text-gray-400 w-5">{i + 1}</span>
+                                        <div key={stock.symbol} className="flex items-center justify-between p-4 rounded-2xl bg-zinc-50 hover:bg-zinc-100 transition-colors">
+                                            <div className="flex items-center gap-4">
+                                                <span className="text-xs font-black text-zinc-300 w-4">{i + 1}</span>
                                                 <div>
-                                                    <p className="font-semibold text-sm text-gray-800">{stock.symbol}</p>
-                                                    <p className="text-xs text-gray-400 truncate max-w-[120px]">{stock.name}</p>
+                                                    <p className="font-bold text-zinc-900">{stock.symbol}</p>
+                                                    <p className="text-[10px] font-bold text-zinc-400 uppercase tracking-wider truncate max-w-[150px]">{stock.name}</p>
                                                 </div>
                                             </div>
                                             <div className="text-right">
-                                                <p className="text-sm font-semibold text-gray-800">Rs. {stock.lastPrice?.toFixed(2)}</p>
-                                                <p className="text-xs font-bold text-red-600">{stock.changePercent?.toFixed(2)}%</p>
+                                                <p className="font-bold text-zinc-900">Rs. {stock.lastPrice?.toFixed(2)}</p>
+                                                <p className="text-sm font-black text-rose-600">{stock.changePercent?.toFixed(2)}%</p>
                                             </div>
                                         </div>
                                     ))}
@@ -275,8 +274,8 @@ const Landing = () => {
                             </div>
                         </div>
 
-                        <div className="text-center mt-8">
-                            <Link to="/market" className="btn-secondary inline-flex items-center gap-2 no-underline">
+                        <div className="text-center mt-12">
+                            <Link to="/market" className="px-8 py-3.5 bg-zinc-50 border border-zinc-200 text-zinc-700 rounded-xl font-bold text-sm hover:bg-zinc-100 transition-all no-underline inline-flex items-center gap-3">
                                 View Full Market
                                 <ChevronRight className="h-4 w-4" />
                             </Link>
@@ -286,49 +285,49 @@ const Landing = () => {
             )}
 
             {/* CTA */}
-            <section className="py-24">
-                <div className="container mx-auto px-4">
-                    <div className="relative rounded-3xl overflow-hidden p-12 md:p-20 text-center bg-gradient-to-br from-indigo-50 via-white to-purple-50 border border-indigo-100">
-                        <div className="relative z-10">
-                            <h2 className="text-3xl md:text-5xl font-extrabold text-gray-900 mb-6">
-                                Ready to Track Your{' '}
-                                <span className="gradient-text">NEPSE Portfolio</span>?
-                            </h2>
-                            <p className="text-gray-500 text-lg mb-10 max-w-xl mx-auto">
-                                Join thousands of investors who trust our platform to manage and grow their investments.
-                            </p>
-                            <Link
-                                to="/register"
-                                className="btn-primary text-lg px-10 py-4 inline-flex items-center gap-3 no-underline"
-                            >
-                                Create Free Account
-                                <ArrowRight className="h-5 w-5" />
-                            </Link>
-                        </div>
+            <section className="py-48 px-6 bg-zinc-950">
+                <div className="container mx-auto">
+                    <div className="max-w-4xl mx-auto text-center">
+                        <h2 className="text-5xl md:text-7xl font-black text-white mb-8 tracking-tighter leading-[1.1]">
+                            Ready to Master Your <br />
+                            <span className="text-zinc-500">Financial Future?</span>
+                        </h2>
+                        <p className="text-zinc-400 text-xl md:text-2xl mb-16 max-w-2xl mx-auto font-medium leading-relaxed">
+                            Join the elite circle of Nepalese investors who trade with data-backed precision.
+                        </p>
+                        <Link
+                            to="/register"
+                            className="px-12 py-6 bg-white text-zinc-950 rounded-2xl font-black text-xl hover:bg-zinc-100 hover:scale-[1.05] active:scale-[0.95] transition-all no-underline inline-flex items-center gap-4 shadow-2xl shadow-white/10"
+                        >
+                            Get Started Free
+                            <ArrowRight className="h-6 w-6" />
+                        </Link>
                     </div>
                 </div>
             </section>
 
             {/* Footer */}
-            <footer className="border-t border-gray-200 bg-white py-12">
-                <div className="container mx-auto px-4">
-                    <div className="flex flex-col md:flex-row items-center justify-between gap-6">
-                        <div className="flex items-center gap-2">
-                            <TrendingUp className="h-6 w-6 text-primary-600" />
-                            <span className="text-lg font-bold text-gray-900">NEPSE Tracker</span>
+            <footer className="bg-white py-24 border-t border-zinc-100">
+                <div className="container mx-auto px-6">
+                    <div className="flex flex-col md:flex-row items-center justify-between gap-12">
+                        <div className="flex items-center gap-3">
+                            <div className="w-8 h-8 bg-zinc-900 rounded-lg flex items-center justify-center">
+                                <TrendingUp className="h-5 w-5 text-white" />
+                            </div>
+                            <span className="text-xl font-black text-zinc-900 tracking-tighter">NEPSE Tracker</span>
                         </div>
-                        <div className="flex items-center gap-8">
-                            <Link to="/market" className="text-sm text-gray-500 hover:text-primary-600 transition-colors no-underline">Market</Link>
-                            <Link to="/login" className="text-sm text-gray-500 hover:text-primary-600 transition-colors no-underline">Login</Link>
-                            <Link to="/register" className="text-sm text-gray-500 hover:text-primary-600 transition-colors no-underline">Register</Link>
+                        <div className="flex items-center gap-10">
+                            <Link to="/market" className="text-sm font-bold text-zinc-400 hover:text-zinc-900 transition-colors no-underline uppercase tracking-widest">Market</Link>
+                            <Link to="/login" className="text-sm font-bold text-zinc-400 hover:text-zinc-900 transition-colors no-underline uppercase tracking-widest">Login</Link>
+                            <Link to="/register" className="text-sm font-bold text-zinc-400 hover:text-zinc-900 transition-colors no-underline uppercase tracking-widest">Register</Link>
                         </div>
-                        <p className="text-sm text-gray-400">
-                            © {new Date().getFullYear()} NEPSE Tracker. All rights reserved.
+                        <p className="text-xs font-bold text-zinc-300 uppercase tracking-widest">
+                            © {new Date().getFullYear()} NEPSE Tracker. Digital precision.
                         </p>
                     </div>
                 </div>
             </footer>
-        </div>
+        </div >
     )
 }
 
