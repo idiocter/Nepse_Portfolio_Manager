@@ -36,6 +36,9 @@ export const getTopLosers = async (req, res) => {
 export const getStockDetails = async (req, res) => {
   try {
     const { symbol } = req.params;
+    if (!symbol || symbol === "undefined") {
+      return res.status(400).json({ message: "Security symbol is required" });
+    }
     const rawDetails = await nepse.getSecurityDetails(symbol);
 
     // Map to frontend expected shape
@@ -70,6 +73,10 @@ export const getStockDetails = async (req, res) => {
 export const getStockHistory = async (req, res) => {
   try {
     const { symbol } = req.params;
+
+    if (!symbol || symbol === "undefined") {
+      return res.status(400).json({ message: "Security symbol is required" });
+    }
 
     // Try to get more than the default 10 points by appending size parameter if possible
     // Note: The library method doesn't support this, so we'll try to use the securityId directly

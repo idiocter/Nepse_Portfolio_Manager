@@ -15,6 +15,7 @@ const StockDetail = () => {
   }, [symbol])
 
   const fetchStockData = async () => {
+    if (!symbol || symbol === 'undefined') return;
     try {
       const [detailsRes, historyRes] = await Promise.all([
         axios.get(`${import.meta.env.VITE_API_URL}/api/market/stock/${symbol}`),
