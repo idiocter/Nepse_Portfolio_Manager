@@ -1,5 +1,5 @@
 import { useEffect, useRef } from 'react'
-import { createChart, ColorType } from 'lightweight-charts'
+import { createChart, ColorType, CrosshairMode } from 'lightweight-charts'
 
 const StockChart = ({ data, symbol }) => {
   const chartContainerRef = useRef(null)
@@ -10,26 +10,40 @@ const StockChart = ({ data, symbol }) => {
 
     const chart = createChart(chartContainerRef.current, {
       layout: {
-        background: { type: ColorType.Solid, color: '#ffffff' },
+        background: { type: ColorType.Solid, color: '#09090b' }, // zinc-950
         textColor: '#a1a1aa', // zinc-400
         fontSize: 12,
-        fontFamily: 'Inter, sans-serif',
+        fontFamily: 'Instrument Sans, Inter, system-ui, sans-serif',
       },
       grid: {
-        vertLines: { color: '#f4f4f5' }, // zinc-100
-        horzLines: { color: '#f4f4f5' }, // zinc-100
+        vertLines: { color: 'rgba(39, 39, 42, 0.5)' }, // zinc-800
+        horzLines: { color: 'rgba(39, 39, 42, 0.5)' }, // zinc-800
       },
       crosshair: {
-        mode: 1,
-        vertLine: { color: '#18181b', width: 1, style: 2 },
-        horzLine: { color: '#18181b', width: 1, style: 2 },
+        mode: CrosshairMode.Normal,
+        vertLine: {
+          color: '#52525b',
+          width: 1,
+          style: 3,
+          labelBackgroundColor: '#18181b'
+        },
+        horzLine: {
+          color: '#52525b',
+          width: 1,
+          style: 3,
+          labelBackgroundColor: '#18181b'
+        },
       },
       rightPriceScale: {
-        borderColor: '#f4f4f5',
+        borderColor: 'rgba(39, 39, 42, 0.8)',
         textColor: '#a1a1aa',
+        scaleMargins: {
+          top: 0.1,
+          bottom: 0.25,
+        },
       },
       timeScale: {
-        borderColor: '#f4f4f5',
+        borderColor: 'rgba(39, 39, 42, 0.8)',
         timeVisible: true,
         textColor: '#a1a1aa',
       },
@@ -53,6 +67,21 @@ const StockChart = ({ data, symbol }) => {
       wickDownColor: '#f43f5e',
     })
 
+    const volumeSeries = chart.addHistogramSeries({
+      color: '#27272a',
+      priceFormat: {
+        type: 'volume',
+      },
+      priceScaleId: '', // overlay
+    })
+
+    volumeSeries.priceScale().applyOptions({
+      scaleMargins: {
+        top: 0.8,
+        bottom: 0,
+      },
+    })
+
     const formattedData = data.map(item => ({
       time: item.date,
       open: item.open,
@@ -61,39 +90,73 @@ const StockChart = ({ data, symbol }) => {
       close: item.close,
     }))
 
-    candlestickSeries.setData(formattedData)
-    chart.timeScale().fitContent()
+    const volumeData = data.map(item => ({
+      time: item.date,
+      value: item.volume,
+      color: item.close >= item.open ? 'rgba(16, 185, 129, 0.2)' : 'rgba(244, 63, 94, 0.2)',
+    }))
 
+    candlestickSeries.setData(formattedData)
+    volumeSeries.setData(volumeData)
+
+    chart.timeScale().fitContent()
     chartRef.current = chart
 
     const handleResize = () => {
       if (chartContainerRef.current) {
         chart.applyOptions({
           width: chartContainerRef.current.clientWidth,
-          height: 480,
+          height: chartContainerRef.current.clientHeight,
         })
       }
     }
 
-    window.addEventListener('resize', handleResize)
-    handleResize()
+    const resizeObserver = new ResizeObserver(() => {
+      handleResize()
+    })
+
+    resizeObserver.observe(chartContainerRef.current)
 
     return () => {
-      window.removeEventListener('resize', handleResize)
+      resizeObserver.disconnect()
       chart.remove()
     }
   }, [data])
 
   return (
-    <div className="bg-white rounded-[32px] p-8 h-full flex flex-col">
-      <div className="flex justify-between items-center mb-6">
-        <h3 className="text-xs font-black text-zinc-900 uppercase tracking-[0.3em]">{symbol} / Market Analytics</h3>
-        <div className="flex gap-2">
-          <div className="h-2 w-2 rounded-full bg-emerald-500 animate-pulse" />
-          <span className="text-[10px] font-black text-zinc-400 uppercase tracking-widest">Live Execution</span>
+    <div className="bg-zinc-950 rounded-[32px] p-2 h-full flex flex-col overflow-hidden border border-zinc-800 shadow-2xl">
+      <div className="flex justify-between items-center px-6 py-4 border-b border-zinc-800/50 bg-zinc-950/50 backdrop-blur-sm z-10">
+        <div className="flex items-center gap-4">
+          <h3 className="text-[10px] font-black text-zinc-500 uppercase tracking-[0.4em]">{symbol} <span className="text-zinc-700 mx-2">/</span> MARKET PRO</h3>
+          <div className="flex gap-1.5">
+            <div className="h-1.5 w-1.5 rounded-full bg-emerald-500/50" />
+            <div className="h-1.5 w-1.5 rounded-full bg-emerald-500" />
+          </div>
+        </div>
+        <div className="flex items-center gap-6">
+          <div className="flex items-center gap-2">
+            <span className="text-[9px] font-black text-zinc-600 uppercase tracking-widest">Execution</span>
+            <span className="text-[10px] font-black text-emerald-500 uppercase tabular-nums">Realtime</span>
+          </div>
+          <div className="px-3 py-1 bg-zinc-900 rounded-lg border border-zinc-800">
+            <span className="text-[10px] font-black text-zinc-400 uppercase tracking-widest">D1</span>
+          </div>
         </div>
       </div>
-      <div ref={chartContainerRef} className="w-full flex-grow rounded-2xl overflow-hidden" />
+      <div ref={chartContainerRef} className="w-full flex-grow relative" />
+      <div className="px-6 py-3 border-t border-zinc-800/50 bg-zinc-950 flex justify-between items-center">
+        <p className="text-[9px] font-bold text-zinc-600 uppercase tracking-widest">TradingView Engine v4.0</p>
+        <div className="flex items-center gap-4">
+          <div className="flex items-center gap-2">
+            <div className="w-2 h-2 rounded-[2px] bg-emerald-500/20 border border-emerald-500/50" />
+            <span className="text-[9px] font-bold text-zinc-500 uppercase tracking-tighter">Bullish Intensity</span>
+          </div>
+          <div className="flex items-center gap-2">
+            <div className="w-2 h-2 rounded-[2px] bg-rose-500/20 border border-rose-500/50" />
+            <span className="text-[9px] font-bold text-zinc-500 uppercase tracking-tighter">Bearish Pressure</span>
+          </div>
+        </div>
+      </div>
     </div>
   )
 }

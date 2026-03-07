@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import axios from 'axios'
-import { X, Search } from 'lucide-react'
+import { X, Search, ArrowUpRight } from 'lucide-react'
 
 const HoldingForm = ({ onClose, onSuccess, editingHolding = null }) => {
   const [symbol, setSymbol] = useState(editingHolding?.symbol || '')

@@ -1,4 +1,5 @@
 import { Nepse } from "@rumess/nepse-api";
+import axios from "axios";
 import StockPrice from "../models/StockPrice.js";
 
 const nepse = new Nepse();
@@ -45,17 +46,23 @@ export const getStockDetails = async (req, res) => {
       ...tradeDto,
       ...security,
       ...rawDetails,
-      securityName: security.securityName,
+      securityName: security.securityName || rawDetails.securityName || 'N/A',
+      lastTradedPrice: tradeDto.lastTradedPrice || 0,
+      openPrice: tradeDto.openPrice || 0,
+      highPrice: tradeDto.highPrice || 0,
+      lowPrice: tradeDto.lowPrice || 0,
+      previousClose: tradeDto.previousClose || 0,
       change: tradeDto.lastTradedPrice && tradeDto.previousClose ? Number((tradeDto.lastTradedPrice - tradeDto.previousClose).toFixed(2)) : 0,
       percentChange: tradeDto.lastTradedPrice && tradeDto.previousClose ? Number((((tradeDto.lastTradedPrice - tradeDto.previousClose) / tradeDto.previousClose) * 100).toFixed(2)) : 0,
-      totalTradedQuantity: tradeDto.totalTradeQuantity,
-      outstandingShares: rawDetails.stockListedShares,
-      sectorName: security.companyId?.sectorMaster?.[0]?.sectorDescription || rawDetails.sectorName || 'N/A',
+      totalTradedQuantity: tradeDto.totalTradeQuantity || 0,
+      outstandingShares: rawDetails.stockListedShares || 0,
+      sectorName: security.companyId?.sectorMaster?.[0]?.sectorDescription || rawDetails.sectorName || security.sectorMaster?.[0]?.sectorDescription || 'N/A',
       lastUpdatedDate: rawDetails.updatedDate || tradeDto.lastUpdatedDateTime || new Date().toISOString()
     };
 
     res.json(details);
   } catch (error) {
+    console.error(`Error fetching details for ${req.params.symbol}:`, error);
     res.status(500).json({ message: error.message });
   }
 };
@@ -64,11 +71,26 @@ export const getStockHistory = async (req, res) => {
   try {
     const { symbol } = req.params;
 
-    // Timeout mechanism because Nepse API can hang on this endpoint
-    const historyPromise = nepse.getSecurityPriceVolumeHistory(symbol);
-    const timeoutPromise = new Promise((resolve) => setTimeout(() => resolve({ content: [] }), 5000));
+    // Try to get more than the default 10 points by appending size parameter if possible
+    // Note: The library method doesn't support this, so we'll try to use the securityId directly
+    const securityId = (await nepse.getSecuritySymbolIdKeymap()).get(symbol);
+    let rawHistory;
 
-    let rawHistory = await Promise.race([historyPromise, timeoutPromise]);
+    if (securityId) {
+      // Manual fetch for more data points (last 300 days)
+      const accessToken = await nepse.tokenManager.getAccessToken();
+      const historyPromise = axios.get(`https://www.nepalstock.com.np/api/nots/market/security/price/${securityId}?size=300`, {
+        headers: {
+          'Authorization': `Salter ${accessToken}`,
+          ...nepse.headers
+        }
+      }).then(r => r.data).catch(() => nepse.getSecurityPriceVolumeHistory(symbol)); // Fallback to library
+
+      const timeoutPromise = new Promise((resolve) => setTimeout(() => resolve({ content: [] }), 30000));
+      rawHistory = await Promise.race([historyPromise, timeoutPromise]);
+    } else {
+      rawHistory = await nepse.getSecurityPriceVolumeHistory(symbol);
+    }
     let history = [];
 
     if (rawHistory && Array.isArray(rawHistory.content)) {

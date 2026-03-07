@@ -109,8 +109,17 @@ const StockDetail = () => {
         </div>
       </div>
 
-      <div className="bg-white border border-zinc-100 rounded-[32px] p-4 shadow-sm h-[550px] overflow-hidden">
-        <StockChart data={history} symbol={symbol} />
+      <div className="bg-zinc-950 border border-zinc-800 rounded-[32px] p-2 shadow-2xl h-[600px] overflow-hidden group">
+        {history.length > 0 ? (
+          <StockChart data={history} symbol={symbol} />
+        ) : (
+          <div className="h-full flex flex-col items-center justify-center space-y-4">
+            <div className="p-4 bg-zinc-900 rounded-2xl border border-zinc-800 animate-pulse">
+              <Activity className="h-8 w-8 text-zinc-700" />
+            </div>
+            <p className="text-[10px] font-black text-zinc-600 uppercase tracking-[0.3em]">Historical Analysis unavailable for this security</p>
+          </div>
+        )}
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
