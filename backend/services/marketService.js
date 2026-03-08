@@ -1,10 +1,7 @@
-import { Nepse } from "@rumess/nepse-api";
+import { nepse, agent } from "../config/nepse.js";
 import axios from "axios";
-import https from "https";
 import StockPrice from "../models/StockPrice.js";
 
-const nepse = new Nepse();
-const agent = new https.Agent({ rejectUnauthorized: false });
 
 export const fetchMarketStatus = async () => {
     return await nepse.getMarketStatus();

@@ -1,7 +1,6 @@
-import { Nepse } from "@rumess/nepse-api";
+import { nepse } from "../config/nepse.js";
 import StockPrice from "../models/StockPrice.js";
 
-const nepse = new Nepse();
 
 export const updateLivePrices = async () => {
   try {
