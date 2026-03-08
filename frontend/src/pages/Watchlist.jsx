@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
-import axios from 'axios'
+import marketService from '../services/marketService'
+
 import {
     Eye, Plus, X, Search, TrendingUp, TrendingDown,
     Star, ArrowUpRight
@@ -30,7 +31,7 @@ const Watchlist = () => {
 
     const fetchStocks = async () => {
         try {
-            const { data } = await axios.get(`${import.meta.env.VITE_API_URL}/api/market/stocks`)
+            const data = await marketService.getStocks()
             setStocks(data || [])
         } catch (error) {
             console.error('Error fetching stocks:', error)
@@ -41,7 +42,7 @@ const Watchlist = () => {
 
     const fetchStockPrices = async () => {
         try {
-            const { data } = await axios.get(`${import.meta.env.VITE_API_URL}/api/market/stocks`)
+            const data = await marketService.getStocks()
             setStocks(data || [])
         } catch (error) {
             console.error('Error refreshing prices:', error)

@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom'
 import { useState, useEffect } from 'react'
-import axios from 'axios'
+import marketService from '../services/marketService'
 import {
     TrendingUp, TrendingDown, BarChart3, Shield, Zap,
     PieChart, Eye, ArrowRight, Activity, LineChart,
@@ -17,12 +17,12 @@ const Landing = () => {
 
     const fetchMarketData = async () => {
         try {
-            const [gainersRes, losersRes] = await Promise.all([
-                axios.get(`${import.meta.env.VITE_API_URL}/api/market/gainers`).catch(() => ({ data: [] })),
-                axios.get(`${import.meta.env.VITE_API_URL}/api/market/losers`).catch(() => ({ data: [] }))
+            const [gainersData, losersData] = await Promise.all([
+                marketService.getGainers().catch(() => ([])),
+                marketService.getLosers().catch(() => ([]))
             ])
-            setGainers(gainersRes.data?.slice(0, 5) || [])
-            setLosers(losersRes.data?.slice(0, 5) || [])
+            setGainers(gainersData?.slice(0, 5) || [])
+            setLosers(losersData?.slice(0, 5) || [])
         } catch (error) {
             console.error('Error fetching market data:', error)
         }

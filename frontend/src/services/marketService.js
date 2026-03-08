@@ -12,12 +12,12 @@ const marketService = {
     },
 
     getChartData: async (symbol) => {
-        const { data } = await api.get(`/market/chart/${symbol}`);
+        const { data } = await api.get(`/market/history/${symbol}`);
         return data;
     },
 
     getSectorIndices: async () => {
-        const { data } = await api.get('/market/sector-indices');
+        const { data } = await api.get('/market/sectors');
         return data;
     },
 
