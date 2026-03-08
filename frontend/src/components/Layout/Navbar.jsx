@@ -35,12 +35,12 @@ const Navbar = () => {
     <nav className="bg-white border-b border-zinc-100 sticky top-0 z-50 shadow-sm">
       <div className="container mx-auto px-6">
         <div className="flex justify-between items-center h-20">
-          {/* Logo */}
           <Link to={user ? '/dashboard' : '/'} className="flex items-center gap-3 no-underline group">
-            <div className="w-10 h-10 rounded-xl bg-zinc-900 flex items-center justify-center shadow-lg group-hover:scale-105 transition-transform duration-300">
-              <TrendingUp className="h-6 w-6 text-white" />
+            <div className="w-10 h-10 rounded-xl bg-white flex items-center justify-center shadow-lg border border-zinc-100 group-hover:scale-105 transition-transform duration-300 overflow-hidden p-1">
+              <img src="/favicon.png" alt="NEPSE" className="w-full h-full object-contain" />
             </div>
             <span className="text-xl font-black text-zinc-900 tracking-tighter">
+
               NEPSE<span className="text-zinc-500">Tracker</span>
             </span>
           </Link>

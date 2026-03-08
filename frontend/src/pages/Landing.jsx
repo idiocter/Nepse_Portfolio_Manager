@@ -107,6 +107,7 @@ const Landing = () => {
                                 to="/register"
                                 className="w-full sm:w-auto px-10 py-5 bg-zinc-900 text-white rounded-2xl font-bold text-lg hover:bg-zinc-800 hover:scale-[1.02] active:scale-[0.98] transition-all shadow-xl shadow-zinc-200 no-underline flex items-center justify-center gap-3"
                             >
+                                <img src="/favicon.png" alt="" className="h-6 w-6 brightness-0 invert" />
                                 Get Started Free
                                 <ArrowRight className="h-5 w-5" />
                             </Link>
@@ -311,8 +312,8 @@ const Landing = () => {
                 <div className="container mx-auto px-6">
                     <div className="flex flex-col md:flex-row items-center justify-between gap-12">
                         <div className="flex items-center gap-3">
-                            <div className="w-8 h-8 bg-zinc-900 rounded-lg flex items-center justify-center">
-                                <TrendingUp className="h-5 w-5 text-white" />
+                            <div className="w-10 h-10 bg-white border border-zinc-100 p-1.5 rounded-xl flex items-center justify-center shadow-sm">
+                                <img src="/favicon.png" alt="" className="w-full h-full object-contain" />
                             </div>
                             <span className="text-xl font-black text-zinc-900 tracking-tighter">NEPSE Tracker</span>
                         </div>
