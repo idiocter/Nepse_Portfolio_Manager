@@ -1,9 +1,15 @@
-import { useEffect, useRef } from 'react'
-import { createChart, ColorType, CrosshairMode } from 'lightweight-charts'
+import { useEffect, useRef, useState } from 'react'
+import { createChart, ColorType, CrosshairMode, CandlestickSeries, HistogramSeries, LineSeries } from 'lightweight-charts'
+import { Activity, BarChart3, TrendingUp, Zap, Layers } from 'lucide-react'
 
 const StockChart = ({ data, symbol }) => {
   const chartContainerRef = useRef(null)
   const chartRef = useRef(null)
+  const seriesRef = useRef({})
+
+  const [showVolume, setShowVolume] = useState(true)
+  const [showEMA20, setShowEMA20] = useState(true)
+  const [showEMA50, setShowEMA50] = useState(true)
 
   useEffect(() => {
     if (!chartContainerRef.current || !data || data.length === 0) return
@@ -16,8 +22,8 @@ const StockChart = ({ data, symbol }) => {
         fontFamily: 'Instrument Sans, Inter, system-ui, sans-serif',
       },
       grid: {
-        vertLines: { color: 'rgba(39, 39, 42, 0.5)' }, // zinc-800
-        horzLines: { color: 'rgba(39, 39, 42, 0.5)' }, // zinc-800
+        vertLines: { color: 'rgba(39, 39, 42, 0.3)' }, // zinc-800
+        horzLines: { color: 'rgba(39, 39, 42, 0.3)' }, // zinc-800
       },
       crosshair: {
         mode: CrosshairMode.Normal,
@@ -58,7 +64,7 @@ const StockChart = ({ data, symbol }) => {
       }
     })
 
-    const candlestickSeries = chart.addCandlestickSeries({
+    const candlestickSeries = chart.addSeries(CandlestickSeries, {
       upColor: '#10b981', // emerald-500
       downColor: '#f43f5e', // rose-500
       borderUpColor: '#10b981',
@@ -67,12 +73,31 @@ const StockChart = ({ data, symbol }) => {
       wickDownColor: '#f43f5e',
     })
 
-    const volumeSeries = chart.addHistogramSeries({
+    const ema20Series = chart.addSeries(LineSeries, {
+      color: '#3b82f6', // blue-500
+      lineWidth: 1.5,
+      priceLineVisible: false,
+      lastValueVisible: false,
+      title: 'EMA 20',
+      visible: showEMA20
+    });
+
+    const ema50Series = chart.addSeries(LineSeries, {
+      color: '#8b5cf6', // violet-500
+      lineWidth: 1.5,
+      priceLineVisible: false,
+      lastValueVisible: false,
+      title: 'EMA 50',
+      visible: showEMA50
+    });
+
+    const volumeSeries = chart.addSeries(HistogramSeries, {
       color: '#27272a',
       priceFormat: {
         type: 'volume',
       },
       priceScaleId: '', // overlay
+      visible: showVolume
     })
 
     volumeSeries.priceScale().applyOptions({
@@ -93,14 +118,38 @@ const StockChart = ({ data, symbol }) => {
     const volumeData = data.map(item => ({
       time: item.date,
       value: item.volume,
-      color: item.close >= item.open ? 'rgba(16, 185, 129, 0.2)' : 'rgba(244, 63, 94, 0.2)',
+      color: item.close >= item.open ? 'rgba(16, 185, 129, 0.25)' : 'rgba(244, 63, 94, 0.25)',
     }))
+
+    // Calculate EMAs
+    const calculateEMA = (data, period) => {
+      const k = 2 / (period + 1);
+      let ema = data[0].close;
+      const emaData = [];
+      for (let i = 0; i < data.length; i++) {
+        if (i < period - 1) {
+          ema = (ema * i + data[i].close) / (i + 1); // Simple mean until period reached
+        } else {
+          ema = data[i].close * k + ema * (1 - k);
+          emaData.push({ time: data[i].date, value: ema });
+        }
+      }
+      return emaData;
+    };
+
+    if (data.length >= 20) {
+      ema20Series.setData(calculateEMA(data, 20));
+    }
+    if (data.length >= 50) {
+      ema50Series.setData(calculateEMA(data, 50));
+    }
 
     candlestickSeries.setData(formattedData)
     volumeSeries.setData(volumeData)
 
     chart.timeScale().fitContent()
     chartRef.current = chart
+    seriesRef.current = { candlestickSeries, volumeSeries, ema20Series, ema50Series }
 
     const handleResize = () => {
       if (chartContainerRef.current) {
@@ -123,9 +172,23 @@ const StockChart = ({ data, symbol }) => {
     }
   }, [data])
 
+  // Single effect to handle visibility toggles without full re-render of chart object
+  useEffect(() => {
+    if (seriesRef.current.volumeSeries) {
+      seriesRef.current.volumeSeries.applyOptions({ visible: showVolume })
+    }
+    if (seriesRef.current.ema20Series) {
+      seriesRef.current.ema20Series.applyOptions({ visible: showEMA20 })
+    }
+    if (seriesRef.current.ema50Series) {
+      seriesRef.current.ema50Series.applyOptions({ visible: showEMA50 })
+    }
+  }, [showVolume, showEMA20, showEMA50])
+
   return (
-    <div className="bg-zinc-950 rounded-[32px] p-2 h-full flex flex-col overflow-hidden border border-zinc-800 shadow-2xl">
-      <div className="flex justify-between items-center px-6 py-4 border-b border-zinc-800/50 bg-zinc-950/50 backdrop-blur-sm z-10">
+    <div className="bg-zinc-950 rounded-[32px] p-2 h-full flex flex-col overflow-hidden border border-zinc-800 shadow-2xl relative">
+      {/* Chart Header / Toolbar */}
+      <div className="flex flex-col md:flex-row justify-between md:items-center px-6 py-4 border-b border-zinc-800/50 bg-zinc-950/50 backdrop-blur-sm z-10 gap-4">
         <div className="flex items-center gap-4">
           <h3 className="text-[10px] font-black text-zinc-500 uppercase tracking-[0.4em]">{symbol} <span className="text-zinc-700 mx-2">/</span> MARKET PRO</h3>
           <div className="flex gap-1.5">
@@ -133,19 +196,46 @@ const StockChart = ({ data, symbol }) => {
             <div className="h-1.5 w-1.5 rounded-full bg-emerald-500" />
           </div>
         </div>
-        <div className="flex items-center gap-6">
-          <div className="flex items-center gap-2">
-            <span className="text-[9px] font-black text-zinc-600 uppercase tracking-widest">Execution</span>
-            <span className="text-[10px] font-black text-emerald-500 uppercase tabular-nums">Realtime</span>
-          </div>
-          <div className="px-3 py-1 bg-zinc-900 rounded-lg border border-zinc-800">
-            <span className="text-[10px] font-black text-zinc-400 uppercase tracking-widest">D1</span>
+
+        {/* Options Toolbar */}
+        <div className="flex flex-wrap items-center gap-2">
+          <button
+            onClick={() => setShowEMA20(!showEMA20)}
+            className={`px-3 py-1 rounded-lg border text-[9px] font-black uppercase tracking-widest transition-all flex items-center gap-2 ${showEMA20 ? 'bg-blue-500/10 border-blue-500/50 text-blue-500' : 'bg-zinc-900 border-zinc-800 text-zinc-600'}`}
+          >
+            <Zap className="h-3 w-3" /> EMA 20
+          </button>
+          <button
+            onClick={() => setShowEMA50(!showEMA50)}
+            className={`px-3 py-1 rounded-lg border text-[9px] font-black uppercase tracking-widest transition-all flex items-center gap-2 ${showEMA50 ? 'bg-violet-500/10 border-violet-500/50 text-violet-500' : 'bg-zinc-900 border-zinc-800 text-zinc-600'}`}
+          >
+            <Zap className="h-3 w-3" /> EMA 50
+          </button>
+          <button
+            onClick={() => setShowVolume(!showVolume)}
+            className={`px-3 py-1 rounded-lg border text-[9px] font-black uppercase tracking-widest transition-all flex items-center gap-2 ${showVolume ? 'bg-zinc-100 border-zinc-200 text-zinc-900' : 'bg-zinc-900 border-zinc-800 text-zinc-600'}`}
+          >
+            <BarChart3 className="h-3 w-3" /> Volume
+          </button>
+          <div className="h-4 w-px bg-zinc-800 mx-2 hidden sm:block" />
+          <div className="px-3 py-1 bg-zinc-900 rounded-lg border border-zinc-800 flex items-center gap-2">
+            <Activity className="h-3 w-3 text-emerald-500" />
+            <span className="text-[9px] font-black text-zinc-400 uppercase tracking-widest">D1 Interval</span>
           </div>
         </div>
       </div>
+
+      {/* Main Chart Area */}
       <div ref={chartContainerRef} className="w-full flex-grow relative" />
-      <div className="px-6 py-3 border-t border-zinc-800/50 bg-zinc-950 flex justify-between items-center">
-        <p className="text-[9px] font-bold text-zinc-600 uppercase tracking-widest">TradingView Engine v4.0</p>
+
+      {/* Chart Footer */}
+      <div className="px-6 py-3 border-t border-zinc-800/50 bg-zinc-950 flex flex-col sm:flex-row justify-between items-center gap-4">
+        <div className="flex items-center gap-4">
+          <p className="text-[9px] font-bold text-zinc-600 uppercase tracking-widest">TradingView Engine v4.0</p>
+          <span className="text-[9px] font-bold text-zinc-800 hidden sm:block">|</span>
+          <p className="text-[9px] font-bold text-zinc-600 uppercase tracking-widest">{data.length} Data Points Logged</p>
+        </div>
+
         <div className="flex items-center gap-4">
           <div className="flex items-center gap-2">
             <div className="w-2 h-2 rounded-[2px] bg-emerald-500/20 border border-emerald-500/50" />
@@ -154,6 +244,9 @@ const StockChart = ({ data, symbol }) => {
           <div className="flex items-center gap-2">
             <div className="w-2 h-2 rounded-[2px] bg-rose-500/20 border border-rose-500/50" />
             <span className="text-[9px] font-bold text-zinc-500 uppercase tracking-tighter">Bearish Pressure</span>
+          </div>
+          <div className="flex items-center gap-2 ml-4 px-2 py-0.5 bg-emerald-500/10 rounded border border-emerald-500/20">
+            <span className="text-[9px] font-black text-emerald-500 uppercase tracking-widest">Live Connect</span>
           </div>
         </div>
       </div>

@@ -87,10 +87,10 @@ const Market = () => {
         <div className="h-12 w-64 bg-zinc-100 animate-pulse rounded-2xl mb-8" />
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           {[1, 2, 3].map(i => (
-            <div key={i} className="h-48 bg-zinc-100 animate-pulse rounded-[32px]" />
+            <div key={i} className="h-48 bg-zinc-100 animate-pulse rounded-4xl" />
           ))}
         </div>
-        <div className="h-96 bg-zinc-50 animate-pulse rounded-[32px]" />
+        <div className="h-96 bg-zinc-50 animate-pulse rounded-4xl" />
       </div>
     )
   }
@@ -110,7 +110,7 @@ const Market = () => {
         </div>
 
         <div className="flex flex-wrap items-center gap-4">
-          <div className="relative group min-w-[300px]">
+          <div className="relative group min-w-75">
             <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-zinc-400 group-focus-within:text-zinc-900 transition-colors" />
             <input
               type="text"
@@ -131,7 +131,7 @@ const Market = () => {
 
       {/* Market Stats (Summary) */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <div className="bg-zinc-900 rounded-[32px] p-8 text-white relative overflow-hidden shadow-2xl group">
+        <div className="bg-zinc-900 rounded-4xl p-8 text-white relative overflow-hidden shadow-2xl group">
           <div className="relative z-10">
             <p className="text-zinc-400 font-black uppercase tracking-[0.2em] text-[10px] mb-4">Top Ticker</p>
             <h3 className="text-4xl font-black tracking-tighter mb-2">
@@ -149,7 +149,7 @@ const Market = () => {
           </div>
         </div>
 
-        <div className="bg-white border border-zinc-200 rounded-[32px] p-8 shadow-sm group hover:border-zinc-300 transition-all">
+        <div className="bg-white border border-zinc-200 rounded-4xl p-8 shadow-sm group hover:border-zinc-300 transition-all">
           <p className="text-zinc-400 font-black uppercase tracking-[0.2em] text-[10px] mb-4">Market Heat</p>
           <h3 className="text-4xl font-black tracking-tighter mb-2 text-zinc-900">
             {stocks.filter(s => s.changePercent > 0).length} / {stocks.length}
@@ -157,7 +157,7 @@ const Market = () => {
           <p className="text-zinc-500 font-bold text-sm">Securities currently in the green</p>
         </div>
 
-        <div className="bg-zinc-100 rounded-[32px] p-8 border border-zinc-200 shadow-sm relative overflow-hidden">
+        <div className="bg-zinc-100 rounded-4xl p-8 border border-zinc-200 shadow-sm relative overflow-hidden">
           <p className="text-zinc-400 font-black uppercase tracking-[0.2em] text-[10px] mb-4">Daily Volume</p>
           <h3 className="text-3xl font-black tracking-tighter mb-1 text-zinc-900">
             {stocks.reduce((sum, s) => sum + (s.volume || 0), 0).toLocaleString()}
@@ -182,6 +182,7 @@ const Market = () => {
               className="bg-zinc-50 border-none rounded-xl px-4 py-2 text-xs font-black uppercase tracking-tight focus:ring-2 focus:ring-zinc-900/5 transition-all text-zinc-600 cursor-pointer"
             >
               <option value="symbol">Symbol</option>
+              <option value="sector">Sector</option>
               <option value="lastPrice">Price</option>
               <option value="changePercent">Change</option>
               <option value="volume">Volume</option>
@@ -194,6 +195,7 @@ const Market = () => {
             <thead>
               <tr className="bg-zinc-50/50 border-b border-zinc-100">
                 <th className="px-10 py-6 text-xs font-black text-zinc-400 uppercase tracking-widest">Ticker Int</th>
+                <th className="px-6 py-6 text-xs font-black text-zinc-400 uppercase tracking-widest cursor-pointer hover:text-zinc-900" onClick={() => handleSort('sector')}>Sector</th>
                 <th className="px-6 py-6 text-xs font-black text-zinc-400 uppercase tracking-widest">Security Name</th>
                 <th className="px-6 py-6 text-right text-xs font-black text-zinc-400 uppercase tracking-widest cursor-pointer hover:text-zinc-900" onClick={() => handleSort('lastPrice')}>LTP</th>
                 <th className="px-6 py-6 text-right text-xs font-black text-zinc-400 uppercase tracking-widest cursor-pointer hover:text-zinc-900" onClick={() => handleSort('changePercent')}>Change</th>
@@ -215,7 +217,12 @@ const Market = () => {
                       </div>
                     </td>
                     <td className="px-6 py-6">
-                      <p className="text-sm font-bold text-zinc-500 uppercase tracking-tight truncate max-w-[200px]">{stock.name}</p>
+                      <span className="px-2.5 py-1 bg-zinc-100 text-zinc-600 text-[10px] font-black uppercase tracking-tight rounded-md border border-zinc-200">
+                        {stock.sector || 'N/A'}
+                      </span>
+                    </td>
+                    <td className="px-6 py-6">
+                      <p className="text-sm font-bold text-zinc-500 uppercase tracking-tight truncate max-w-50">{stock.name}</p>
                     </td>
                     <td className="px-6 py-6 text-right">
                       <p className="font-black text-zinc-900 tabular-nums">Rs. {stock.lastPrice?.toFixed(2)}</p>
@@ -283,8 +290,8 @@ const Market = () => {
                       key={pageNum}
                       onClick={() => goToPage(pageNum)}
                       className={`w-12 h-12 rounded-2xl text-sm font-black transition-all ${currentPage === pageNum
-                          ? 'bg-zinc-900 text-white shadow-lg'
-                          : 'bg-white border border-zinc-200 text-zinc-500 hover:border-zinc-900 hover:text-zinc-900'
+                        ? 'bg-zinc-900 text-white shadow-lg'
+                        : 'bg-white border border-zinc-200 text-zinc-500 hover:border-zinc-900 hover:text-zinc-900'
                         }`}
                     >
                       {pageNum}

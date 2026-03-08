@@ -1,8 +1,10 @@
 import { Nepse } from "@rumess/nepse-api";
 import axios from "axios";
+import https from "https";
 import StockPrice from "../models/StockPrice.js";
 
 const nepse = new Nepse();
+const agent = new https.Agent({ rejectUnauthorized: false });
 
 export const getMarketStatus = async (req, res) => {
   try {
@@ -72,47 +74,72 @@ export const getStockDetails = async (req, res) => {
 
 export const getStockHistory = async (req, res) => {
   try {
-    const { symbol } = req.params;
-
+    let { symbol } = req.params;
     if (!symbol || symbol === "undefined") {
       return res.status(400).json({ message: "Security symbol is required" });
     }
 
-    // Try to get more than the default 10 points by appending size parameter if possible
-    // Note: The library method doesn't support this, so we'll try to use the securityId directly
-    const securityId = (await nepse.getSecuritySymbolIdKeymap()).get(symbol);
+    symbol = symbol.toUpperCase();
+
+    // Map symbol to securityId
+    const keymap = await nepse.getSecuritySymbolIdKeymap();
+    const securityId = keymap.get(symbol);
+
     let rawHistory;
 
     if (securityId) {
-      // Manual fetch for more data points (last 300 days)
-      const accessToken = await nepse.tokenManager.getAccessToken();
-      const historyPromise = axios.get(`https://www.nepalstock.com.np/api/nots/market/security/price/${securityId}?size=300`, {
-        headers: {
-          'Authorization': `Salter ${accessToken}`,
-          ...nepse.headers
-        }
-      }).then(r => r.data).catch(() => nepse.getSecurityPriceVolumeHistory(symbol)); // Fallback to library
-
-      const timeoutPromise = new Promise((resolve) => setTimeout(() => resolve({ content: [] }), 30000));
-      rawHistory = await Promise.race([historyPromise, timeoutPromise]);
+      try {
+        // Try getting a larger size for manual fetch
+        const accessToken = await nepse.tokenManager.getAccessToken();
+        const response = await axios.get(`https://www.nepalstock.com.np/api/nots/market/security/price/${securityId}?size=500`, {
+          headers: {
+            'Authorization': `Salter ${accessToken}`,
+            ...nepse.headers
+          },
+          httpsAgent: agent,
+          timeout: 10000
+        });
+        rawHistory = response.data;
+      } catch (err) {
+        console.warn(`Manual history fetch failed for ${symbol}, falling back to library:`, err.message);
+        rawHistory = await nepse.getSecurityPriceVolumeHistory(symbol);
+      }
     } else {
       rawHistory = await nepse.getSecurityPriceVolumeHistory(symbol);
     }
+
     let history = [];
 
     if (rawHistory && Array.isArray(rawHistory.content)) {
-      history = rawHistory.content.map(item => ({
-        date: item.businessDate,
-        open: item.openPrice,
-        high: item.highPrice,
-        low: item.lowPrice,
-        close: item.closePrice,
-        volume: item.totalTradedQuantity
-      })).reverse(); // Sort so the earliest date is first, as required by the chart
+      history = rawHistory.content
+        .filter(item => item.businessDate && item.closePrice) // Guard against invalid data
+        .map(item => ({
+          date: item.businessDate.split('T')[0], // Ensure YYYY-MM-DD
+          open: Number(item.openPrice) || 0,
+          high: Number(item.highPrice) || 0,
+          low: Number(item.lowPrice) || 0,
+          close: Number(item.closePrice) || 0,
+          volume: Number(item.totalTradedQuantity) || 0
+        }));
+
+      // Sort chronological (Oldest -> Newest) for lightweight-charts
+      history.sort((a, b) => new Date(a.date) - new Date(b.date));
     }
 
-    res.json(history);
+    // Secondary Guard: If data is not strictly increasing, lightweight-charts will fail.
+    // Ensure uniqueness and strict order.
+    const uniqueHistory = [];
+    const seenDates = new Set();
+    for (const entry of history) {
+      if (!seenDates.has(entry.date)) {
+        uniqueHistory.push(entry);
+        seenDates.add(entry.date);
+      }
+    }
+
+    res.json(uniqueHistory);
   } catch (error) {
+    console.error(`Error in getStockHistory for ${req.params.symbol}:`, error);
     res.status(500).json({ message: error.message });
   }
 };
@@ -122,6 +149,16 @@ export const getAllStocks = async (req, res) => {
     const stocks = await StockPrice.find().sort({ symbol: 1 });
     res.json(stocks);
   } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+export const getSectorIndices = async (req, res) => {
+  try {
+    const sectors = await nepse.getNepseSubIndices();
+    res.json(sectors);
+  } catch (error) {
+    console.error('Error fetching sector indices:', error);
     res.status(500).json({ message: error.message });
   }
 };

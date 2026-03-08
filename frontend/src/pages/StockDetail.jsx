@@ -3,6 +3,7 @@ import { useParams, Link } from 'react-router-dom'
 import axios from 'axios'
 import { ArrowLeft, TrendingUp, TrendingDown, Activity, DollarSign, BarChart3 } from 'lucide-react'
 import StockChart from '../components/Charts/StockChart'
+import SectorIndices from '../components/Charts/SectorIndices'
 
 const StockDetail = () => {
   const { symbol } = useParams()
@@ -43,11 +44,11 @@ const StockDetail = () => {
 
   return (
     <div className="animate-fade-in-up space-y-12 pb-12">
-      <Link to="/" className="inline-flex items-center space-x-3 text-zinc-400 hover:text-zinc-900 font-bold transition-all group">
+      <Link to="/" className="inline-flex items-center space-x-3 text-zinc-400 font-bold transition-all group">
         <div className="p-2 bg-zinc-50 rounded-xl group-hover:bg-zinc-100">
           <ArrowLeft className="h-5 w-5" />
         </div>
-        <span className="text-sm uppercase tracking-widest">Back to Terminal</span>
+        <span className="text-sm uppercase tracking-widest group-hover:text-zinc-900">Back to Terminal</span>
       </Link>
 
       <div className="bg-white border border-zinc-100 rounded-[32px] p-10 shadow-sm">
@@ -110,17 +111,35 @@ const StockDetail = () => {
         </div>
       </div>
 
-      <div className="bg-zinc-950 border border-zinc-800 rounded-[32px] p-2 shadow-2xl h-[600px] overflow-hidden group">
-        {history.length > 0 ? (
-          <StockChart data={history} symbol={symbol} />
-        ) : (
-          <div className="h-full flex flex-col items-center justify-center space-y-4">
-            <div className="p-4 bg-zinc-900 rounded-2xl border border-zinc-800 animate-pulse">
-              <Activity className="h-8 w-8 text-zinc-700" />
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 h-[600px]">
+        <div className="lg:col-span-9 bg-zinc-950 border border-zinc-800 rounded-[32px] p-2 shadow-2xl overflow-hidden group">
+          {history.length > 0 ? (
+            <StockChart data={history} symbol={symbol} />
+          ) : (
+            <div className="h-full flex flex-col items-center justify-center space-y-4">
+              <div className="p-4 bg-zinc-900 rounded-2xl border border-zinc-800 animate-pulse">
+                <Activity className="h-8 w-8 text-zinc-700" />
+              </div>
+              <p className="text-[10px] font-black text-zinc-600 uppercase tracking-[0.3em]">Historical Analysis unavailable for this security</p>
             </div>
-            <p className="text-[10px] font-black text-zinc-600 uppercase tracking-[0.3em]">Historical Analysis unavailable for this security</p>
+          )}
+        </div>
+
+        {/* Sector Stats */}
+        <div className="lg:col-span-3 bg-white border border-zinc-100 rounded-[32px] p-6 shadow-sm overflow-hidden flex flex-col min-h-[400px]">
+          <div className="flex items-center justify-between mb-6">
+            <h3 className="text-[10px] font-black text-zinc-400 uppercase tracking-[0.2em]">Sector Wise Pricing</h3>
+            <div className={`w-2 h-2 rounded-full ${details ? 'bg-emerald-500 animate-pulse' : 'bg-zinc-200'}`} />
           </div>
-        )}
+          <div className="flex-grow overflow-hidden">
+            <SectorIndices />
+          </div>
+          <div className="mt-4 pt-4 border-t border-zinc-50">
+            <p className="text-[9px] font-bold text-zinc-300 uppercase leading-relaxed text-center">
+              Real-time NEPSE sub-indices data
+            </p>
+          </div>
+        </div>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8">

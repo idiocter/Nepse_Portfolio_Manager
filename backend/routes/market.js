@@ -6,6 +6,7 @@ import {
   getStockDetails,
   getStockHistory,
   getAllStocks,
+  getSectorIndices,
 } from "../controllers/marketController.js";
 import { protect } from "../middleware/auth.js";
 
@@ -15,6 +16,7 @@ router.get("/status", getMarketStatus);
 router.get("/gainers", getTopGainers);
 router.get("/losers", getTopLosers);
 router.get("/stocks", getAllStocks);
+router.get("/sectors", getSectorIndices);
 router.get("/stock/:symbol", protect, getStockDetails);
 router.get("/history/:symbol", protect, getStockHistory);
 

@@ -10,6 +10,7 @@ const stockPriceSchema = new mongoose.Schema({
   previousClose: Number,
   change: Number,
   changePercent: Number,
+  sector: String,
   volume: Number,
   lastUpdated: { type: Date, default: Date.now },
 });
