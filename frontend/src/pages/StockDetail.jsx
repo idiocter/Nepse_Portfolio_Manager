@@ -113,8 +113,9 @@ const StockDetail = () => {
         </div>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 h-[600px]">
-        <div className="lg:col-span-9 bg-zinc-950 border border-zinc-800 rounded-[32px] p-2 shadow-2xl overflow-hidden group">
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:h-[600px]">
+        <div className="lg:col-span-9 h-[450px] lg:h-full bg-zinc-950 border border-zinc-800 rounded-[32px] p-2 shadow-2xl overflow-hidden group">
+
           {history.length > 0 ? (
             <StockChart data={history} symbol={symbol} />
           ) : (

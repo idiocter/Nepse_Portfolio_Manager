@@ -188,68 +188,72 @@ const StockChart = ({ data, symbol }) => {
   return (
     <div className="bg-zinc-950 rounded-[32px] p-2 h-full flex flex-col overflow-hidden border border-zinc-800 shadow-2xl relative">
       {/* Chart Header / Toolbar */}
-      <div className="flex flex-col md:flex-row justify-between md:items-center px-6 py-4 border-b border-zinc-800/50 bg-zinc-950/50 backdrop-blur-sm z-10 gap-4">
-        <div className="flex items-center gap-4">
-          <h3 className="text-[10px] font-black text-zinc-500 uppercase tracking-[0.4em]">{symbol} <span className="text-zinc-700 mx-2">/</span> MARKET PRO</h3>
-          <div className="flex gap-1.5">
-            <div className="h-1.5 w-1.5 rounded-full bg-emerald-500/50" />
-            <div className="h-1.5 w-1.5 rounded-full bg-emerald-500" />
+      <div className="flex flex-col sm:flex-row justify-between sm:items-center px-4 sm:px-6 py-3 sm:py-4 border-b border-zinc-800/50 bg-zinc-950/50 backdrop-blur-sm z-10 gap-3">
+        <div className="flex items-center gap-3">
+          <h3 className="text-[9px] sm:text-[10px] font-black text-zinc-500 uppercase tracking-[0.2em] sm:tracking-[0.4em]">
+            {symbol} <span className="text-zinc-700 mx-1 sm:mx-2">/</span> <span className="hidden xs:inline">MARKET PRO</span>
+          </h3>
+          <div className="flex gap-1">
+            <div className="h-1 w-1 sm:h-1.5 sm:w-1.5 rounded-full bg-emerald-500/50" />
+            <div className="h-1 w-1 sm:h-1.5 sm:w-1.5 rounded-full bg-emerald-500" />
           </div>
         </div>
 
         {/* Options Toolbar */}
-        <div className="flex flex-wrap items-center gap-2">
+        <div className="flex flex-wrap items-center gap-1.5 sm:gap-2">
           <button
             onClick={() => setShowEMA20(!showEMA20)}
-            className={`px-3 py-1 rounded-lg border text-[9px] font-black uppercase tracking-widest transition-all flex items-center gap-2 ${showEMA20 ? 'bg-blue-500/10 border-blue-500/50 text-blue-500' : 'bg-zinc-900 border-zinc-800 text-zinc-600'}`}
+            className={`px-2 sm:px-3 py-1 rounded-lg border text-[8px] sm:text-[9px] font-black uppercase tracking-widest transition-all flex items-center gap-1.5 ${showEMA20 ? 'bg-blue-500/10 border-blue-500/50 text-blue-500' : 'bg-zinc-900 border-zinc-800 text-zinc-600'}`}
           >
-            <Zap className="h-3 w-3" /> EMA 20
+            <Zap className="h-2.5 w-2.5 sm:h-3 sm:w-3" /> EMA 20
           </button>
           <button
             onClick={() => setShowEMA50(!showEMA50)}
-            className={`px-3 py-1 rounded-lg border text-[9px] font-black uppercase tracking-widest transition-all flex items-center gap-2 ${showEMA50 ? 'bg-violet-500/10 border-violet-500/50 text-violet-500' : 'bg-zinc-900 border-zinc-800 text-zinc-600'}`}
+            className={`px-2 sm:px-3 py-1 rounded-lg border text-[8px] sm:text-[9px] font-black uppercase tracking-widest transition-all flex items-center gap-1.5 ${showEMA50 ? 'bg-violet-500/10 border-violet-500/50 text-violet-500' : 'bg-zinc-900 border-zinc-800 text-zinc-600'}`}
           >
-            <Zap className="h-3 w-3" /> EMA 50
+            <Zap className="h-2.5 w-2.5 sm:h-3 sm:w-3" /> EMA 50
           </button>
           <button
             onClick={() => setShowVolume(!showVolume)}
-            className={`px-3 py-1 rounded-lg border text-[9px] font-black uppercase tracking-widest transition-all flex items-center gap-2 ${showVolume ? 'bg-zinc-100 border-zinc-200 text-zinc-900' : 'bg-zinc-900 border-zinc-800 text-zinc-600'}`}
+            className={`px-2 sm:px-3 py-1 rounded-lg border text-[8px] sm:text-[9px] font-black uppercase tracking-widest transition-all flex items-center gap-1.5 ${showVolume ? 'bg-zinc-100 border-zinc-200 text-zinc-900' : 'bg-zinc-900 border-zinc-800 text-zinc-600'}`}
           >
-            <BarChart3 className="h-3 w-3" /> Volume
+            <BarChart3 className="h-2.5 w-2.5 sm:h-3 sm:w-3" /> <span className="hidden xs:inline">Volume</span>
           </button>
-          <div className="h-4 w-px bg-zinc-800 mx-2 hidden sm:block" />
-          <div className="px-3 py-1 bg-zinc-900 rounded-lg border border-zinc-800 flex items-center gap-2">
-            <Activity className="h-3 w-3 text-emerald-500" />
-            <span className="text-[9px] font-black text-zinc-400 uppercase tracking-widest">D1 Interval</span>
+          <div className="h-4 w-px bg-zinc-800 mx-1 sm:mx-2 hidden sm:block" />
+          <div className="px-2 sm:px-3 py-1 bg-zinc-900 rounded-lg border border-zinc-800 flex items-center gap-1.5">
+            <Activity className="h-2.5 w-2.5 sm:h-3 sm:w-3 text-emerald-500" />
+            <span className="text-[8px] sm:text-[9px] font-black text-zinc-400 uppercase tracking-widest">D1</span>
           </div>
         </div>
       </div>
 
       {/* Main Chart Area */}
-      <div ref={chartContainerRef} className="w-full flex-grow relative" />
+      <div ref={chartContainerRef} className="w-full flex-grow relative min-h-[250px]" />
 
       {/* Chart Footer */}
-      <div className="px-6 py-3 border-t border-zinc-800/50 bg-zinc-950 flex flex-col sm:flex-row justify-between items-center gap-4">
-        <div className="flex items-center gap-4">
-          <p className="text-[9px] font-bold text-zinc-600 uppercase tracking-widest">TradingView Engine v4.0</p>
-          <span className="text-[9px] font-bold text-zinc-800 hidden sm:block">|</span>
-          <p className="text-[9px] font-bold text-zinc-600 uppercase tracking-widest">{data.length} Data Points Logged</p>
+      <div className="px-4 sm:px-6 py-2.5 sm:py-3 border-t border-zinc-800/50 bg-zinc-950 flex justify-between items-center gap-4">
+        <div className="flex items-center gap-3 sm:gap-4">
+          <p className="text-[8px] sm:text-[9px] font-bold text-zinc-600 uppercase tracking-widest">TV Engine v4.0</p>
+          <span className="text-[8px] sm:text-[9px] font-bold text-zinc-800">|</span>
+          <p className="text-[8px] sm:text-[9px] font-bold text-zinc-600 uppercase tracking-widest">{data.length} Pts</p>
         </div>
 
-        <div className="flex items-center gap-4">
-          <div className="flex items-center gap-2">
-            <div className="w-2 h-2 rounded-[2px] bg-emerald-500/20 border border-emerald-500/50" />
-            <span className="text-[9px] font-bold text-zinc-500 uppercase tracking-tighter">Bullish Intensity</span>
+        <div className="flex items-center gap-3 sm:gap-4">
+          <div className="hidden xs:flex items-center gap-2">
+            <div className="w-1.5 h-1.5 sm:w-2 sm:h-2 rounded-[2px] bg-emerald-500/20 border border-emerald-500/50" />
+            <span className="text-[8px] sm:text-[9px] font-bold text-zinc-500 uppercase tracking-tighter">Bull</span>
           </div>
-          <div className="flex items-center gap-2">
-            <div className="w-2 h-2 rounded-[2px] bg-rose-500/20 border border-rose-500/50" />
-            <span className="text-[9px] font-bold text-zinc-500 uppercase tracking-tighter">Bearish Pressure</span>
+          <div className="hidden xs:flex items-center gap-2">
+            <div className="w-1.5 h-1.5 sm:w-2 sm:h-2 rounded-[2px] bg-rose-500/20 border border-rose-500/50" />
+            <span className="text-[8px] sm:text-[9px] font-bold text-zinc-500 uppercase tracking-tighter">Bear</span>
           </div>
-          <div className="flex items-center gap-2 ml-4 px-2 py-0.5 bg-emerald-500/10 rounded border border-emerald-500/20">
-            <span className="text-[9px] font-black text-emerald-500 uppercase tracking-widest">Live Connect</span>
+          <div className="flex items-center gap-1.5 sm:gap-2 px-1.5 sm:px-2 py-0.5 bg-emerald-500/10 rounded border border-emerald-500/20">
+            <div className="w-1 h-1 rounded-full bg-emerald-500 animate-pulse" />
+            <span className="text-[8px] sm:text-[9px] font-black text-emerald-500 uppercase tracking-widest">Live</span>
           </div>
         </div>
       </div>
+
     </div>
   )
 }
