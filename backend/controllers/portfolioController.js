@@ -9,20 +9,22 @@ export const getHoldings = async (req, res) => {
     const holdingsWithPrices = user.holdings.map((holding) => {
       const priceData = prices.find((p) => p.symbol === holding.symbol);
       const currentPrice = priceData?.lastPrice || holding.avgPrice;
-      const sector = priceData?.sector || "N/A";
+      const indexId = priceData?.indexId || null;
+      const sector = priceData?.sector || "Others";
       const investment = holding.quantity * holding.avgPrice;
       const currentValue = holding.quantity * currentPrice;
 
       return {
         ...holding.toObject(),
         currentPrice,
+        indexId,
         sector,
-        change: currentPrice - holding.avgPrice,
-        changePercent:
-          ((currentPrice - holding.avgPrice) / holding.avgPrice) * 100,
         investment,
         currentValue,
         pnl: currentValue - investment,
+        change: currentPrice - holding.avgPrice,
+        changePercent:
+          ((currentPrice - holding.avgPrice) / holding.avgPrice) * 100,
       };
     });
 

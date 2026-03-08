@@ -7,6 +7,13 @@ export const updateLivePrices = async () => {
   try {
     const liveData = await nepse.getLiveMarket();
 
+    const SECTOR_ID_MAP = {
+      51: 'Banking', 52: 'Hotels', 54: 'Hydro', 55: 'Dev Bank',
+      56: 'Manufacturing', 59: 'Non-Life Insurance', 60: 'Finance',
+      61: 'Trading', 64: 'Microfinance', 65: 'Life Insurance',
+      66: 'Mutual Fund', 67: 'Investment'
+    };
+
     const bulkOps = liveData.map((stock) => ({
       updateOne: {
         filter: { symbol: stock.symbol },
@@ -24,6 +31,8 @@ export const updateLivePrices = async () => {
             ),
             changePercent: stock.percentageChange,
             volume: stock.totalTradeQuantity,
+            indexId: stock.indexId,
+            sector: SECTOR_ID_MAP[stock.indexId] || 'Others',
             lastUpdated: new Date(),
           },
         },

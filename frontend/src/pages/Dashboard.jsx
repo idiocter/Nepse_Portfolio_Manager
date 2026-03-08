@@ -5,12 +5,12 @@ import PortfolioSummary from '../components/Dashboard/PortfolioSummary'
 import AllocationChart from '../components/Dashboard/AllocationChart'
 import HoldingsTable from '../components/Dashboard/HoldingsTable'
 import TopMovers from '../components/Dashboard/TopMovers'
-import { 
-  LayoutDashboard, 
-  Clock, 
-  RefreshCw, 
-  TrendingUp, 
-  TrendingDown, 
+import {
+  LayoutDashboard,
+  Clock,
+  RefreshCw,
+  TrendingUp,
+  TrendingDown,
   Wallet,
   PieChart,
   Activity,
@@ -180,7 +180,7 @@ const Dashboard = () => {
 
         {/* Sidebar - Sticky to prevent scroll issues */}
         <div className="lg:col-span-4 space-y-6 lg:sticky lg:top-6">
-          {/* Allocation Chart - Won't re-render on timestamp updates */}
+          {/* Allocation Chart */}
           <div className="bg-white border border-zinc-200 rounded-3xl shadow-sm p-6">
             <div className="flex items-center gap-3 mb-4">
               <PieChart className="h-5 w-5 text-zinc-700" />
