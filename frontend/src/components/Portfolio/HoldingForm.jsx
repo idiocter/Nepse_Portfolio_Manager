@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
-import axios from 'axios'
+import marketService from '../../services/marketService'
+import portfolioService from '../../services/portfolioService'
 import { X, Search, ArrowUpRight } from 'lucide-react'
 
 const HoldingForm = ({ onClose, onSuccess, editingHolding = null }) => {
@@ -27,7 +28,7 @@ const HoldingForm = ({ onClose, onSuccess, editingHolding = null }) => {
 
   const fetchStocks = async () => {
     try {
-      const { data } = await axios.get(`${import.meta.env.VITE_API_URL}/api/market/stocks`)
+      const data = await marketService.getStocks()
       setStocks(data)
     } catch (error) {
       console.error('Error fetching stocks:', error)
@@ -39,13 +40,9 @@ const HoldingForm = ({ onClose, onSuccess, editingHolding = null }) => {
     setLoading(true)
     try {
       if (editingHolding) {
-        await axios.put(`${import.meta.env.VITE_API_URL}/api/portfolio/${symbol}`, {
-          quantity: Number(quantity), avgPrice: Number(avgPrice)
-        })
+        await portfolioService.editHolding(symbol, Number(quantity), Number(avgPrice))
       } else {
-        await axios.post(`${import.meta.env.VITE_API_URL}/api/portfolio`, {
-          symbol: symbol.toUpperCase(), quantity: Number(quantity), avgPrice: Number(avgPrice)
-        })
+        await portfolioService.addHolding(symbol.toUpperCase(), Number(quantity), Number(avgPrice))
       }
       onSuccess()
       onClose()

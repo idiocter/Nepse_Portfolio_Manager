@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
-import axios from 'axios'
+import marketService from '../../services/marketService'
+import { formatPercent } from '../../utils/formatters'
 import { TrendingUp, TrendingDown, Activity } from 'lucide-react'
 
 const SectorIndices = () => {
@@ -9,7 +10,7 @@ const SectorIndices = () => {
     useEffect(() => {
         const fetchSectors = async () => {
             try {
-                const { data } = await axios.get(`${import.meta.env.VITE_API_URL}/api/market/sectors`)
+                const data = await marketService.getSectorIndices()
                 setSectors(data)
             } catch (error) {
                 console.error('Error fetching sectors:', error)
@@ -17,6 +18,7 @@ const SectorIndices = () => {
                 setLoading(false)
             }
         }
+
 
         fetchSectors()
         const interval = setInterval(fetchSectors, 60000) // update every minute
@@ -53,12 +55,13 @@ const SectorIndices = () => {
                             <div className={`flex flex-col items-end px-3 py-1 rounded-xl ${isPositive ? 'bg-emerald-50 text-emerald-600' : 'bg-rose-50 text-rose-600'}`}>
                                 <div className="flex items-center gap-1 font-black text-[10px] tabular-nums">
                                     {isPositive ? <TrendingUp className="h-3 w-3" /> : <TrendingDown className="h-3 w-3" />}
-                                    {isPositive ? '+' : ''}{sector.perChange.toFixed(2)}%
+                                    {formatPercent(sector.perChange)}
                                 </div>
                                 <span className="text-[9px] font-bold opacity-70 tabular-nums">
                                     {isPositive ? '+' : ''}{sector.change.toFixed(2)}
                                 </span>
                             </div>
+
                         </div>
                     )
                 })}

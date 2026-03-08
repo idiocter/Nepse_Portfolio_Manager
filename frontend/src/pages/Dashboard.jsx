@@ -1,6 +1,7 @@
 import { useState, useEffect, useCallback } from 'react'
-import axios from 'axios'
 import { useAuth } from '../contexts/AuthContext'
+import portfolioService from '../services/portfolioService'
+import { formatTime } from '../utils/formatters'
 import PortfolioSummary from '../components/Dashboard/PortfolioSummary'
 import AllocationChart from '../components/Dashboard/AllocationChart'
 import HoldingsTable from '../components/Dashboard/HoldingsTable'
@@ -30,7 +31,7 @@ const Dashboard = () => {
   // Separate data fetching from timestamp updates
   const fetchPortfolio = useCallback(async () => {
     try {
-      const { data } = await axios.get(`${import.meta.env.VITE_API_URL}/api/portfolio`)
+      const data = await portfolioService.getHoldings()
       setPortfolio(data)
       setLastUpdated(new Date())
     } catch (error) {
@@ -90,7 +91,7 @@ const Dashboard = () => {
           </h1>
           <div className="flex items-center gap-2 mt-2 text-sm font-bold text-zinc-400 uppercase tracking-widest">
             <Clock className="h-4 w-4" />
-            Live Analytics • {lastUpdated.toLocaleTimeString()}
+            Live Analytics • {formatTime(lastUpdated)}
           </div>
         </div>
         <button
@@ -100,6 +101,7 @@ const Dashboard = () => {
           <RefreshCw className="h-4 w-4" /> Refresh Data
         </button>
       </div>
+
 
       {/* Quick Stats */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">

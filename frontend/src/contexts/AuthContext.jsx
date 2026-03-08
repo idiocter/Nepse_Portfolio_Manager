@@ -1,5 +1,6 @@
 import { createContext, useState, useContext, useEffect } from 'react'
-import axios from 'axios'
+import authService from '../services/authService'
+import api from '../services/api'
 
 const AuthContext = createContext(null)
 
@@ -10,7 +11,6 @@ export const AuthProvider = ({ children }) => {
   useEffect(() => {
     const token = localStorage.getItem('token')
     if (token) {
-      axios.defaults.headers.common['Authorization'] = `Bearer ${token}`
       fetchUser()
     } else {
       setLoading(false)
@@ -19,7 +19,7 @@ export const AuthProvider = ({ children }) => {
 
   const fetchUser = async () => {
     try {
-      const { data } = await axios.get(`${import.meta.env.VITE_API_URL}/api/auth/me`)
+      const data = await authService.getCurrentUser()
       setUser(data)
     } catch (error) {
       logout()
@@ -29,41 +29,31 @@ export const AuthProvider = ({ children }) => {
   }
 
   const login = async (email, password) => {
-    const { data } = await axios.post(`${import.meta.env.VITE_API_URL}/api/auth/login`, {
-      email,
-      password
-    })
+    const data = await authService.login(email, password)
     localStorage.setItem('token', data.token)
-    axios.defaults.headers.common['Authorization'] = `Bearer ${data.token}`
     setUser(data.user)
     return data
   }
 
   const googleLogin = async (tokenData) => {
-    const { data } = await axios.post(`${import.meta.env.VITE_API_URL}/api/auth/google`, tokenData)
+    const data = await authService.googleLogin(tokenData)
     localStorage.setItem('token', data.token)
-    axios.defaults.headers.common['Authorization'] = `Bearer ${data.token}`
     setUser(data.user)
     return data
   }
 
   const register = async (name, email, password) => {
-    const { data } = await axios.post(`${import.meta.env.VITE_API_URL}/api/auth/register`, {
-      name,
-      email,
-      password
-    })
+    const data = await authService.register(name, email, password)
     localStorage.setItem('token', data.token)
-    axios.defaults.headers.common['Authorization'] = `Bearer ${data.token}`
     setUser(data.user)
     return data
   }
 
   const logout = () => {
-    localStorage.removeItem('token')
-    delete axios.defaults.headers.common['Authorization']
+    authService.logout()
     setUser(null)
   }
+
 
   return (
     <AuthContext.Provider value={{ user, login, logout, register, googleLogin, loading }}>

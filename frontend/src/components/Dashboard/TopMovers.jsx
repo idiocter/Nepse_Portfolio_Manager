@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
-import axios from 'axios'
+import marketService from '../../services/marketService'
+import { formatCurrency, formatPercent } from '../../utils/formatters'
 import { TrendingUp, TrendingDown } from 'lucide-react'
 
 const TopMovers = () => {
@@ -15,16 +16,17 @@ const TopMovers = () => {
 
   const fetchMovers = async () => {
     try {
-      const [gainersRes, losersRes] = await Promise.all([
-        axios.get(`${import.meta.env.VITE_API_URL}/api/market/gainers`),
-        axios.get(`${import.meta.env.VITE_API_URL}/api/market/losers`)
+      const [gainersData, losersData] = await Promise.all([
+        marketService.getGainers(),
+        marketService.getLosers()
       ])
-      setGainers(gainersRes.data)
-      setLosers(losersRes.data)
+      setGainers(gainersData)
+      setLosers(losersData)
     } catch (error) {
       console.error('Error fetching movers:', error)
     }
   }
+
 
   const data = activeTab === 'gainers' ? gainers : losers
   const isGainers = activeTab === 'gainers'
@@ -61,11 +63,12 @@ const TopMovers = () => {
               </div>
             </div>
             <div className="text-right">
-              <p className="font-black text-zinc-900 tabular-nums">Rs. {stock.lastPrice?.toFixed(2)}</p>
+              <p className="font-black text-zinc-900 tabular-nums">{formatCurrency(stock.lastPrice)}</p>
               <p className={`text-sm font-black tabular-nums ${isGainers ? 'text-emerald-600' : 'text-rose-600'}`}>
-                {isGainers ? '+' : ''}{stock.changePercent?.toFixed(2)}%
+                {formatPercent(stock.changePercent)}
               </p>
             </div>
+
           </div>
         ))}
         {data.length === 0 && (

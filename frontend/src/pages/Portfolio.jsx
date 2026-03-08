@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
-import axios from 'axios'
+import portfolioService from '../services/portfolioService'
+import { formatCurrency, formatPercent, formatVolume } from '../utils/formatters'
 import { Plus, Pencil, Trash2 } from 'lucide-react'
 import HoldingForm from '../components/Portfolio/HoldingForm'
 
@@ -14,7 +15,7 @@ const Portfolio = () => {
 
   const fetchHoldings = async () => {
     try {
-      const { data } = await axios.get(`${import.meta.env.VITE_API_URL}/api/portfolio`)
+      const data = await portfolioService.getHoldings()
       setHoldings(data.holdings)
       setSummary(data.summary)
     } catch (error) {
@@ -27,13 +28,14 @@ const Portfolio = () => {
   const handleDelete = async (symbol) => {
     if (!confirm(`Are you sure you want to delete ${symbol}?`)) return
     try {
-      await axios.delete(`${import.meta.env.VITE_API_URL}/api/portfolio/${symbol}`)
+      await portfolioService.deleteHolding(symbol)
       fetchHoldings()
     } catch (error) { alert('Error deleting holding') }
   }
 
   const handleEdit = (holding) => { setEditingHolding(holding); setShowForm(true) }
   const handleAdd = () => { setEditingHolding(null); setShowForm(true) }
+
 
   if (loading) {
     return (
@@ -77,12 +79,13 @@ const Portfolio = () => {
               {holdings.map((holding) => (
                 <tr key={holding._id} className="hover:bg-zinc-50/50 transition-colors">
                   <td className="px-8 py-5 font-black text-zinc-900 uppercase tracking-tight">{holding.symbol}</td>
-                  <td className="px-6 py-5 text-right font-bold text-zinc-600 tabular-nums">{holding.quantity}</td>
-                  <td className="px-6 py-5 text-right text-zinc-500 tabular-nums font-medium">Rs. {holding.avgPrice?.toFixed(2)}</td>
-                  <td className="px-6 py-5 text-right font-black text-zinc-900 tabular-nums">Rs. {holding.currentPrice?.toFixed(2)}</td>
+                  <td className="px-6 py-5 text-right font-bold text-zinc-600 tabular-nums">{formatVolume(holding.quantity)}</td>
+                  <td className="px-6 py-5 text-right text-zinc-500 tabular-nums font-medium">{formatCurrency(holding.avgPrice || 0)}</td>
+                  <td className="px-6 py-5 text-right font-black text-zinc-900 tabular-nums">{formatCurrency(holding.currentPrice || 0)}</td>
                   <td className={`px-6 py-5 text-right font-black tabular-nums ${holding.pnl >= 0 ? 'text-emerald-600' : 'text-rose-600'}`}>
                     {holding.pnl >= 0 ? '+' : ''}{holding.pnl?.toLocaleString()}
                   </td>
+
                   <td className="px-8 py-5">
                     <div className="flex items-center justify-center gap-2">
                       <button

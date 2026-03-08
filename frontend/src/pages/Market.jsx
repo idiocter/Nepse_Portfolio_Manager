@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
-import axios from 'axios'
+import marketService from '../services/marketService'
+import { formatCurrency, formatPercent, formatVolume } from '../utils/formatters'
 import {
   Search,
   TrendingUp,
@@ -31,7 +32,7 @@ const Market = () => {
   const fetchStocks = async () => {
     setLoading(true)
     try {
-      const { data } = await axios.get(`${import.meta.env.VITE_API_URL}/api/market/stocks`)
+      const data = await marketService.getStocks()
       setStocks(data || [])
     } catch (error) {
       console.error('Error fetching market stocks:', error)
@@ -39,6 +40,7 @@ const Market = () => {
       setLoading(false)
     }
   }
+
 
   const handleSort = (field) => {
     if (sortBy === field) {
@@ -225,17 +227,18 @@ const Market = () => {
                       <p className="text-sm font-bold text-zinc-500 uppercase tracking-tight truncate max-w-50">{stock.name}</p>
                     </td>
                     <td className="px-6 py-6 text-right">
-                      <p className="font-black text-zinc-900 tabular-nums">Rs. {stock.lastPrice?.toFixed(2)}</p>
+                      <p className="font-black text-zinc-900 tabular-nums">{formatCurrency(stock.lastPrice)}</p>
                     </td>
                     <td className="px-6 py-6 text-right">
                       <div className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[10px] font-black ${isPositive ? 'bg-emerald-50 text-emerald-600' : 'bg-rose-50 text-rose-600'}`}>
                         {isPositive ? <TrendingUp className="h-3 w-3" /> : <TrendingDown className="h-3 w-3" />}
-                        {isPositive ? '+' : ''}{stock.changePercent?.toFixed(2)}%
+                        {formatPercent(stock.changePercent)}
                       </div>
                     </td>
                     <td className="px-6 py-6 text-right">
-                      <p className="text-xs font-bold text-zinc-400 tabular-nums">{stock.volume?.toLocaleString()}</p>
+                      <p className="text-xs font-bold text-zinc-400 tabular-nums">{formatVolume(stock.volume)}</p>
                     </td>
+
                     <td className="px-10 py-6 text-center">
                       <Link
                         to={`/stock/${stock.symbol}`}

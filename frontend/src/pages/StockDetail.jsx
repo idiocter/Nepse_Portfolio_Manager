@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import { useParams, Link } from 'react-router-dom'
-import axios from 'axios'
+import marketService from '../services/marketService'
+import { formatCurrency, formatPercent, formatVolume, formatDate, formatTime } from '../utils/formatters'
 import { ArrowLeft, TrendingUp, TrendingDown, Activity, DollarSign, BarChart3 } from 'lucide-react'
 import StockChart from '../components/Charts/StockChart'
 import SectorIndices from '../components/Charts/SectorIndices'
@@ -18,12 +19,12 @@ const StockDetail = () => {
   const fetchStockData = async () => {
     if (!symbol || symbol === 'undefined') return;
     try {
-      const [detailsRes, historyRes] = await Promise.all([
-        axios.get(`${import.meta.env.VITE_API_URL}/api/market/stock/${symbol}`),
-        axios.get(`${import.meta.env.VITE_API_URL}/api/market/history/${symbol}`)
+      const [detailsData, historyData] = await Promise.all([
+        marketService.getStockDetail(symbol),
+        marketService.getChartData(symbol)
       ])
-      setDetails(detailsRes.data)
-      setHistory(historyRes.data)
+      setDetails(detailsData)
+      setHistory(historyData)
     } catch (error) {
       console.error('Error fetching stock data:', error)
     } finally {
@@ -39,6 +40,7 @@ const StockDetail = () => {
       </div>
     )
   }
+
 
   const isPositive = details?.change >= 0
 
@@ -61,11 +63,11 @@ const StockDetail = () => {
             <p className="text-sm font-bold text-zinc-400 uppercase tracking-widest">{details?.securityName}</p>
           </div>
           <div className="text-right flex flex-col items-end">
-            <p className="text-5xl font-black text-zinc-900 tracking-tighter tabular-nums">Rs. {(details?.lastTradedPrice || 0).toFixed(2)}</p>
+            <p className="text-5xl font-black text-zinc-900 tracking-tighter tabular-nums">{formatCurrency(details?.lastTradedPrice || 0)}</p>
             <div className={`flex items-center gap-2 mt-3 px-4 py-1.5 rounded-full ${isPositive ? 'bg-emerald-50 text-emerald-600' : 'bg-rose-50 text-rose-600'}`}>
               {isPositive ? <TrendingUp className="h-4 w-4" /> : <TrendingDown className="h-4 w-4" />}
               <span className="text-lg font-black tabular-nums">
-                {isPositive ? '+' : ''}{(details?.change || 0).toFixed(2)} ({isPositive ? '+' : ''}{(details?.percentChange || 0).toFixed(2)}%)
+                {isPositive ? '+' : ''}{(details?.change || 0).toFixed(2)} ({formatPercent(details?.percentChange || 0)})
               </span>
             </div>
           </div>
@@ -80,7 +82,7 @@ const StockDetail = () => {
             </div>
             <span className="text-[10px] font-black uppercase tracking-[0.2em]">Open Price</span>
           </div>
-          <p className="text-2xl font-black text-zinc-900 tabular-nums">Rs. {(details?.openPrice || 0).toFixed(2)}</p>
+          <p className="text-2xl font-black text-zinc-900 tabular-nums">{formatCurrency(details?.openPrice || 0)}</p>
         </div>
         <div className="bg-white border border-zinc-100 rounded-3xl p-8 shadow-sm">
           <div className="flex items-center gap-3 text-emerald-400 mb-4">
@@ -89,7 +91,7 @@ const StockDetail = () => {
             </div>
             <span className="text-[10px] font-black uppercase tracking-[0.2em]">Day High</span>
           </div>
-          <p className="text-2xl font-black text-emerald-600 tabular-nums">Rs. {(details?.highPrice || 0).toFixed(2)}</p>
+          <p className="text-2xl font-black text-emerald-600 tabular-nums">{formatCurrency(details?.highPrice || 0)}</p>
         </div>
         <div className="bg-white border border-zinc-100 rounded-3xl p-8 shadow-sm">
           <div className="flex items-center gap-3 text-rose-400 mb-4">
@@ -98,7 +100,7 @@ const StockDetail = () => {
             </div>
             <span className="text-[10px] font-black uppercase tracking-[0.2em]">Day Low</span>
           </div>
-          <p className="text-2xl font-black text-rose-600 tabular-nums">Rs. {(details?.lowPrice || 0).toFixed(2)}</p>
+          <p className="text-2xl font-black text-rose-600 tabular-nums">{formatCurrency(details?.lowPrice || 0)}</p>
         </div>
         <div className="bg-white border border-zinc-100 rounded-3xl p-8 shadow-sm">
           <div className="flex items-center gap-3 text-zinc-400 mb-4">
@@ -107,7 +109,7 @@ const StockDetail = () => {
             </div>
             <span className="text-[10px] font-black uppercase tracking-[0.2em]">Volume</span>
           </div>
-          <p className="text-2xl font-black text-zinc-900 tabular-nums">{(details?.totalTradedQuantity || 0).toLocaleString()}</p>
+          <p className="text-2xl font-black text-zinc-900 tabular-nums">{formatVolume(details?.totalTradedQuantity || 0)}</p>
         </div>
       </div>
 
@@ -148,19 +150,19 @@ const StockDetail = () => {
           <div className="space-y-6">
             <div className="flex justify-between items-center py-4 border-b border-zinc-50">
               <span className="text-xs font-bold text-zinc-400 uppercase tracking-widest">Previous Close</span>
-              <span className="font-black text-zinc-900 tabular-nums">Rs. {(details?.previousClose || 0).toFixed(2)}</span>
+              <span className="font-black text-zinc-900 tabular-nums">{formatCurrency(details?.previousClose || 0)}</span>
             </div>
             <div className="flex justify-between items-center py-4 border-b border-zinc-50">
               <span className="text-xs font-bold text-zinc-400 uppercase tracking-widest">52 Week High</span>
-              <span className="font-black text-emerald-600 tabular-nums">Rs. {(details?.fiftyTwoWeekHigh || 0).toFixed(2)}</span>
+              <span className="font-black text-emerald-600 tabular-nums">{formatCurrency(details?.fiftyTwoWeekHigh || 0)}</span>
             </div>
             <div className="flex justify-between items-center py-4 border-b border-zinc-50">
               <span className="text-xs font-bold text-zinc-400 uppercase tracking-widest">52 Week Low</span>
-              <span className="font-black text-rose-600 tabular-nums">Rs. {(details?.fiftyTwoWeekLow || 0).toFixed(2)}</span>
+              <span className="font-black text-rose-600 tabular-nums">{formatCurrency(details?.fiftyTwoWeekLow || 0)}</span>
             </div>
             <div className="flex justify-between items-center py-4">
               <span className="text-xs font-bold text-zinc-400 uppercase tracking-widest">Average Traded</span>
-              <span className="font-black text-zinc-900 tabular-nums">Rs. {(details?.averageTradedPrice || 0).toFixed(2)}</span>
+              <span className="font-black text-zinc-900 tabular-nums">{formatCurrency(details?.averageTradedPrice || 0)}</span>
             </div>
           </div>
         </div>
@@ -170,11 +172,11 @@ const StockDetail = () => {
           <div className="space-y-6">
             <div className="flex justify-between items-center py-4 border-b border-zinc-50">
               <span className="text-xs font-bold text-zinc-400 uppercase tracking-widest">Market Cap</span>
-              <span className="font-black text-zinc-900 tabular-nums">{(details?.marketCapitalization || 0).toLocaleString()}</span>
+              <span className="font-black text-zinc-900 tabular-nums">{formatVolume(details?.marketCapitalization || 0)}</span>
             </div>
             <div className="flex justify-between items-center py-4 border-b border-zinc-50">
               <span className="text-xs font-bold text-zinc-400 uppercase tracking-widest">Listed Shares</span>
-              <span className="font-black text-zinc-900 tabular-nums">{(details?.outstandingShares || 0).toLocaleString()}</span>
+              <span className="font-black text-zinc-900 tabular-nums">{formatVolume(details?.outstandingShares || 0)}</span>
             </div>
             <div className="flex justify-between items-center py-4 border-b border-zinc-50">
               <span className="text-xs font-bold text-zinc-400 uppercase tracking-widest">Sector</span>
@@ -182,7 +184,7 @@ const StockDetail = () => {
             </div>
             <div className="flex justify-between items-center py-4">
               <span className="text-xs font-bold text-zinc-400 uppercase tracking-widest">Last Sync</span>
-              <span className="text-xs font-black text-zinc-900 uppercase tracking-tight">{new Date(details?.lastUpdatedDate).toLocaleString()}</span>
+              <span className="text-xs font-black text-zinc-900 uppercase tracking-tight">{formatDate(details?.lastUpdatedDate)} {formatTime(details?.lastUpdatedDate)}</span>
             </div>
           </div>
         </div>
