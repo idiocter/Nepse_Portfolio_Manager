@@ -6,8 +6,11 @@ const PrivateRoute = ({ children }) => {
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center h-64">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary-600"></div>
+      <div className="flex items-center justify-center min-h-screen p-4">
+        <div className="flex flex-col items-center gap-3 sm:gap-4">
+          <div className="animate-spin rounded-full h-10 w-10 sm:h-12 sm:w-12 border-b-2 border-primary-600"></div>
+          <p className="text-xs sm:text-sm text-slate-500 animate-pulse">Authenticating...</p>
+        </div>
       </div>
     )
   }

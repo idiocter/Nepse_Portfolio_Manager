@@ -91,72 +91,72 @@ const Market = () => {
 
   if (loading && stocks.length === 0) {
     return (
-      <div className="min-h-screen bg-slate-50 p-8 space-y-8">
-        <div className="h-10 w-64 bg-slate-200 animate-pulse rounded-xl" />
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+      <div className="min-h-screen bg-slate-50 p-4 sm:p-6 lg:p-8 space-y-4 sm:space-y-6 lg:space-y-8">
+        <div className="h-8 sm:h-10 w-48 sm:w-64 bg-slate-200 animate-pulse rounded-xl" />
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
           {[1, 2, 3].map(i => (
-            <div key={i} className="h-40 bg-white rounded-2xl border border-slate-200 animate-pulse" />
+            <div key={i} className="h-32 sm:h-40 bg-white rounded-xl sm:rounded-2xl border border-slate-200 animate-pulse" />
           ))}
         </div>
-        <div className="h-[500px] bg-white rounded-2xl border border-slate-200 animate-pulse" />
+        <div className="h-[300px] sm:h-[400px] lg:h-[500px] bg-white rounded-xl sm:rounded-2xl border border-slate-200 animate-pulse" />
       </div>
     )
   }
 
   return (
-    <div className="min-h-screen bg-slate-50 p-8">
-      <div className="max-w-7xl mx-auto space-y-8">
+    <div className="min-h-screen bg-slate-50 p-4 sm:p-6 lg:p-8">
+      <div className="max-w-7xl mx-auto space-y-4 sm:space-y-6 lg:space-y-8">
 
-        {/* Header - Clean & Spaced */}
-        <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6">
-          <div className="space-y-2">
-            <h1 className="text-3xl font-bold text-slate-900 tracking-tight">
+        {/* Header - Responsive layout */}
+        <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4 sm:gap-6">
+          <div className="space-y-1 sm:space-y-2">
+            <h1 className="text-2xl sm:text-3xl font-bold text-slate-900 tracking-tight">
               Market Overview
             </h1>
-            <p className="text-sm text-slate-500">
+            <p className="text-xs sm:text-sm text-slate-500">
               {stocks.length} Securities Listed • Live Data
             </p>
           </div>
 
-          <div className="flex items-center gap-4">
-            <div className="relative w-full sm:w-80">
-              <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
+          <div className="flex items-center gap-2 sm:gap-4">
+            <div className="relative flex-1 sm:flex-none sm:w-80">
+              <Search className="absolute left-3 sm:left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
               <input
                 type="text"
                 placeholder="Search ticker or company..."
                 value={searchTerm}
                 onChange={(e) => { setSearchTerm(e.target.value); setCurrentPage(1) }}
-                className="w-full pl-11 pr-4 py-3 bg-white border border-slate-300 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-slate-900/5 focus:border-slate-900 transition-all shadow-sm"
+                className="w-full pl-9 sm:pl-11 pr-3 sm:pr-4 py-2.5 sm:py-3 bg-white border border-slate-300 rounded-lg sm:rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-slate-900/5 focus:border-slate-900 transition-all shadow-sm"
               />
             </div>
             <button
               onClick={fetchStocks}
-              className="p-3 bg-slate-900 text-white rounded-xl hover:bg-slate-800 transition-all shadow-lg active:scale-95"
+              className="p-2.5 sm:p-3 bg-slate-900 text-white rounded-lg sm:rounded-xl hover:bg-slate-800 transition-all shadow-lg active:scale-95 flex-shrink-0"
             >
-              <RefreshCw className={`h-5 w-5 ${loading ? 'animate-spin' : ''}`} />
+              <RefreshCw className={`h-4 w-4 sm:h-5 sm:w-5 ${loading ? 'animate-spin' : ''}`} />
             </button>
           </div>
         </div>
 
-        {/* Market Stats - Clean Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        {/* Market Stats - Responsive grid */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
           {/* Top Gainer */}
-          <div className="bg-slate-900 rounded-2xl p-8 text-white shadow-lg">
-            <div className="flex items-center justify-between mb-6">
-              <div className="flex items-center gap-3">
-                <div className="p-3 bg-white/10 rounded-xl">
-                  <TrendingUp className="h-5 w-5 text-emerald-400" />
+          <div className="bg-slate-900 rounded-xl sm:rounded-2xl p-5 sm:p-8 text-white shadow-lg">
+            <div className="flex items-center justify-between mb-4 sm:mb-6">
+              <div className="flex items-center gap-2 sm:gap-3">
+                <div className="p-2 sm:p-3 bg-white/10 rounded-lg sm:rounded-xl">
+                  <TrendingUp className="h-4 w-4 sm:h-5 sm:w-5 text-emerald-400" />
                 </div>
-                <span className="text-xs font-semibold text-slate-400 uppercase tracking-wider">Top Gainer</span>
+                <span className="text-[10px] sm:text-xs font-semibold text-slate-400 uppercase tracking-wider">Top Gainer</span>
               </div>
             </div>
-            <div className="space-y-2">
-              <h3 className="text-3xl font-bold tracking-tight">
+            <div className="space-y-1 sm:space-y-2">
+              <h3 className="text-2xl sm:text-3xl font-bold tracking-tight">
                 {topGainer?.symbol || '—'}
               </h3>
-              <div className="flex items-center gap-2 text-emerald-400">
-                <ArrowUpRight className="h-4 w-4" />
-                <span className="text-lg font-semibold">
+              <div className="flex items-center gap-1.5 sm:gap-2 text-emerald-400">
+                <ArrowUpRight className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
+                <span className="text-base sm:text-lg font-semibold">
                   +{topGainer?.changePercent?.toFixed(2) || '0.00'}%
                 </span>
               </div>
@@ -164,21 +164,21 @@ const Market = () => {
           </div>
 
           {/* Market Heat */}
-          <div className="bg-white rounded-2xl p-8 border border-slate-200 shadow-sm">
-            <div className="flex items-center gap-3 mb-6">
-              <div className="p-3 bg-slate-100 rounded-xl">
-                <Activity className="h-5 w-5 text-slate-600" />
+          <div className="bg-white rounded-xl sm:rounded-2xl p-5 sm:p-8 border border-slate-200 shadow-sm">
+            <div className="flex items-center gap-2 sm:gap-3 mb-4 sm:mb-6">
+              <div className="p-2 sm:p-3 bg-slate-100 rounded-lg sm:rounded-xl">
+                <Activity className="h-4 w-4 sm:h-5 sm:w-5 text-slate-600" />
               </div>
-              <span className="text-xs font-semibold text-slate-500 uppercase tracking-wider">Market Heat</span>
+              <span className="text-[10px] sm:text-xs font-semibold text-slate-500 uppercase tracking-wider">Market Heat</span>
             </div>
-            <div className="space-y-2">
-              <h3 className="text-3xl font-bold text-slate-900 tracking-tight">
-                {gainersCount} <span className="text-slate-400 text-2xl">/ {stocks.length}</span>
+            <div className="space-y-1 sm:space-y-2">
+              <h3 className="text-2xl sm:text-3xl font-bold text-slate-900 tracking-tight">
+                {gainersCount} <span className="text-slate-400 text-lg sm:text-2xl">/ {stocks.length}</span>
               </h3>
-              <p className="text-sm text-slate-500">Securities in the green</p>
+              <p className="text-xs sm:text-sm text-slate-500">Securities in the green</p>
             </div>
             {/* Progress Bar */}
-            <div className="mt-4 h-2 bg-slate-100 rounded-full overflow-hidden">
+            <div className="mt-3 sm:mt-4 h-1.5 sm:h-2 bg-slate-100 rounded-full overflow-hidden">
               <div
                 className="h-full bg-emerald-500 rounded-full"
                 style={{ width: `${stocks.length ? (gainersCount / stocks.length) * 100 : 0}%` }}
@@ -187,38 +187,38 @@ const Market = () => {
           </div>
 
           {/* Daily Volume */}
-          <div className="bg-white rounded-2xl p-8 border border-slate-200 shadow-sm">
-            <div className="flex items-center gap-3 mb-6">
-              <div className="p-3 bg-slate-100 rounded-xl">
-                <BarChart3 className="h-5 w-5 text-slate-600" />
+          <div className="bg-white rounded-xl sm:rounded-2xl p-5 sm:p-8 border border-slate-200 shadow-sm">
+            <div className="flex items-center gap-2 sm:gap-3 mb-4 sm:mb-6">
+              <div className="p-2 sm:p-3 bg-slate-100 rounded-lg sm:rounded-xl">
+                <BarChart3 className="h-4 w-4 sm:h-5 sm:w-5 text-slate-600" />
               </div>
-              <span className="text-xs font-semibold text-slate-500 uppercase tracking-wider">Daily Volume</span>
+              <span className="text-[10px] sm:text-xs font-semibold text-slate-500 uppercase tracking-wider">Daily Volume</span>
             </div>
-            <div className="space-y-2">
-              <h3 className="text-3xl font-bold text-slate-900 tracking-tight tabular-nums">
+            <div className="space-y-1 sm:space-y-2">
+              <h3 className="text-2xl sm:text-3xl font-bold text-slate-900 tracking-tight tabular-nums">
                 {totalVolume.toLocaleString()}
               </h3>
-              <p className="text-sm text-slate-500">Total trades today</p>
+              <p className="text-xs sm:text-sm text-slate-500">Total trades today</p>
             </div>
           </div>
         </div>
 
-        {/* Stocks Table - Clean & Spacious */}
-        <div className="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
+        {/* Stocks Table - Mobile optimized */}
+        <div className="bg-white rounded-xl sm:rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
           {/* Table Header */}
-          <div className="px-8 py-6 border-b border-slate-200 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-            <div className="flex items-center gap-3">
-              <div className="p-2 bg-slate-100 rounded-lg">
-                <Filter className="h-5 w-5 text-slate-600" />
+          <div className="px-4 sm:px-6 lg:px-8 py-4 sm:py-6 border-b border-slate-200 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 sm:gap-4">
+            <div className="flex items-center gap-2 sm:gap-3">
+              <div className="p-1.5 sm:p-2 bg-slate-100 rounded-lg">
+                <Filter className="h-4 w-4 sm:h-5 sm:w-5 text-slate-600" />
               </div>
-              <h3 className="text-lg font-bold text-slate-900">Live Market Feed</h3>
+              <h3 className="text-base sm:text-lg font-bold text-slate-900">Live Market Feed</h3>
             </div>
-            <div className="flex items-center gap-3">
-              <span className="text-sm text-slate-500">Sort by</span>
+            <div className="flex items-center gap-2 sm:gap-3">
+              <span className="text-xs sm:text-sm text-slate-500">Sort by</span>
               <select
                 value={sortBy}
                 onChange={(e) => handleSort(e.target.value)}
-                className="bg-slate-50 border border-slate-200 rounded-lg px-4 py-2 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-slate-900/5 cursor-pointer"
+                className="bg-slate-50 border border-slate-200 rounded-lg px-3 sm:px-4 py-2 text-xs sm:text-sm font-medium focus:outline-none focus:ring-2 focus:ring-slate-900/5 cursor-pointer"
               >
                 <option value="symbol">Symbol</option>
                 <option value="sector">Sector</option>
@@ -229,38 +229,38 @@ const Market = () => {
             </div>
           </div>
 
-          {/* Table */}
+          {/* Table - Horizontal scroll on mobile */}
           <div className="overflow-x-auto">
-            <table className="w-full text-left border-collapse">
+            <table className="w-full text-left border-collapse min-w-[800px] sm:min-w-0">
               <thead>
                 <tr className="bg-slate-50 border-b border-slate-200">
-                  <th className="px-8 py-5 text-xs font-semibold text-slate-500 uppercase tracking-wider">Symbol</th>
+                  <th className="px-4 sm:px-6 lg:px-8 py-3 sm:py-5 text-[10px] sm:text-xs font-semibold text-slate-500 uppercase tracking-wider">Symbol</th>
                   <th
-                    className="px-6 py-5 text-xs font-semibold text-slate-500 uppercase tracking-wider cursor-pointer hover:text-slate-900 transition-colors"
+                    className="px-3 sm:px-6 py-3 sm:py-5 text-[10px] sm:text-xs font-semibold text-slate-500 uppercase tracking-wider cursor-pointer hover:text-slate-900 transition-colors"
                     onClick={() => handleSort('sector')}
                   >
                     Sector
                   </th>
-                  <th className="px-6 py-5 text-xs font-semibold text-slate-500 uppercase tracking-wider">Name</th>
+                  <th className="px-3 sm:px-6 py-3 sm:py-5 text-[10px] sm:text-xs font-semibold text-slate-500 uppercase tracking-wider">Name</th>
                   <th
-                    className="px-6 py-5 text-right text-xs font-semibold text-slate-500 uppercase tracking-wider cursor-pointer hover:text-slate-900 transition-colors"
+                    className="px-3 sm:px-6 py-3 sm:py-5 text-right text-[10px] sm:text-xs font-semibold text-slate-500 uppercase tracking-wider cursor-pointer hover:text-slate-900 transition-colors"
                     onClick={() => handleSort('lastPrice')}
                   >
                     LTP
                   </th>
                   <th
-                    className="px-6 py-5 text-right text-xs font-semibold text-slate-500 uppercase tracking-wider cursor-pointer hover:text-slate-900 transition-colors"
+                    className="px-3 sm:px-6 py-3 sm:py-5 text-right text-[10px] sm:text-xs font-semibold text-slate-500 uppercase tracking-wider cursor-pointer hover:text-slate-900 transition-colors"
                     onClick={() => handleSort('changePercent')}
                   >
                     Change
                   </th>
                   <th
-                    className="px-6 py-5 text-right text-xs font-semibold text-slate-500 uppercase tracking-wider cursor-pointer hover:text-slate-900 transition-colors"
+                    className="px-3 sm:px-6 py-3 sm:py-5 text-right text-[10px] sm:text-xs font-semibold text-slate-500 uppercase tracking-wider cursor-pointer hover:text-slate-900 transition-colors"
                     onClick={() => handleSort('volume')}
                   >
                     Volume
                   </th>
-                  <th className="px-8 py-5 text-center text-xs font-semibold text-slate-500 uppercase tracking-wider">Action</th>
+                  <th className="px-4 sm:px-6 lg:px-8 py-3 sm:py-5 text-center text-[10px] sm:text-xs font-semibold text-slate-500 uppercase tracking-wider">Action</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-slate-100">
@@ -268,40 +268,40 @@ const Market = () => {
                   const isPositive = stock.changePercent >= 0
                   return (
                     <tr key={stock.symbol} className="hover:bg-slate-50/50 transition-colors">
-                      <td className="px-8 py-5">
-                        <div className="flex items-center gap-4">
-                          <div className="w-10 h-10 bg-slate-100 rounded-lg flex items-center justify-center font-bold text-sm text-slate-900">
+                      <td className="px-4 sm:px-6 lg:px-8 py-3 sm:py-5">
+                        <div className="flex items-center gap-3 sm:gap-4">
+                          <div className="w-8 h-8 sm:w-10 sm:h-10 bg-slate-100 rounded-lg flex items-center justify-center font-bold text-xs sm:text-sm text-slate-900">
                             {stock.symbol?.charAt(0)}
                           </div>
-                          <span className="font-bold text-slate-900">{stock.symbol}</span>
+                          <span className="font-bold text-slate-900 text-sm sm:text-base">{stock.symbol}</span>
                         </div>
                       </td>
-                      <td className="px-6 py-5">
-                        <span className="px-3 py-1 bg-slate-100 text-slate-600 text-xs font-medium rounded-md">
+                      <td className="px-3 sm:px-6 py-3 sm:py-5">
+                        <span className="px-2 sm:px-3 py-1 bg-slate-100 text-slate-600 text-[10px] sm:text-xs font-medium rounded-md">
                           {stock.sector || 'N/A'}
                         </span>
                       </td>
-                      <td className="px-6 py-5">
-                        <p className="text-sm font-medium text-slate-600 truncate max-w-xs">{stock.name}</p>
+                      <td className="px-3 sm:px-6 py-3 sm:py-5">
+                        <p className="text-xs sm:text-sm font-medium text-slate-600 truncate max-w-[120px] sm:max-w-xs">{stock.name}</p>
                       </td>
-                      <td className="px-6 py-5 text-right">
-                        <p className="font-bold text-slate-900 tabular-nums">{formatCurrency(stock.lastPrice)}</p>
+                      <td className="px-3 sm:px-6 py-3 sm:py-5 text-right">
+                        <p className="font-bold text-slate-900 tabular-nums text-sm sm:text-base">{formatCurrency(stock.lastPrice)}</p>
                       </td>
-                      <td className="px-6 py-5 text-right">
-                        <div className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold ${isPositive ? 'bg-emerald-50 text-emerald-700' : 'bg-red-50 text-red-700'}`}>
-                          {isPositive ? <TrendingUp className="h-3 w-3" /> : <TrendingDown className="h-3 w-3" />}
+                      <td className="px-3 sm:px-6 py-3 sm:py-5 text-right">
+                        <div className={`inline-flex items-center gap-1 sm:gap-1.5 px-2 sm:px-3 py-1 sm:py-1.5 rounded-lg text-[10px] sm:text-xs font-semibold ${isPositive ? 'bg-emerald-50 text-emerald-700' : 'bg-red-50 text-red-700'}`}>
+                          {isPositive ? <TrendingUp className="h-2.5 w-2.5 sm:h-3 sm:w-3" /> : <TrendingDown className="h-2.5 w-2.5 sm:h-3 sm:w-3" />}
                           {formatPercent(stock.changePercent)}
                         </div>
                       </td>
-                      <td className="px-6 py-5 text-right">
-                        <p className="text-sm font-medium text-slate-500 tabular-nums">{formatVolume(stock.volume)}</p>
+                      <td className="px-3 sm:px-6 py-3 sm:py-5 text-right">
+                        <p className="text-xs sm:text-sm font-medium text-slate-500 tabular-nums">{formatVolume(stock.volume)}</p>
                       </td>
-                      <td className="px-8 py-5 text-center">
+                      <td className="px-4 sm:px-6 lg:px-8 py-3 sm:py-5 text-center">
                         <Link
                           to={`/stock/${stock.symbol}`}
-                          className="inline-flex p-2 border border-slate-200 rounded-lg text-slate-400 hover:text-slate-900 hover:border-slate-900 hover:bg-slate-50 transition-all"
+                          className="inline-flex p-1.5 sm:p-2 border border-slate-200 rounded-lg text-slate-400 hover:text-slate-900 hover:border-slate-900 hover:bg-slate-50 transition-all"
                         >
-                          <ArrowUpRight className="h-4 w-4" />
+                          <ArrowUpRight className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
                         </Link>
                       </td>
                     </tr>
@@ -309,12 +309,12 @@ const Market = () => {
                 })}
                 {currentStocks.length === 0 && (
                   <tr>
-                    <td colSpan="7" className="px-8 py-20 text-center">
-                      <div className="flex flex-col items-center gap-4">
-                        <div className="p-4 bg-slate-100 rounded-full">
-                          <Search className="h-6 w-6 text-slate-400" />
+                    <td colSpan="7" className="px-4 sm:px-8 py-12 sm:py-20 text-center">
+                      <div className="flex flex-col items-center gap-3 sm:gap-4">
+                        <div className="p-3 sm:p-4 bg-slate-100 rounded-full">
+                          <Search className="h-5 w-5 sm:h-6 sm:w-6 text-slate-400" />
                         </div>
-                        <p className="text-sm text-slate-500">No matching securities found</p>
+                        <p className="text-xs sm:text-sm text-slate-500">No matching securities found</p>
                       </div>
                     </td>
                   </tr>
@@ -323,35 +323,35 @@ const Market = () => {
             </table>
           </div>
 
-          {/* Pagination */}
+          {/* Pagination - Simplified on mobile */}
           {totalPages > 1 && (
-            <div className="px-8 py-6 bg-slate-50 border-t border-slate-200 flex flex-col sm:flex-row items-center justify-between gap-4">
-              <p className="text-sm text-slate-500">
+            <div className="px-4 sm:px-6 lg:px-8 py-4 sm:py-6 bg-slate-50 border-t border-slate-200 flex flex-col sm:flex-row items-center justify-between gap-3 sm:gap-4">
+              <p className="text-xs sm:text-sm text-slate-500 text-center sm:text-left">
                 Showing <span className="font-semibold text-slate-900">{(currentPage - 1) * itemsPerPage + 1}</span> to <span className="font-semibold text-slate-900">{Math.min(currentPage * itemsPerPage, filteredStocks.length)}</span> of <span className="font-semibold text-slate-900">{filteredStocks.length}</span> results
               </p>
 
-              <div className="flex items-center gap-2">
+              <div className="flex items-center gap-1.5 sm:gap-2">
                 <button
                   onClick={() => goToPage(currentPage - 1)}
                   disabled={currentPage === 1}
-                  className="p-2.5 bg-white border border-slate-200 rounded-lg text-slate-600 hover:text-slate-900 hover:border-slate-300 disabled:opacity-40 disabled:cursor-not-allowed transition-all shadow-sm"
+                  className="p-2 sm:p-2.5 bg-white border border-slate-200 rounded-lg text-slate-600 hover:text-slate-900 hover:border-slate-300 disabled:opacity-40 disabled:cursor-not-allowed transition-all shadow-sm"
                 >
-                  <ChevronLeft className="h-5 w-5" />
+                  <ChevronLeft className="h-4 w-4 sm:h-5 sm:w-5" />
                 </button>
 
                 <div className="flex items-center gap-1">
-                  {Array.from({ length: Math.min(5, totalPages) }, (_, i) => {
+                  {Array.from({ length: Math.min(3, totalPages) }, (_, i) => {
                     let pageNum
-                    if (totalPages <= 5) pageNum = i + 1
-                    else if (currentPage <= 3) pageNum = i + 1
-                    else if (currentPage >= totalPages - 2) pageNum = totalPages - 4 + i
-                    else pageNum = currentPage - 2 + i
+                    if (totalPages <= 3) pageNum = i + 1
+                    else if (currentPage <= 2) pageNum = i + 1
+                    else if (currentPage >= totalPages - 1) pageNum = totalPages - 2 + i
+                    else pageNum = currentPage - 1 + i
 
                     return (
                       <button
                         key={pageNum}
                         onClick={() => goToPage(pageNum)}
-                        className={`w-10 h-10 rounded-lg text-sm font-semibold transition-all ${currentPage === pageNum
+                        className={`w-8 h-8 sm:w-10 sm:h-10 rounded-lg text-xs sm:text-sm font-semibold transition-all ${currentPage === pageNum
                           ? 'bg-slate-900 text-white shadow-md'
                           : 'bg-white border border-slate-200 text-slate-600 hover:border-slate-300 hover:text-slate-900'
                           }`}
@@ -365,9 +365,9 @@ const Market = () => {
                 <button
                   onClick={() => goToPage(currentPage + 1)}
                   disabled={currentPage === totalPages}
-                  className="p-2.5 bg-white border border-slate-200 rounded-lg text-slate-600 hover:text-slate-900 hover:border-slate-300 disabled:opacity-40 disabled:cursor-not-allowed transition-all shadow-sm"
+                  className="p-2 sm:p-2.5 bg-white border border-slate-200 rounded-lg text-slate-600 hover:text-slate-900 hover:border-slate-300 disabled:opacity-40 disabled:cursor-not-allowed transition-all shadow-sm"
                 >
-                  <ChevronRight className="h-5 w-5" />
+                  <ChevronRight className="h-4 w-4 sm:h-5 sm:w-5" />
                 </button>
               </div>
             </div>

@@ -54,69 +54,69 @@ const HoldingForm = ({ onClose, onSuccess, editingHolding = null }) => {
   }
 
   return (
-    <div className="fixed inset-0 bg-zinc-950/60 backdrop-blur-md flex items-center justify-center z-50 p-6 animate-fade-in">
-      <div className="bg-white rounded-[32px] shadow-2xl w-full max-w-lg animate-fade-in-up border border-zinc-100 overflow-hidden" style={{ animationDuration: '0.4s' }}>
-        <div className="flex justify-between items-center px-10 py-8 border-b border-zinc-50">
-          <div>
-            <h2 className="text-2xl font-black text-zinc-900 tracking-tighter">
+    <div className="fixed inset-0 bg-zinc-950/60 backdrop-blur-md flex items-center justify-center z-50 p-3 sm:p-4 lg:p-6 animate-fade-in">
+      <div className="bg-white rounded-2xl sm:rounded-[32px] shadow-2xl w-full max-w-lg animate-fade-in-up border border-zinc-100 overflow-hidden mx-2 sm:mx-0" style={{ animationDuration: '0.4s' }}>
+        <div className="flex justify-between items-center px-5 sm:px-8 lg:px-10 py-5 sm:py-6 lg:py-8 border-b border-zinc-50 gap-3">
+          <div className="min-w-0">
+            <h2 className="text-xl sm:text-2xl font-black text-zinc-900 tracking-tighter">
               {editingHolding ? 'Adjust Holding' : 'New Asset'}
             </h2>
-            <p className="text-xs font-bold text-zinc-400 uppercase tracking-widest mt-1">Portfolio configuration</p>
+            <p className="text-[10px] sm:text-xs font-bold text-zinc-400 uppercase tracking-widest mt-1">Portfolio configuration</p>
           </div>
-          <button onClick={onClose} className="p-3 bg-zinc-50 text-zinc-400 hover:text-zinc-900 rounded-2xl transition-all">
-            <X className="h-6 w-6" />
+          <button onClick={onClose} className="p-2 sm:p-3 bg-zinc-50 text-zinc-400 hover:text-zinc-900 rounded-xl sm:rounded-2xl transition-all flex-shrink-0">
+            <X className="h-5 w-5 sm:h-6 sm:w-6" />
           </button>
         </div>
 
-        <form onSubmit={handleSubmit} className="p-10 space-y-8">
+        <form onSubmit={handleSubmit} className="px-5 sm:px-8 lg:px-10 py-6 sm:py-8 lg:py-10 space-y-5 sm:space-y-8">
           <div className="relative">
-            <label className="block text-xs font-black text-zinc-400 uppercase tracking-[0.2em] mb-3">Stock Symbol</label>
+            <label className="block text-[10px] sm:text-xs font-black text-zinc-400 uppercase tracking-[0.15em] sm:tracking-[0.2em] mb-2 sm:mb-3">Stock Symbol</label>
             <div className="relative group">
-              <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 h-5 w-5 text-zinc-300 group-focus-within:text-zinc-900 transition-colors" />
+              <Search className="absolute left-3 sm:left-4 top-1/2 transform -translate-y-1/2 h-4 w-4 sm:h-5 sm:w-5 text-zinc-300 group-focus-within:text-zinc-900 transition-colors" />
               <input type="text" value={symbol}
                 onChange={(e) => { setSymbol(e.target.value); setShowDropdown(true) }}
                 disabled={!!editingHolding}
-                className="w-full pl-12 pr-6 py-4 bg-zinc-50 border border-zinc-100 rounded-2xl text-zinc-900 font-bold placeholder:text-zinc-300 focus:bg-white focus:border-zinc-900 focus:ring-4 focus:ring-zinc-900/5 transition-all outline-none"
+                className="w-full pl-10 sm:pl-12 pr-4 sm:pr-6 py-3 sm:py-4 bg-zinc-50 border border-zinc-100 rounded-xl sm:rounded-2xl text-zinc-900 font-bold text-sm sm:text-base placeholder:text-zinc-300 focus:bg-white focus:border-zinc-900 focus:ring-4 focus:ring-zinc-900/5 transition-all outline-none"
                 placeholder="Search symbol (e.g. NICA)" required />
             </div>
             {showDropdown && filteredStocks.length > 0 && !editingHolding && (
-              <div className="absolute z-10 w-full mt-2 bg-white border border-zinc-100 rounded-2xl shadow-2xl overflow-hidden max-h-72 overflow-y-auto">
+              <div className="absolute z-10 w-full mt-2 bg-white border border-zinc-100 rounded-xl sm:rounded-2xl shadow-2xl overflow-hidden max-h-60 sm:max-h-72 overflow-y-auto">
                 {filteredStocks.map((stock) => (
                   <button key={stock.symbol} type="button"
                     onClick={() => { setSymbol(stock.symbol); setShowDropdown(false) }}
-                    className="w-full text-left px-6 py-4 hover:bg-zinc-50 border-b border-zinc-50 last:border-0 transition-colors flex items-center justify-between group">
-                    <div>
-                      <p className="font-black text-zinc-900 group-hover:text-zinc-950">{stock.symbol}</p>
-                      <p className="text-xs font-bold text-zinc-400 uppercase tracking-tight">{stock.name}</p>
+                    className="w-full text-left px-4 sm:px-6 py-3 sm:py-4 hover:bg-zinc-50 border-b border-zinc-50 last:border-0 transition-colors flex items-center justify-between group">
+                    <div className="min-w-0">
+                      <p className="font-black text-zinc-900 group-hover:text-zinc-950 text-sm sm:text-base">{stock.symbol}</p>
+                      <p className="text-[10px] sm:text-xs font-bold text-zinc-400 uppercase tracking-tight truncate">{stock.name}</p>
                     </div>
-                    <ArrowUpRight className="h-4 w-4 text-zinc-200 group-hover:text-zinc-900 transition-colors" />
+                    <ArrowUpRight className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-zinc-200 group-hover:text-zinc-900 transition-colors flex-shrink-0 ml-2" />
                   </button>
                 ))}
               </div>
             )}
           </div>
 
-          <div className="grid grid-cols-2 gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
             <div>
-              <label className="block text-xs font-black text-zinc-400 uppercase tracking-[0.2em] mb-3">Quantity</label>
+              <label className="block text-[10px] sm:text-xs font-black text-zinc-400 uppercase tracking-[0.15em] sm:tracking-[0.2em] mb-2 sm:mb-3">Quantity</label>
               <input type="number" value={quantity} onChange={(e) => setQuantity(e.target.value)}
-                className="w-full px-6 py-4 bg-zinc-50 border border-zinc-100 rounded-2xl text-zinc-900 font-bold placeholder:text-zinc-300 focus:bg-white focus:border-zinc-900 focus:ring-4 focus:ring-zinc-900/5 transition-all outline-none"
+                className="w-full px-4 sm:px-6 py-3 sm:py-4 bg-zinc-50 border border-zinc-100 rounded-xl sm:rounded-2xl text-zinc-900 font-bold text-sm sm:text-base placeholder:text-zinc-300 focus:bg-white focus:border-zinc-900 focus:ring-4 focus:ring-zinc-900/5 transition-all outline-none"
                 placeholder="0" min="1" required />
             </div>
 
             <div>
-              <label className="block text-xs font-black text-zinc-400 uppercase tracking-[0.2em] mb-3">Avg Price</label>
+              <label className="block text-[10px] sm:text-xs font-black text-zinc-400 uppercase tracking-[0.15em] sm:tracking-[0.2em] mb-2 sm:mb-3">Avg Price</label>
               <input type="number" value={avgPrice} onChange={(e) => setAvgPrice(e.target.value)}
-                className="w-full px-6 py-4 bg-zinc-50 border border-zinc-100 rounded-2xl text-zinc-900 font-bold placeholder:text-zinc-300 focus:bg-white focus:border-zinc-900 focus:ring-4 focus:ring-zinc-900/5 transition-all outline-none"
+                className="w-full px-4 sm:px-6 py-3 sm:py-4 bg-zinc-50 border border-zinc-100 rounded-xl sm:rounded-2xl text-zinc-900 font-bold text-sm sm:text-base placeholder:text-zinc-300 focus:bg-white focus:border-zinc-900 focus:ring-4 focus:ring-zinc-900/5 transition-all outline-none"
                 placeholder="0.00" min="0" step="0.01" required />
             </div>
           </div>
 
-          <div className="flex gap-4 pt-4">
-            <button type="button" onClick={onClose} className="flex-1 px-6 py-5 border border-zinc-200 text-zinc-600 rounded-2xl font-black text-sm hover:bg-zinc-50 transition-all">
+          <div className="flex flex-col-reverse sm:flex-row gap-2.5 sm:gap-4 pt-2 sm:pt-4">
+            <button type="button" onClick={onClose} className="flex-1 px-4 sm:px-6 py-3.5 sm:py-5 border border-zinc-200 text-zinc-600 rounded-xl sm:rounded-2xl font-black text-xs sm:text-sm hover:bg-zinc-50 transition-all">
               Discard
             </button>
-            <button type="submit" disabled={loading} className="flex-1 px-6 py-5 bg-zinc-900 text-white rounded-2xl font-black text-sm hover:bg-zinc-800 transition-all shadow-xl shadow-zinc-200 disabled:opacity-50">
+            <button type="submit" disabled={loading} className="flex-1 px-4 sm:px-6 py-3.5 sm:py-5 bg-zinc-900 text-white rounded-xl sm:rounded-2xl font-black text-xs sm:text-sm hover:bg-zinc-800 transition-all shadow-xl shadow-zinc-200 disabled:opacity-50">
               {loading ? 'Processing...' : (editingHolding ? 'Update Asset' : 'Save Asset')}
             </button>
           </div>

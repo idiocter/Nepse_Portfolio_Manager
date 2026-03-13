@@ -44,26 +44,26 @@ const Navbar = () => {
 
   const navLinks = user
     ? [
-      { to: '/dashboard', label: 'Dashboard', icon: <Home className="h-4 w-4" /> },
-      { to: '/portfolio', label: 'Portfolio', icon: <PieChart className="h-4 w-4" /> },
-      { to: '/market', label: 'Market', icon: <Activity className="h-4 w-4" /> },
-      { to: '/watchlist', label: 'Watchlist', icon: <Eye className="h-4 w-4" /> },
+      { to: '/dashboard', label: 'Dashboard', icon: <Home className="h-4 w-4 md:h-4 md:w-4" /> },
+      { to: '/portfolio', label: 'Portfolio', icon: <PieChart className="h-4 w-4 md:h-4 md:w-4" /> },
+      { to: '/market', label: 'Market', icon: <Activity className="h-4 w-4 md:h-4 md:w-4" /> },
+      { to: '/watchlist', label: 'Watchlist', icon: <Eye className="h-4 w-4 md:h-4 md:w-4" /> },
     ]
     : [
-      { to: '/market', label: 'Market', icon: <Activity className="h-4 w-4" /> },
+      { to: '/market', label: 'Market', icon: <Activity className="h-4 w-4 md:h-4 md:w-4" /> },
     ]
 
   return (
     <nav className="bg-white border-b border-zinc-100 sticky top-0 z-50 shadow-sm">
-      <div className="container mx-auto px-6">
-        <div className="flex justify-between items-center h-20">
+      <div className="container mx-auto px-4 sm:px-6">
+        <div className="flex justify-between items-center h-16 md:h-20">
 
-          {/* Original Logo - Unchanged */}
-          <Link to={user ? '/dashboard' : '/'} className="flex items-center gap-3 no-underline group">
-            <div className="w-10 h-10 rounded-xl bg-white flex items-center justify-center shadow-lg border border-zinc-100 group-hover:scale-105 transition-transform duration-300 overflow-hidden p-1">
+          {/* Logo - Responsive sizing */}
+          <Link to={user ? '/dashboard' : '/'} className="flex items-center gap-2 md:gap-3 no-underline group">
+            <div className="w-8 h-8 md:w-10 md:h-10 rounded-xl bg-white flex items-center justify-center shadow-lg border border-zinc-100 group-hover:scale-105 transition-transform duration-300 overflow-hidden p-1">
               <img src="/favicon.png" alt="NEPSE" className="w-full h-full object-contain" />
             </div>
-            <span className="text-xl font-black text-zinc-900 tracking-tighter">
+            <span className="text-lg md:text-xl font-black text-zinc-900 tracking-tighter">
               NEPSE<span className="text-zinc-500">Tracker</span>
             </span>
           </Link>
@@ -85,7 +85,7 @@ const Navbar = () => {
             ))}
           </div>
 
-          {/* Right side */}
+          {/* Right side - Desktop */}
           <div className="hidden md:flex items-center gap-4">
 
             {/* 3D Market Status Sphere with Bottom Tooltip */}
@@ -173,26 +173,42 @@ const Navbar = () => {
             )}
           </div>
 
-          {/* Mobile menu button */}
-          <button
-            onClick={() => setMobileOpen(!mobileOpen)}
-            className="md:hidden p-2 text-zinc-400 hover:text-zinc-900 transition-colors"
-          >
-            {mobileOpen ? <X className="h-7 w-7" /> : <Menu className="h-7 w-7" />}
-          </button>
+          {/* Mobile header right side */}
+          <div className="flex md:hidden items-center gap-3">
+            {/* Market Status Indicator - Mobile */}
+            <div className="relative">
+              <div className={`relative w-6 h-6 rounded-full shadow-lg ${isMarketOpen ? 'shadow-emerald-500/50' : 'shadow-red-500/50'}`}>
+                {isMarketOpen && (
+                  <span className="absolute inset-0 rounded-full bg-emerald-400 animate-ping opacity-60" />
+                )}
+                <span className={`absolute inset-0 rounded-full border-2 border-white/30 bg-gradient-to-br shadow-[inset_0_-2px_4px_rgba(0,0,0,0.4),inset_0_2px_4px_rgba(255,255,255,0.4),0_2px_6px_rgba(0,0,0,0.2)] ${isMarketOpen ? 'from-emerald-300 via-emerald-500 to-emerald-700' : 'from-red-300 via-red-500 to-red-700'}`} />
+                <span className="absolute top-0.5 left-1.5 w-2 h-1.5 bg-white/40 rounded-full blur-[1px]" />
+              </div>
+            </div>
+
+            {/* Mobile menu button */}
+            <button
+              onClick={() => setMobileOpen(!mobileOpen)}
+              className="p-2 text-zinc-400 hover:text-zinc-900 transition-colors rounded-lg hover:bg-zinc-50"
+              aria-label="Toggle menu"
+            >
+              {mobileOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
+            </button>
+          </div>
         </div>
       </div>
 
-      {/* Mobile Menu */}
+      {/* Mobile Menu - Improved */}
       {mobileOpen && (
-        <div className="md:hidden bg-white border-t border-zinc-50">
-          <div className="container mx-auto px-6 py-6 space-y-3">
+        <div className="md:hidden bg-white border-t border-zinc-100 absolute w-full left-0 shadow-xl">
+          <div className="container mx-auto px-4 py-4 space-y-1">
+            {/* Navigation Links */}
             {navLinks.map(link => (
               <Link
                 key={link.to}
                 to={link.to}
                 onClick={() => setMobileOpen(false)}
-                className={`flex items-center gap-4 px-5 py-4 rounded-2xl text-base font-bold transition-all no-underline ${isActive(link.to)
+                className={`flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-bold transition-all no-underline ${isActive(link.to)
                   ? 'bg-zinc-100 text-zinc-900'
                   : 'text-zinc-500 hover:text-zinc-900 hover:bg-zinc-50'
                   }`}
@@ -202,29 +218,50 @@ const Navbar = () => {
               </Link>
             ))}
 
+            {/* Divider */}
+            <div className="border-t border-zinc-100 my-3"></div>
+
+            {/* User Section */}
             {user ? (
-              <>
+              <div className="space-y-1">
+                {/* User Info Header */}
+                <div className="px-4 py-3 mb-2">
+                  <p className="text-sm font-black text-zinc-900">{user.name}</p>
+                  {user.username && <p className="text-xs font-medium text-primary-600">@{user.username}</p>}
+                  <p className="text-xs font-medium text-zinc-400 truncate">{user.email}</p>
+                </div>
+                
                 <Link
                   to="/profile"
                   onClick={() => setMobileOpen(false)}
-                  className="flex items-center gap-4 px-5 py-4 rounded-2xl text-base font-bold text-zinc-500 hover:text-zinc-900 hover:bg-zinc-50 transition-all no-underline"
+                  className="flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-bold text-zinc-600 hover:text-zinc-900 hover:bg-zinc-50 transition-all no-underline"
                 >
-                  <User className="h-5 w-5" />
-                  Profile
+                  <User className="h-4 w-4" />
+                  My Profile
                 </Link>
                 <button
                   onClick={() => { setMobileOpen(false); handleLogout() }}
-                  className="w-full flex items-center gap-4 px-5 py-4 rounded-2xl text-base font-bold text-rose-600 hover:bg-rose-50 transition-all"
+                  className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-bold text-rose-600 hover:bg-rose-50 transition-all"
                 >
-                  <LogOut className="h-5 w-5" />
+                  <LogOut className="h-4 w-4" />
                   Sign Out
                 </button>
-              </>
+              </div>
             ) : (
-              <div className="flex flex-col gap-3 pt-4 border-t border-zinc-100">
-                <Link to="/login" onClick={() => setMobileOpen(false)} className="w-full py-4 text-center font-bold text-zinc-600 border border-zinc-200 rounded-2xl no-underline">Sign In</Link>
-                <Link to="/register" onClick={() => setMobileOpen(false)} className="w-full py-4 text-center font-bold bg-zinc-900 text-white rounded-2xl no-underline flex items-center justify-center gap-3 group">
-                  <Rocket className="h-5 w-5 text-zinc-400 group-hover:text-white group-hover:rotate-12 transition-all duration-300" />
+              <div className="flex flex-col gap-2 pt-2">
+                <Link 
+                  to="/login" 
+                  onClick={() => setMobileOpen(false)} 
+                  className="w-full py-3 text-center font-bold text-zinc-600 border border-zinc-200 rounded-xl no-underline text-sm hover:bg-zinc-50 transition-colors"
+                >
+                  Sign In
+                </Link>
+                <Link 
+                  to="/register" 
+                  onClick={() => setMobileOpen(false)} 
+                  className="w-full py-3 text-center font-bold bg-zinc-900 text-white rounded-xl no-underline flex items-center justify-center gap-2 group text-sm"
+                >
+                  <Rocket className="h-4 w-4 text-zinc-400 group-hover:text-white group-hover:rotate-12 transition-all duration-300" />
                   Get Started
                 </Link>
               </div>

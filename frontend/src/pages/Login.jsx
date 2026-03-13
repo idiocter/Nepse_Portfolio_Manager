@@ -40,63 +40,82 @@ const Login = () => {
   })
 
   return (
-    <div className="min-h-[90vh] flex items-center justify-center py-20 px-6">
+    <div className="min-h-screen sm:min-h-[90vh] flex items-center justify-center py-8 sm:py-12 lg:py-20 px-4 sm:px-6">
       <div className="w-full max-w-lg animate-fade-in-up">
-        <div className="text-center mb-12">
-          <div className="inline-flex items-center justify-center w-20 h-20 rounded-[32px] bg-zinc-900 shadow-2xl mb-8 group transition-transform hover:scale-110">
-            <TrendingUp className="h-10 w-10 text-white" />
+        <div className="text-center mb-8 sm:mb-12">
+          <div className="inline-flex items-center justify-center w-16 h-16 sm:w-20 sm:h-20 rounded-2xl sm:rounded-[32px] bg-zinc-900 shadow-2xl mb-6 sm:mb-8 group transition-transform hover:scale-110">
+            <TrendingUp className="h-8 w-8 sm:h-10 sm:w-10 text-white" />
           </div>
-          <h1 className="text-4xl font-black text-zinc-900 tracking-tighter">Welcome Back</h1>
-          <p className="text-sm font-bold text-zinc-400 uppercase tracking-[0.2em] mt-3">Access your market terminal</p>
+          <h1 className="text-3xl sm:text-4xl font-black text-zinc-900 tracking-tighter">Welcome Back</h1>
+          <p className="text-xs sm:text-sm font-bold text-zinc-400 uppercase tracking-[0.15em] sm:tracking-[0.2em] mt-2 sm:mt-3">Access your market terminal</p>
         </div>
 
-        <div className="bg-white border border-zinc-100 rounded-[40px] p-12 shadow-sm border border-zinc-100">
-          <form onSubmit={handleSubmit} className="space-y-8">
+        <div className="bg-white border border-zinc-100 rounded-3xl sm:rounded-[40px] p-6 sm:p-8 lg:p-12 shadow-sm">
+          <form onSubmit={handleSubmit} className="space-y-6 sm:space-y-8">
             <div>
-              <label className="block text-xs font-black text-zinc-400 uppercase tracking-[0.2em] mb-3 ml-1">Email Terminal</label>
+              <label className="block text-[10px] sm:text-xs font-black text-zinc-400 uppercase tracking-[0.15em] sm:tracking-[0.2em] mb-2 sm:mb-3 ml-1">Email Terminal</label>
               <div className="relative group">
-                <Mail className="absolute left-5 top-1/2 -translate-y-1/2 h-5 w-5 text-zinc-300 group-focus-within:text-zinc-900 transition-colors" />
-                <input type="email" value={email} onChange={(e) => setEmail(e.target.value)}
-                  className="w-full pl-14 pr-6 py-5 bg-zinc-50 border border-zinc-100 rounded-2xl text-zinc-900 font-bold placeholder:text-zinc-300 focus:bg-white focus:border-zinc-900 focus:ring-4 focus:ring-zinc-900/5 transition-all outline-none"
-                  placeholder="name@company.com" required />
+                <Mail className="absolute left-4 sm:left-5 top-1/2 -translate-y-1/2 h-4 w-4 sm:h-5 sm:w-5 text-zinc-300 group-focus-within:text-zinc-900 transition-colors" />
+                <input 
+                  type="email" 
+                  value={email} 
+                  onChange={(e) => setEmail(e.target.value)}
+                  className="w-full pl-11 sm:pl-14 pr-4 sm:pr-6 py-4 sm:py-5 bg-zinc-50 border border-zinc-100 rounded-xl sm:rounded-2xl text-zinc-900 font-bold text-sm sm:text-base placeholder:text-zinc-300 focus:bg-white focus:border-zinc-900 focus:ring-4 focus:ring-zinc-900/5 transition-all outline-none"
+                  placeholder="name@company.com" 
+                  required 
+                />
               </div>
             </div>
 
             <div>
-              <label className="block text-xs font-black text-zinc-400 uppercase tracking-[0.2em] mb-3 ml-1">Secure Key</label>
+              <label className="block text-[10px] sm:text-xs font-black text-zinc-400 uppercase tracking-[0.15em] sm:tracking-[0.2em] mb-2 sm:mb-3 ml-1">Secure Key</label>
               <div className="relative group">
-                <Lock className="absolute left-5 top-1/2 -translate-y-1/2 h-5 w-5 text-zinc-300 group-focus-within:text-zinc-900 transition-colors" />
-                <input type={showPassword ? 'text' : 'password'} value={password}
+                <Lock className="absolute left-4 sm:left-5 top-1/2 -translate-y-1/2 h-4 w-4 sm:h-5 sm:w-5 text-zinc-300 group-focus-within:text-zinc-900 transition-colors" />
+                <input 
+                  type={showPassword ? 'text' : 'password'} 
+                  value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  className="w-full pl-14 pr-14 py-5 bg-zinc-50 border border-zinc-100 rounded-2xl text-zinc-900 font-bold placeholder:text-zinc-300 focus:bg-white focus:border-zinc-900 focus:ring-4 focus:ring-zinc-900/5 transition-all outline-none"
-                  placeholder="••••••••" required />
-                <button type="button" onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-5 top-1/2 -translate-y-1/2 text-zinc-300 hover:text-zinc-900 transition-all">
-                  {showPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
+                  className="w-full pl-11 sm:pl-14 pr-11 sm:pr-14 py-4 sm:py-5 bg-zinc-50 border border-zinc-100 rounded-xl sm:rounded-2xl text-zinc-900 font-bold text-sm sm:text-base placeholder:text-zinc-300 focus:bg-white focus:border-zinc-900 focus:ring-4 focus:ring-zinc-900/5 transition-all outline-none"
+                  placeholder="••••••••" 
+                  required 
+                />
+                <button 
+                  type="button" 
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="absolute right-4 sm:right-5 top-1/2 -translate-y-1/2 text-zinc-300 hover:text-zinc-900 transition-all"
+                >
+                  {showPassword ? <EyeOff className="h-4 w-4 sm:h-5 sm:w-5" /> : <Eye className="h-4 w-4 sm:h-5 sm:w-5" />}
                 </button>
               </div>
             </div>
 
-            <button type="submit" disabled={loading}
-              className="w-full bg-zinc-900 text-white py-5 rounded-2xl font-black text-sm uppercase tracking-widest hover:bg-zinc-800 hover:scale-[1.02] active:scale-[0.98] transition-all shadow-xl shadow-zinc-200 disabled:opacity-50 flex items-center justify-center gap-3">
+            <button 
+              type="submit" 
+              disabled={loading}
+              className="w-full bg-zinc-900 text-white py-4 sm:py-5 rounded-xl sm:rounded-2xl font-black text-xs sm:text-sm uppercase tracking-widest hover:bg-zinc-800 hover:scale-[1.02] active:scale-[0.98] transition-all shadow-xl shadow-zinc-200 disabled:opacity-50 flex items-center justify-center gap-2 sm:gap-3"
+            >
               {loading ? (
-                <><div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" /> Authenticating...</>
+                <><div className="w-4 h-4 sm:w-5 sm:h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" /> Authenticating...</>
               ) : (
-                <>Sign In Securely <ArrowRight className="h-5 w-5" /></>
+                <>Sign In Securely <ArrowRight className="h-4 w-4 sm:h-5 sm:w-5" /></>
               )}
             </button>
           </form>
 
-          <div className="relative my-10">
-            <div className="absolute inset-0 flex items-center"><div className="w-full border-t border-zinc-100" /></div>
-            <div className="relative flex justify-center text-[10px] font-black uppercase tracking-[0.3em]">
-              <span className="px-6 bg-white text-zinc-300">Or connect with</span>
+          <div className="relative my-8 sm:my-10">
+            <div className="absolute inset-0 flex items-center">
+              <div className="w-full border-t border-zinc-100" />
+            </div>
+            <div className="relative flex justify-center text-[10px] font-black uppercase tracking-[0.2em] sm:tracking-[0.3em]">
+              <span className="px-4 sm:px-6 bg-white text-zinc-300">Or connect with</span>
             </div>
           </div>
 
-          <button onClick={() => googleLoginHandler()}
-            className="w-full flex items-center justify-center gap-4 py-5 rounded-2xl border border-zinc-100 bg-white text-zinc-900 font-black text-sm hover:bg-zinc-50 transition-all group">
-            <svg className="h-6 w-6 group-hover:scale-110 transition-transform" viewBox="0 0 24 24">
+          <button 
+            onClick={() => googleLoginHandler()}
+            className="w-full flex items-center justify-center gap-3 sm:gap-4 py-4 sm:py-5 rounded-xl sm:rounded-2xl border border-zinc-100 bg-white text-zinc-900 font-black text-xs sm:text-sm hover:bg-zinc-50 transition-all group"
+          >
+            <svg className="h-5 w-5 sm:h-6 sm:w-6 group-hover:scale-110 transition-transform" viewBox="0 0 24 24">
               <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" />
               <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" />
               <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" />
@@ -105,7 +124,7 @@ const Login = () => {
             <span>Google Network</span>
           </button>
 
-          <p className="text-center text-xs font-bold text-zinc-400 uppercase tracking-widest mt-12">
+          <p className="text-center text-[10px] sm:text-xs font-bold text-zinc-400 uppercase tracking-widest mt-8 sm:mt-12">
             New to the platform?{' '}
             <Link to="/register" className="text-zinc-900 border-b-2 border-zinc-900 ml-1 hover:text-zinc-600 hover:border-zinc-600 transition-all">Create Account</Link>
           </p>
