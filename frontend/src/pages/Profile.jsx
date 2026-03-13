@@ -54,6 +54,9 @@ const Profile = () => {
                     </div>
                     <div className="text-center md:text-left flex-1">
                         <h1 className="text-2xl font-extrabold text-gray-900">{user?.name}</h1>
+                        {user?.username && (
+                            <p className="text-sm font-medium text-primary-600 mt-1 justify-center md:justify-start flex">@{user.username}</p>
+                        )}
                         <p className="text-gray-500 flex items-center gap-2 justify-center md:justify-start mt-1">
                             <Mail className="h-4 w-4" /> {user?.email}
                         </p>
@@ -92,8 +95,8 @@ const Profile = () => {
                             {menuItems.map(item => (
                                 <button key={item.id} onClick={() => setActiveSection(item.id)}
                                     className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-all ${activeSection === item.id
-                                            ? 'bg-primary-50 text-primary-700'
-                                            : 'text-gray-500 hover:text-gray-900 hover:bg-gray-50'
+                                        ? 'bg-primary-50 text-primary-700'
+                                        : 'text-gray-500 hover:text-gray-900 hover:bg-gray-50'
                                         }`}>
                                     {item.icon} {item.label}
                                 </button>
@@ -113,6 +116,7 @@ const Profile = () => {
                             <div className="space-y-4">
                                 {[
                                     { icon: <User className="h-4 w-4" />, label: 'Full Name', value: user?.name },
+                                    { icon: <User className="h-4 w-4" />, label: 'Username', value: user?.username ? `@${user.username}` : 'N/A' },
                                     { icon: <Mail className="h-4 w-4" />, label: 'Email Address', value: user?.email },
                                     { icon: <Shield className="h-4 w-4" />, label: 'Authentication', value: user?.googleId ? 'Google OAuth' : 'Email & Password' },
                                     { icon: <BarChart3 className="h-4 w-4" />, label: 'Portfolio Size', value: `${user?.holdings?.length || 0} holdings` },

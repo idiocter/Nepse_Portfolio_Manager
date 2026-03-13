@@ -87,6 +87,7 @@ const Navbar = () => {
                     <div className="absolute right-0 top-full mt-3 w-64 bg-white rounded-2xl shadow-2xl shadow-zinc-200 border border-zinc-100 p-2.5 z-50 animate-fade-in" style={{ animationDuration: '0.2s' }}>
                       <div className="px-4 py-3 border-b border-zinc-50 mb-2">
                         <p className="text-sm font-black text-zinc-900">{user.name}</p>
+                        {user.username && <p className="text-xs font-medium text-primary-600 my-0.5">@{user.username}</p>}
                         <p className="text-xs font-medium text-zinc-400">{user.email}</p>
                       </div>
                       <Link

@@ -10,6 +10,29 @@ const generateToken = (id) => {
   });
 };
 
+const generateUsername = async (name, email) => {
+  const emailBase = email.split("@")[0].replace(/[^a-zA-Z0-9]/g, "").toLowerCase();
+  const nameBase = name.replace(/[^a-zA-Z0-9]/g, "").toLowerCase();
+
+  const tempUsername = `${nameBase.substring(0, 10)}_${emailBase.substring(0, 10)}`;
+
+  let isUnique = false;
+  let counter = 0;
+  let finalUsername = tempUsername;
+
+  while (!isUnique) {
+    const existingUser = await User.findOne({ username: finalUsername });
+    if (!existingUser) {
+      isUnique = true;
+    } else {
+      counter++;
+      finalUsername = `${tempUsername}${counter}`;
+    }
+  }
+
+  return finalUsername;
+};
+
 export const register = async (req, res) => {
   try {
     const { name, email, password } = req.body;
@@ -19,7 +42,8 @@ export const register = async (req, res) => {
       return res.status(400).json({ message: "User already exists" });
     }
 
-    const user = await User.create({ name, email, password });
+    const username = await generateUsername(name, email);
+    const user = await User.create({ name, email, password, username });
 
     res.status(201).json({
       token: generateToken(user._id),
@@ -27,6 +51,7 @@ export const register = async (req, res) => {
         id: user._id,
         name: user.name,
         email: user.email,
+        username: user.username,
       },
     });
   } catch (error) {
@@ -49,6 +74,7 @@ export const login = async (req, res) => {
         id: user._id,
         name: user.name,
         email: user.email,
+        username: user.username,
         holdings: user.holdings,
       },
     });
@@ -107,9 +133,11 @@ export const googleAuth = async (req, res) => {
 
     if (!user) {
       console.log("Creating new user...");
+      const username = await generateUsername(name, email);
       user = await User.create({
         email,
         name,
+        username,
         googleId,
         avatar: picture,
       });
@@ -125,6 +153,7 @@ export const googleAuth = async (req, res) => {
         id: user._id,
         name: user.name,
         email: user.email,
+        username: user.username,
         avatar: user.avatar,
         holdings: user.holdings,
       },
