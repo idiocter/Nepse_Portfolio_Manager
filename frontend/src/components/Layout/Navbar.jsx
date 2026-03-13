@@ -1,8 +1,8 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { Link, useLocation, useNavigate } from 'react-router-dom'
 import { useAuth } from '../../contexts/AuthContext'
 import {
-  TrendingUp, LogOut, User, PieChart, Home,
+  LogOut, User, PieChart, Home,
   Activity, Eye, Menu, X, ChevronDown
 } from 'lucide-react'
 
@@ -12,6 +12,28 @@ const Navbar = () => {
   const location = useLocation()
   const [mobileOpen, setMobileOpen] = useState(false)
   const [profileOpen, setProfileOpen] = useState(false)
+  const [isMarketOpen, setIsMarketOpen] = useState(false)
+  const [showTooltip, setShowTooltip] = useState(false)
+
+  useEffect(() => {
+    const checkMarketStatus = () => {
+      const now = new Date();
+      const nepalTimeString = now.toLocaleString("en-US", { timeZone: "Asia/Kathmandu" });
+      const nepalTime = new Date(nepalTimeString);
+
+      const day = nepalTime.getDay();
+      const hours = nepalTime.getHours();
+
+      const isOpenDay = day >= 0 && day <= 4;
+      const isOpenTime = hours >= 11 && hours < 15;
+
+      setIsMarketOpen(isOpenDay && isOpenTime);
+    };
+
+    checkMarketStatus();
+    const interval = setInterval(checkMarketStatus, 60000);
+    return () => clearInterval(interval);
+  }, []);
 
   const handleLogout = () => {
     logout()
@@ -35,12 +57,13 @@ const Navbar = () => {
     <nav className="bg-white border-b border-zinc-100 sticky top-0 z-50 shadow-sm">
       <div className="container mx-auto px-6">
         <div className="flex justify-between items-center h-20">
+          
+          {/* Original Logo - Unchanged */}
           <Link to={user ? '/dashboard' : '/'} className="flex items-center gap-3 no-underline group">
             <div className="w-10 h-10 rounded-xl bg-white flex items-center justify-center shadow-lg border border-zinc-100 group-hover:scale-105 transition-transform duration-300 overflow-hidden p-1">
               <img src="/favicon.png" alt="NEPSE" className="w-full h-full object-contain" />
             </div>
             <span className="text-xl font-black text-zinc-900 tracking-tighter">
-
               NEPSE<span className="text-zinc-500">Tracker</span>
             </span>
           </Link>
@@ -64,6 +87,36 @@ const Navbar = () => {
 
           {/* Right side */}
           <div className="hidden md:flex items-center gap-4">
+            
+            {/* 3D Market Status Sphere with Bottom Tooltip */}
+            <div 
+              className="relative flex flex-col items-center"
+              onMouseEnter={() => setShowTooltip(true)}
+              onMouseLeave={() => setShowTooltip(false)}
+            >
+              {/* 3D Sphere */}
+              <div className={`relative w-8 h-8 rounded-full shadow-xl transition-all duration-300 hover:scale-110 hover:-translate-y-1 ${isMarketOpen ? 'shadow-emerald-500/50' : 'shadow-red-500/50'}`}>
+                {/* Ping animation when open */}
+                {isMarketOpen && (
+                  <span className="absolute inset-0 rounded-full bg-emerald-400 animate-ping opacity-60" />
+                )}
+                
+                {/* 3D Sphere Core */}
+                <span className={`absolute inset-0 rounded-full border-2 border-white/30 bg-gradient-to-br shadow-[inset_0_-4px_8px_rgba(0,0,0,0.4),inset_0_4px_8px_rgba(255,255,255,0.4),0_4px_12px_rgba(0,0,0,0.2)] ${isMarketOpen ? 'from-emerald-300 via-emerald-500 to-emerald-700' : 'from-red-300 via-red-500 to-red-700'}`} />
+                
+                {/* Highlight reflection */}
+                <span className="absolute top-1 left-2 w-3 h-2 bg-white/40 rounded-full blur-[2px]" />
+              </div>
+
+              {/* Tooltip - Bottom */}
+              {showTooltip && (
+                <div className="absolute top-full mt-2 px-3 py-1.5 bg-slate-900 text-white text-xs font-bold rounded-lg whitespace-nowrap shadow-lg">
+                  {isMarketOpen ? 'Market Open' : 'Market Closed'}
+                  <div className="absolute -top-1 left-1/2 -translate-x-1/2 w-2 h-2 bg-slate-900 rotate-45" />
+                </div>
+              )}
+            </div>
+
             {user ? (
               <div className="relative">
                 <button
@@ -84,7 +137,7 @@ const Navbar = () => {
                 {profileOpen && (
                   <>
                     <div className="fixed inset-0 z-40" onClick={() => setProfileOpen(false)} />
-                    <div className="absolute right-0 top-full mt-3 w-64 bg-white rounded-2xl shadow-2xl shadow-zinc-200 border border-zinc-100 p-2.5 z-50 animate-fade-in" style={{ animationDuration: '0.2s' }}>
+                    <div className="absolute right-0 top-full mt-3 w-64 bg-white rounded-2xl shadow-2xl shadow-zinc-200 border border-zinc-100 p-2.5 z-50">
                       <div className="px-4 py-3 border-b border-zinc-50 mb-2">
                         <p className="text-sm font-black text-zinc-900">{user.name}</p>
                         {user.username && <p className="text-xs font-medium text-primary-600 my-0.5">@{user.username}</p>}
@@ -129,7 +182,7 @@ const Navbar = () => {
 
       {/* Mobile Menu */}
       {mobileOpen && (
-        <div className="md:hidden bg-white border-t border-zinc-50 animate-fade-in" style={{ animationDuration: '0.3s' }}>
+        <div className="md:hidden bg-white border-t border-zinc-50">
           <div className="container mx-auto px-6 py-6 space-y-3">
             {navLinks.map(link => (
               <Link

@@ -4,7 +4,8 @@ import {
   login,
   googleAuth,
   getMe,
-  updateWatchlist
+  updateWatchlist,
+  updatePreferences
 } from "../controllers/authController.js";
 import { protect } from "../middleware/auth.js";
 
@@ -15,5 +16,6 @@ router.post("/login", login);
 router.post("/google", googleAuth);
 router.get("/me", protect, getMe);
 router.put("/watchlist", protect, updateWatchlist);
+router.put("/preferences", protect, updatePreferences);
 
 export default router;

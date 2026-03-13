@@ -54,9 +54,22 @@ export const AuthProvider = ({ children }) => {
     setUser(null)
   }
 
+  const updatePreferences = async (newPreferences) => {
+    try {
+      const data = await authService.updatePreferences(newPreferences);
+      setUser(prev => ({
+        ...prev,
+        preferences: data.preferences
+      }));
+      return data;
+    } catch (error) {
+      console.error('Failed to update preferences:', error);
+      throw error;
+    }
+  }
 
   return (
-    <AuthContext.Provider value={{ user, login, logout, register, googleLogin, loading }}>
+    <AuthContext.Provider value={{ user, login, logout, register, googleLogin, loading, updatePreferences }}>
       {children}
     </AuthContext.Provider>
   )

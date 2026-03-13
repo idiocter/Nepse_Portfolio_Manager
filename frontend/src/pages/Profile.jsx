@@ -6,8 +6,9 @@ import {
 } from 'lucide-react'
 
 const Profile = () => {
-    const { user, logout } = useAuth()
+    const { user, logout, updatePreferences } = useAuth()
     const [activeSection, setActiveSection] = useState('overview')
+    const [isUpdating, setIsUpdating] = useState(false)
 
     const menuItems = [
         { id: 'overview', label: 'Overview', icon: <User className="h-4 w-4" /> },
@@ -20,181 +21,244 @@ const Profile = () => {
             label: 'Total Holdings',
             value: user?.holdings?.length || 0,
             icon: <Wallet className="h-5 w-5" />,
-            color: 'bg-indigo-100 text-indigo-600'
         },
         {
             label: 'Account Type',
             value: user?.googleId ? 'Google' : 'Email',
             icon: <Shield className="h-5 w-5" />,
-            color: 'bg-green-100 text-green-600'
         },
         {
             label: 'Member Since',
             value: user?.createdAt ? new Date(user.createdAt).toLocaleDateString('en-US', { month: 'short', year: 'numeric' }) : 'N/A',
             icon: <Calendar className="h-5 w-5" />,
-            color: 'bg-amber-100 text-amber-600'
         },
     ]
 
+    const handlePreferenceChange = async (key, value) => {
+        if (isUpdating) return;
+        setIsUpdating(true);
+        try {
+            await updatePreferences({ [key]: value });
+        } catch (error) {
+            console.error("Failed to update preference:", error);
+        } finally {
+            setIsUpdating(false);
+        }
+    };
+
     return (
-        <div className="page-enter space-y-6">
-            {/* Profile Header */}
-            <div className="card relative overflow-hidden">
-                <div className="absolute inset-0 bg-gradient-to-r from-indigo-50 via-white to-purple-50 pointer-events-none" />
-                <div className="relative flex flex-col md:flex-row items-center gap-6 p-2">
+        <div className="min-h-screen bg-white">
+            <div className="max-w-5xl mx-auto px-6 py-8 space-y-8">
+
+                {/* Profile Header - Minimal Card */}
+                <div className="flex flex-col md:flex-row items-start md:items-center gap-6 pb-8 border-b border-slate-200">
                     <div className="relative">
                         {user?.avatar ? (
                             <img src={user.avatar} alt={user.name}
-                                className="w-24 h-24 rounded-2xl object-cover ring-4 ring-primary-100" />
+                                className="w-20 h-20 rounded-lg object-cover border border-slate-200" />
                         ) : (
-                            <div className="w-24 h-24 rounded-2xl bg-gradient-to-br from-primary-500 to-primary-700 flex items-center justify-center ring-4 ring-primary-100">
-                                <span className="text-3xl font-bold text-white">{user?.name?.charAt(0)?.toUpperCase() || 'U'}</span>
+                            <div className="w-20 h-20 rounded-lg bg-slate-900 flex items-center justify-center border border-slate-200">
+                                <span className="text-2xl font-bold text-white">{user?.name?.charAt(0)?.toUpperCase() || 'U'}</span>
                             </div>
                         )}
                     </div>
-                    <div className="text-center md:text-left flex-1">
-                        <h1 className="text-2xl font-extrabold text-gray-900">{user?.name}</h1>
-                        {user?.username && (
-                            <p className="text-sm font-medium text-primary-600 mt-1 justify-center md:justify-start flex">@{user.username}</p>
-                        )}
-                        <p className="text-gray-500 flex items-center gap-2 justify-center md:justify-start mt-1">
-                            <Mail className="h-4 w-4" /> {user?.email}
-                        </p>
-                        <div className="flex items-center gap-2 mt-3 justify-center md:justify-start">
-                            <span className="badge badge-primary">
-                                <TrendingUp className="h-3 w-3 mr-1" /> NEPSE Investor
+
+                    <div className="flex-1 min-w-0">
+                        <div className="flex items-center gap-3 mb-1">
+                            <h1 className="text-2xl font-bold text-slate-900 tracking-tight">{user?.name}</h1>
+                            {user?.username && (
+                                <span className="text-sm font-medium text-slate-500">@{user.username}</span>
+                            )}
+                        </div>
+                        <div className="flex items-center gap-4 text-sm text-slate-600">
+                            <span className="flex items-center gap-1.5">
+                                <Mail className="h-3.5 w-3.5" />
+                                {user?.email}
                             </span>
-                            {user?.googleId && <span className="badge badge-success">Google Verified</span>}
                         </div>
                     </div>
-                </div>
-            </div>
 
-            {/* Stats */}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                {stats.map(stat => (
-                    <div key={stat.label} className="card stat-card">
-                        <div className="flex items-center gap-4">
-                            <div className={`w-12 h-12 rounded-xl ${stat.color} flex items-center justify-center`}>
+                    <div className="flex items-center gap-3">
+                        <span className="inline-flex items-center px-2.5 py-1 rounded border border-slate-200 bg-slate-50 text-xs font-medium text-slate-700">
+                            <TrendingUp className="h-3 w-3 mr-1.5" />
+                            Investor
+                        </span>
+                        {user?.googleId && (
+                            <span className="inline-flex items-center px-2.5 py-1 rounded border border-emerald-200 bg-emerald-50 text-xs font-medium text-emerald-700">
+                                Verified
+                            </span>
+                        )}
+                    </div>
+                </div>
+
+                {/* Stats Row - Horizontal Ticker Style */}
+                <div className="grid grid-cols-3 gap-px bg-slate-200 border border-slate-200 rounded-lg overflow-hidden">
+                    {stats.map((stat, idx) => (
+                        <div key={stat.label} className="bg-white p-4 flex items-center gap-3">
+                            <div className="text-slate-400">
                                 {stat.icon}
                             </div>
                             <div>
-                                <p className="text-sm text-gray-500">{stat.label}</p>
-                                <p className="text-xl font-bold text-gray-900">{stat.value}</p>
+                                <p className="text-xs font-medium text-slate-500 uppercase tracking-wider">{stat.label}</p>
+                                <p className="text-lg font-bold text-slate-900 tabular-nums">{stat.value}</p>
                             </div>
                         </div>
-                    </div>
-                ))}
-            </div>
-
-            {/* Content */}
-            <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
-                <div className="lg:col-span-1">
-                    <div className="card p-2">
-                        <nav className="space-y-1">
-                            {menuItems.map(item => (
-                                <button key={item.id} onClick={() => setActiveSection(item.id)}
-                                    className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-all ${activeSection === item.id
-                                        ? 'bg-primary-50 text-primary-700'
-                                        : 'text-gray-500 hover:text-gray-900 hover:bg-gray-50'
-                                        }`}>
-                                    {item.icon} {item.label}
-                                </button>
-                            ))}
-                            <button onClick={logout}
-                                className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium text-red-600 hover:bg-red-50 transition-all">
-                                <LogOut className="h-4 w-4" /> Sign Out
-                            </button>
-                        </nav>
-                    </div>
+                    ))}
                 </div>
 
-                <div className="lg:col-span-3">
-                    {activeSection === 'overview' && (
-                        <div className="card space-y-6">
-                            <h3 className="text-lg font-bold text-gray-900">Account Information</h3>
-                            <div className="space-y-4">
-                                {[
-                                    { icon: <User className="h-4 w-4" />, label: 'Full Name', value: user?.name },
-                                    { icon: <User className="h-4 w-4" />, label: 'Username', value: user?.username ? `@${user.username}` : 'N/A' },
-                                    { icon: <Mail className="h-4 w-4" />, label: 'Email Address', value: user?.email },
-                                    { icon: <Shield className="h-4 w-4" />, label: 'Authentication', value: user?.googleId ? 'Google OAuth' : 'Email & Password' },
-                                    { icon: <BarChart3 className="h-4 w-4" />, label: 'Portfolio Size', value: `${user?.holdings?.length || 0} holdings` },
-                                ].map(item => (
-                                    <div key={item.label} className="flex items-center justify-between py-3 border-b border-gray-100 last:border-0">
-                                        <div className="flex items-center gap-3">
-                                            <span className="text-gray-400">{item.icon}</span>
-                                            <span className="text-sm text-gray-500">{item.label}</span>
+                {/* Main Content Grid */}
+                <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
+
+                    {/* Sidebar */}
+                    <div className="lg:col-span-3">
+                        <div className="space-y-1">
+                            {menuItems.map(item => (
+                                <button
+                                    key={item.id}
+                                    onClick={() => setActiveSection(item.id)}
+                                    className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-md text-sm font-medium transition-colors ${activeSection === item.id
+                                        ? 'bg-slate-900 text-white'
+                                        : 'text-slate-600 hover:bg-slate-100'
+                                        }`}
+                                >
+                                    <span className={activeSection === item.id ? 'text-white' : 'text-slate-400'}>
+                                        {item.icon}
+                                    </span>
+                                    {item.label}
+                                </button>
+                            ))}
+                            <div className="pt-4 mt-4 border-t border-slate-200">
+                                <button
+                                    onClick={logout}
+                                    className="w-full flex items-center gap-3 px-3 py-2.5 rounded-md text-sm font-medium text-slate-600 hover:bg-red-50 hover:text-red-600 transition-colors"
+                                >
+                                    <LogOut className="h-4 w-4" />
+                                    Sign Out
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    {/* Content Area */}
+                    <div className="lg:col-span-9">
+
+                        {/* Overview */}
+                        {activeSection === 'overview' && (
+                            <div className="space-y-6">
+                                <div className="flex items-center justify-between pb-4 border-b border-slate-200">
+                                    <h3 className="text-lg font-bold text-slate-900">Account Details</h3>
+                                    <button className="text-xs font-medium text-slate-500 hover:text-slate-900 transition-colors">
+                                        Edit Profile
+                                    </button>
+                                </div>
+
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                    {[
+                                        { label: 'Full Name', value: user?.name },
+                                        { label: 'Username', value: user?.username ? `@${user.username}` : '—' },
+                                        { label: 'Email', value: user?.email },
+                                        { label: 'Authentication', value: user?.googleId ? 'Google OAuth' : 'Email & Password' },
+                                        { label: 'Portfolio Size', value: `${user?.holdings?.length || 0} holdings` },
+                                        { label: 'Account Status', value: user?.googleId ? 'Verified' : 'Standard' },
+                                    ].map((item) => (
+                                        <div key={item.label} className="space-y-1">
+                                            <p className="text-xs font-medium text-slate-500 uppercase tracking-wider">{item.label}</p>
+                                            <p className="text-sm font-semibold text-slate-900">{item.value || '—'}</p>
                                         </div>
-                                        <span className="text-sm font-medium text-gray-900">{item.value}</span>
-                                    </div>
-                                ))}
+                                    ))}
+                                </div>
                             </div>
-                        </div>
-                    )}
+                        )}
 
-                    {activeSection === 'security' && (
-                        <div className="card space-y-6">
-                            <h3 className="text-lg font-bold text-gray-900">Security Settings</h3>
-                            <div className="border border-gray-200 rounded-xl p-5">
-                                <div className="flex items-center gap-3">
-                                    <div className="w-10 h-10 rounded-xl bg-green-100 flex items-center justify-center">
-                                        <Shield className="h-5 w-5 text-green-600" />
-                                    </div>
-                                    <div>
-                                        <h4 className="font-semibold text-gray-900">Authentication Method</h4>
-                                        <p className="text-sm text-gray-500">
-                                            {user?.googleId ? 'Your account is secured with Google OAuth 2.0' : 'Your account uses email and password authentication'}
-                                        </p>
-                                    </div>
+                        {/* Security */}
+                        {activeSection === 'security' && (
+                            <div className="space-y-6">
+                                <div className="pb-4 border-b border-slate-200">
+                                    <h3 className="text-lg font-bold text-slate-900">Security</h3>
                                 </div>
-                            </div>
-                            <div className="border border-gray-200 rounded-xl p-5">
-                                <div className="flex items-center gap-3">
-                                    <div className="w-10 h-10 rounded-xl bg-indigo-100 flex items-center justify-center">
-                                        <Calendar className="h-5 w-5 text-indigo-600" />
-                                    </div>
-                                    <div>
-                                        <h4 className="font-semibold text-gray-900">Session Management</h4>
-                                        <p className="text-sm text-gray-500">Your sessions expire after 30 days for security.</p>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    )}
 
-                    {activeSection === 'preferences' && (
-                        <div className="card space-y-6">
-                            <h3 className="text-lg font-bold text-gray-900">Preferences</h3>
-                            <div className="space-y-4">
-                                <div className="flex items-center justify-between p-4 border border-gray-200 rounded-xl">
-                                    <div>
-                                        <h4 className="font-semibold text-gray-900">Auto-refresh Prices</h4>
-                                        <p className="text-sm text-gray-500">Update prices every 10 seconds during market hours</p>
+                                <div className="space-y-4">
+                                    <div className="p-4 border border-slate-200 rounded-lg">
+                                        <div className="flex items-start gap-3">
+                                            <div className="p-2 bg-slate-100 rounded-md">
+                                                <Shield className="h-4 w-4 text-slate-600" />
+                                            </div>
+                                            <div>
+                                                <h4 className="text-sm font-semibold text-slate-900">Authentication</h4>
+                                                <p className="text-xs text-slate-500 mt-1">
+                                                    {user?.googleId ? 'Secured with Google OAuth 2.0' : 'Email and password authentication'}
+                                                </p>
+                                            </div>
+                                        </div>
                                     </div>
-                                    <div className="w-12 h-7 bg-primary-600 rounded-full relative cursor-pointer">
-                                        <div className="absolute right-1 top-1 w-5 h-5 bg-white rounded-full shadow" />
-                                    </div>
-                                </div>
-                                <div className="flex items-center justify-between p-4 border border-gray-200 rounded-xl">
-                                    <div>
-                                        <h4 className="font-semibold text-gray-900">Currency</h4>
-                                        <p className="text-sm text-gray-500">Display currency for portfolio values</p>
-                                    </div>
-                                    <span className="badge badge-primary">NPR (Rs.)</span>
-                                </div>
-                                <div className="flex items-center justify-between p-4 border border-gray-200 rounded-xl">
-                                    <div>
-                                        <h4 className="font-semibold text-gray-900">Market Notifications</h4>
-                                        <p className="text-sm text-gray-500">Get notified about significant price changes</p>
-                                    </div>
-                                    <div className="w-12 h-7 bg-gray-300 rounded-full relative cursor-pointer">
-                                        <div className="absolute left-1 top-1 w-5 h-5 bg-white rounded-full shadow" />
+
+                                    <div className="p-4 border border-slate-200 rounded-lg">
+                                        <div className="flex items-start gap-3">
+                                            <div className="p-2 bg-slate-100 rounded-md">
+                                                <Calendar className="h-4 w-4 text-slate-600" />
+                                            </div>
+                                            <div>
+                                                <h4 className="text-sm font-semibold text-slate-900">Session Expiry</h4>
+                                                <p className="text-xs text-slate-500 mt-1">Sessions expire after 30 days of inactivity</p>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                    )}
+                        )}
+
+                        {/* Preferences */}
+                        {activeSection === 'preferences' && (
+                            <div className="space-y-6">
+                                <div className="pb-4 border-b border-slate-200">
+                                    <h3 className="text-lg font-bold text-slate-900">Preferences</h3>
+                                </div>
+
+                                <div className="space-y-4">
+                                    {/* Toggle Item */}
+                                    <div className="flex items-center justify-between py-4 border-b border-slate-100">
+                                        <div>
+                                            <h4 className="text-sm font-semibold text-slate-900">Auto-refresh Prices</h4>
+                                            <p className="text-xs text-slate-500 mt-0.5">Update every 10 seconds during market hours</p>
+                                        </div>
+                                        <button
+                                            onClick={() => handlePreferenceChange('autoRefresh', user?.preferences?.autoRefresh === false ? true : false)}
+                                            disabled={isUpdating}
+                                            className={`relative inline-flex h-5 w-9 items-center rounded-full transition-colors ${user?.preferences?.autoRefresh !== false ? 'bg-slate-900' : 'bg-slate-300'} ${isUpdating ? 'opacity-50' : ''}`}
+                                        >
+                                            <span className={`inline-block h-3.5 w-3.5 transform rounded-full bg-white transition-transform ${user?.preferences?.autoRefresh !== false ? 'translate-x-5' : 'translate-x-0.5'}`} />
+                                        </button>
+                                    </div>
+
+                                    {/* Currency */}
+                                    <div className="flex items-center justify-between py-4 border-b border-slate-100">
+                                        <div>
+                                            <h4 className="text-sm font-semibold text-slate-900">Currency</h4>
+                                            <p className="text-xs text-slate-500 mt-0.5">Display currency for portfolio values</p>
+                                        </div>
+                                        <span className="text-sm font-semibold text-slate-900 tabular-nums">
+                                            {user?.preferences?.currency || 'NPR'}
+                                        </span>
+                                    </div>
+
+                                    {/* Toggle Item */}
+                                    <div className="flex items-center justify-between py-4 border-b border-slate-100">
+                                        <div>
+                                            <h4 className="text-sm font-semibold text-slate-900">Market Notifications</h4>
+                                            <p className="text-xs text-slate-500 mt-0.5">Alerts for significant price changes</p>
+                                        </div>
+                                        <button
+                                            onClick={() => handlePreferenceChange('notifications', !user?.preferences?.notifications)}
+                                            disabled={isUpdating}
+                                            className={`relative inline-flex h-5 w-9 items-center rounded-full transition-colors ${user?.preferences?.notifications ? 'bg-slate-900' : 'bg-slate-300'} ${isUpdating ? 'opacity-50' : ''}`}
+                                        >
+                                            <span className={`inline-block h-3.5 w-3.5 transform rounded-full bg-white transition-transform ${user?.preferences?.notifications ? 'translate-x-5' : 'translate-x-0.5'}`} />
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        )}
+                    </div>
                 </div>
             </div>
         </div>

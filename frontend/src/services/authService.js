@@ -26,6 +26,11 @@ const authService = {
         return data;
     },
 
+    updatePreferences: async (preferences) => {
+        const { data } = await api.put('/auth/preferences', { preferences });
+        return data;
+    },
+
     logout: () => {
         localStorage.removeItem('token');
     }

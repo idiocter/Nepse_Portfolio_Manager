@@ -39,6 +39,11 @@ const userSchema = new mongoose.Schema(
       },
     ],
     watchlist: [{ type: String }],
+    preferences: {
+      autoRefresh: { type: Boolean, default: true },
+      notifications: { type: Boolean, default: false },
+      currency: { type: String, default: 'NPR' },
+    },
   },
   { timestamps: true },
 );

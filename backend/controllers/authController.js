@@ -53,6 +53,7 @@ export const register = async (req, res) => {
         email: user.email,
         username: user.username,
         watchlist: user.watchlist,
+        preferences: user.preferences,
       },
     });
   } catch (error) {
@@ -78,6 +79,7 @@ export const login = async (req, res) => {
         username: user.username,
         holdings: user.holdings,
         watchlist: user.watchlist,
+        preferences: user.preferences,
       },
     });
   } catch (error) {
@@ -159,6 +161,7 @@ export const googleAuth = async (req, res) => {
         avatar: user.avatar,
         holdings: user.holdings,
         watchlist: user.watchlist,
+        preferences: user.preferences,
       },
     });
     console.log("=== Google Auth Completed Successfully ===");
@@ -190,6 +193,28 @@ export const updateWatchlist = async (req, res) => {
     ).select("-password");
 
     res.json({ watchlist: user.watchlist });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+export const updatePreferences = async (req, res) => {
+  try {
+    const { preferences } = req.body;
+
+    // Use dot notation to only update the provided fields
+    const updateQuery = {};
+    if (typeof preferences.autoRefresh === 'boolean') updateQuery["preferences.autoRefresh"] = preferences.autoRefresh;
+    if (typeof preferences.notifications === 'boolean') updateQuery["preferences.notifications"] = preferences.notifications;
+    if (preferences.currency) updateQuery["preferences.currency"] = preferences.currency;
+
+    const user = await User.findByIdAndUpdate(
+      req.user.id,
+      { $set: updateQuery },
+      { new: true }
+    ).select("-password");
+
+    res.json({ preferences: user.preferences });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
