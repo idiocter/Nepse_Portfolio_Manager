@@ -6,7 +6,11 @@ export const fetchHoldingsWithPrices = async (userId) => {
     const prices = await StockPrice.find();
 
     const holdingsWithPrices = user.holdings.map((holding) => {
-        const priceData = prices.find((p) => p.symbol === holding.symbol);
+        const normalizedHoldingSymbol = holding.symbol.trim().toUpperCase();
+        const priceData = prices.find((p) => p.symbol.trim().toUpperCase() === normalizedHoldingSymbol);
+
+        // If we have price data, use lastPrice. Otherwise, we can fallback to avgPrice 
+        // but it's better to be explicit that data might be missing.
         const currentPrice = priceData?.lastPrice || holding.avgPrice;
         const indexId = priceData?.indexId || null;
         const sector = priceData?.sector || "Others";
@@ -21,9 +25,12 @@ export const fetchHoldingsWithPrices = async (userId) => {
             investment,
             currentValue,
             pnl: currentValue - investment,
-            change: currentPrice - holding.avgPrice,
-            changePercent:
-                ((currentPrice - holding.avgPrice) / holding.avgPrice) * 100,
+            dailyChange: priceData?.change || 0,
+            dailyChangePercent: priceData?.changePercent || 0,
+            pnlPercent:
+                holding.avgPrice > 0
+                    ? ((currentPrice - holding.avgPrice) / holding.avgPrice) * 100
+                    : 0,
         };
     });
 
@@ -52,9 +59,10 @@ export const fetchHoldingsWithPrices = async (userId) => {
 
 export const addHoldingToPortfolio = async (userId, symbol, quantity, avgPrice) => {
     const user = await User.findById(userId);
+    const normalizedSymbol = symbol.trim().toUpperCase();
 
     const existingIndex = user.holdings.findIndex(
-        (h) => h.symbol === symbol.toUpperCase(),
+        (h) => h.symbol === normalizedSymbol,
     );
 
     if (existingIndex >= 0) {
@@ -67,7 +75,7 @@ export const addHoldingToPortfolio = async (userId, symbol, quantity, avgPrice) 
         existing.avgPrice = totalCost / totalQty;
     } else {
         user.holdings.push({
-            symbol: symbol.toUpperCase(),
+            symbol: normalizedSymbol,
             quantity,
             avgPrice,
         });
@@ -80,8 +88,9 @@ export const addHoldingToPortfolio = async (userId, symbol, quantity, avgPrice) 
 export const editHoldingInPortfolio = async (userId, symbol, quantity, avgPrice) => {
     const user = await User.findById(userId);
 
+    const normalizedSymbol = symbol.trim().toUpperCase();
     const holding = user.holdings.find(
-        (h) => h.symbol === symbol.toUpperCase(),
+        (h) => h.symbol === normalizedSymbol,
     );
     if (!holding) {
         throw new Error("Holding not found");
@@ -97,8 +106,9 @@ export const editHoldingInPortfolio = async (userId, symbol, quantity, avgPrice)
 export const deleteHoldingFromPortfolio = async (userId, symbol) => {
     const user = await User.findById(userId);
 
+    const normalizedSymbol = symbol.trim().toUpperCase();
     user.holdings = user.holdings.filter(
-        (h) => h.symbol !== symbol.toUpperCase(),
+        (h) => h.symbol !== normalizedSymbol,
     );
     await user.save();
     return user.holdings;

@@ -56,7 +56,7 @@ const Dashboard = () => {
   const totalHoldings = portfolio.holdings?.length || 0
   const profitableStocks = portfolio.holdings?.filter(h => h.pnl > 0).length || 0
   const lossStocks = totalHoldings - profitableStocks
-  const topGainer = portfolio.holdings?.reduce((max, h) => h.changePercent > max.changePercent ? h : max, portfolio.holdings[0] || {})
+  const topGainer = portfolio.holdings?.reduce((max, h) => h.pnlPercent > max.pnlPercent ? h : max, portfolio.holdings[0] || {})
 
   if (loading) {
     return (
@@ -78,7 +78,7 @@ const Dashboard = () => {
   return (
     <div className="min-h-screen bg-slate-50 p-8">
       <div className="max-w-7xl mx-auto space-y-8">
-        
+
         {/* Header - Proper Spacing */}
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-6">
           <div className="space-y-2">
@@ -154,13 +154,13 @@ const Dashboard = () => {
             <div className="space-y-2">
               <p className="text-2xl font-bold truncate">{topGainer?.symbol || '—'}</p>
               <div className="flex items-center gap-1.5">
-                {topGainer?.changePercent >= 0 ? (
+                {topGainer?.pnlPercent >= 0 ? (
                   <ArrowUpRight className="h-4 w-4 text-emerald-400" />
                 ) : (
                   <ArrowDownRight className="h-4 w-4 text-red-400" />
                 )}
-                <span className={`text-sm font-semibold ${topGainer?.changePercent >= 0 ? 'text-emerald-400' : 'text-red-400'}`}>
-                  {topGainer?.changePercent ? `${Math.abs(topGainer.changePercent).toFixed(2)}%` : '0%'}
+                <span className={`text-sm font-semibold ${topGainer?.pnlPercent >= 0 ? 'text-emerald-400' : 'text-red-400'}`}>
+                  {topGainer?.pnlPercent ? `${Math.abs(topGainer.pnlPercent).toFixed(2)}%` : '0%'}
                 </span>
               </div>
             </div>
@@ -174,7 +174,7 @@ const Dashboard = () => {
 
         {/* Main Content Grid - Proper Gaps */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
-          
+
           {/* Holdings - Main Table */}
           <div className="lg:col-span-8">
             <div className="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
@@ -197,7 +197,7 @@ const Dashboard = () => {
 
           {/* Sidebar - Sticky with Proper Spacing */}
           <div className="lg:col-span-4 space-y-8 lg:sticky lg:top-8 lg:self-start">
-            
+
             {/* Allocation */}
             <div className="bg-white rounded-2xl border border-slate-200 shadow-sm p-8">
               <div className="flex items-center gap-3 mb-6">

@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import portfolioService from '../services/portfolioService'
 import { formatCurrency, formatPercent, formatVolume } from '../utils/formatters'
-import { Plus, Pencil, Trash2, Wallet, TrendingUp, TrendingDown } from 'lucide-react'
+import { Plus, Pencil, Trash2, Wallet, TrendingUp, TrendingDown, RefreshCw } from 'lucide-react'
 import HoldingForm from '../components/Portfolio/HoldingForm'
 
 const Portfolio = () => {
@@ -11,9 +11,15 @@ const Portfolio = () => {
   const [editingHolding, setEditingHolding] = useState(null)
   const [loading, setLoading] = useState(true)
 
-  useEffect(() => { fetchHoldings() }, [])
+  useEffect(() => {
+    fetchHoldings()
+    const interval = setInterval(fetchHoldings, 30000)
+    return () => clearInterval(interval)
+  }, [])
 
   const fetchHoldings = async () => {
+    // Only show full loading if no data yet
+    if (holdings.length === 0) setLoading(true)
     try {
       const data = await portfolioService.getHoldings()
       setHoldings(data.holdings)
@@ -56,7 +62,7 @@ const Portfolio = () => {
   return (
     <div className="min-h-screen bg-slate-50 p-8">
       <div className="max-w-7xl mx-auto space-y-8">
-        
+
         {/* Header */}
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-6">
           <div className="space-y-2">
@@ -67,13 +73,22 @@ const Portfolio = () => {
               {totalHoldings} {totalHoldings === 1 ? 'holding' : 'holdings'} tracked
             </p>
           </div>
-          <button
-            onClick={handleAdd}
-            className="flex items-center gap-2 px-6 py-3 bg-slate-900 text-white rounded-xl font-semibold hover:bg-slate-800 transition-all shadow-lg active:scale-95"
-          >
-            <Plus className="h-5 w-5" />
-            Add Holding
-          </button>
+          <div className="flex items-center gap-4">
+            <button
+              onClick={fetchHoldings}
+              className="p-3 bg-white border border-slate-300 text-slate-700 rounded-xl hover:bg-slate-50 transition-all shadow-sm active:scale-95"
+              title="Refresh Data"
+            >
+              <RefreshCw className={`h-5 w-5 ${loading && holdings.length > 0 ? 'animate-spin' : ''}`} />
+            </button>
+            <button
+              onClick={handleAdd}
+              className="flex items-center gap-2 px-6 py-3 bg-slate-900 text-white rounded-xl font-semibold hover:bg-slate-800 transition-all shadow-lg active:scale-95"
+            >
+              <Plus className="h-5 w-5" />
+              Add Holding
+            </button>
+          </div>
         </div>
 
         {/* Summary Stats */}

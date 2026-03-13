@@ -32,7 +32,7 @@ const HoldingsTable = ({ holdings }) => {
           <tbody className="divide-y divide-zinc-100">
             {holdings.map((holding) => {
               const isProfit = holding.pnl >= 0
-              const dayChangeIsProfit = holding.change >= 0
+              const dayChangeIsProfit = (holding.dailyChangePercent || 0) >= 0
               return (
                 <tr key={holding._id} className="hover:bg-zinc-50/50 transition-colors">
                   <td className="px-8 py-5">
@@ -47,7 +47,7 @@ const HoldingsTable = ({ holdings }) => {
                   <td className="px-6 py-5 text-right">
                     <span className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-black ${dayChangeIsProfit ? 'bg-emerald-50 text-emerald-600' : 'bg-rose-50 text-rose-600'}`}>
                       {dayChangeIsProfit ? <TrendingUp className="h-3 w-3" /> : <TrendingDown className="h-3 w-3" />}
-                      {holding.changePercent?.toFixed(2)}%
+                      {holding.dailyChangePercent?.toFixed(2)}%
                     </span>
                   </td>
                   <td className="px-8 py-5 text-center">

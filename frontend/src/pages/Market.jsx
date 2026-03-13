@@ -26,10 +26,14 @@ const Market = () => {
 
   useEffect(() => {
     fetchStocks()
+    // Auto refresh every 60 seconds
+    const interval = setInterval(fetchStocks, 60000)
+    return () => clearInterval(interval)
   }, [])
 
   const fetchStocks = async () => {
-    setLoading(true)
+    // Only show full loading state if we have no stocks yet
+    if (stocks.length === 0) setLoading(true)
     try {
       const data = await marketService.getStocks()
       setStocks(data || [])
@@ -102,7 +106,7 @@ const Market = () => {
   return (
     <div className="min-h-screen bg-slate-50 p-8">
       <div className="max-w-7xl mx-auto space-y-8">
-        
+
         {/* Header - Clean & Spaced */}
         <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6">
           <div className="space-y-2">
@@ -175,8 +179,8 @@ const Market = () => {
             </div>
             {/* Progress Bar */}
             <div className="mt-4 h-2 bg-slate-100 rounded-full overflow-hidden">
-              <div 
-                className="h-full bg-emerald-500 rounded-full" 
+              <div
+                className="h-full bg-emerald-500 rounded-full"
                 style={{ width: `${stocks.length ? (gainersCount / stocks.length) * 100 : 0}%` }}
               />
             </div>
@@ -231,27 +235,27 @@ const Market = () => {
               <thead>
                 <tr className="bg-slate-50 border-b border-slate-200">
                   <th className="px-8 py-5 text-xs font-semibold text-slate-500 uppercase tracking-wider">Symbol</th>
-                  <th 
-                    className="px-6 py-5 text-xs font-semibold text-slate-500 uppercase tracking-wider cursor-pointer hover:text-slate-900 transition-colors" 
+                  <th
+                    className="px-6 py-5 text-xs font-semibold text-slate-500 uppercase tracking-wider cursor-pointer hover:text-slate-900 transition-colors"
                     onClick={() => handleSort('sector')}
                   >
                     Sector
                   </th>
                   <th className="px-6 py-5 text-xs font-semibold text-slate-500 uppercase tracking-wider">Name</th>
-                  <th 
-                    className="px-6 py-5 text-right text-xs font-semibold text-slate-500 uppercase tracking-wider cursor-pointer hover:text-slate-900 transition-colors" 
+                  <th
+                    className="px-6 py-5 text-right text-xs font-semibold text-slate-500 uppercase tracking-wider cursor-pointer hover:text-slate-900 transition-colors"
                     onClick={() => handleSort('lastPrice')}
                   >
                     LTP
                   </th>
-                  <th 
-                    className="px-6 py-5 text-right text-xs font-semibold text-slate-500 uppercase tracking-wider cursor-pointer hover:text-slate-900 transition-colors" 
+                  <th
+                    className="px-6 py-5 text-right text-xs font-semibold text-slate-500 uppercase tracking-wider cursor-pointer hover:text-slate-900 transition-colors"
                     onClick={() => handleSort('changePercent')}
                   >
                     Change
                   </th>
-                  <th 
-                    className="px-6 py-5 text-right text-xs font-semibold text-slate-500 uppercase tracking-wider cursor-pointer hover:text-slate-900 transition-colors" 
+                  <th
+                    className="px-6 py-5 text-right text-xs font-semibold text-slate-500 uppercase tracking-wider cursor-pointer hover:text-slate-900 transition-colors"
                     onClick={() => handleSort('volume')}
                   >
                     Volume
@@ -350,7 +354,7 @@ const Market = () => {
                         className={`w-10 h-10 rounded-lg text-sm font-semibold transition-all ${currentPage === pageNum
                           ? 'bg-slate-900 text-white shadow-md'
                           : 'bg-white border border-slate-200 text-slate-600 hover:border-slate-300 hover:text-slate-900'
-                        }`}
+                          }`}
                       >
                         {pageNum}
                       </button>
