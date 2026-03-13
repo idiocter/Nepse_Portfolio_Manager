@@ -3,7 +3,7 @@ import { Link, useLocation, useNavigate } from 'react-router-dom'
 import { useAuth } from '../../contexts/AuthContext'
 import {
   LogOut, User, PieChart, Home,
-  Activity, Eye, Menu, X, ChevronDown
+  Activity, Eye, Menu, X, ChevronDown, Rocket
 } from 'lucide-react'
 
 const Navbar = () => {
@@ -57,7 +57,7 @@ const Navbar = () => {
     <nav className="bg-white border-b border-zinc-100 sticky top-0 z-50 shadow-sm">
       <div className="container mx-auto px-6">
         <div className="flex justify-between items-center h-20">
-          
+
           {/* Original Logo - Unchanged */}
           <Link to={user ? '/dashboard' : '/'} className="flex items-center gap-3 no-underline group">
             <div className="w-10 h-10 rounded-xl bg-white flex items-center justify-center shadow-lg border border-zinc-100 group-hover:scale-105 transition-transform duration-300 overflow-hidden p-1">
@@ -87,9 +87,9 @@ const Navbar = () => {
 
           {/* Right side */}
           <div className="hidden md:flex items-center gap-4">
-            
+
             {/* 3D Market Status Sphere with Bottom Tooltip */}
-            <div 
+            <div
               className="relative flex flex-col items-center"
               onMouseEnter={() => setShowTooltip(true)}
               onMouseLeave={() => setShowTooltip(false)}
@@ -100,10 +100,10 @@ const Navbar = () => {
                 {isMarketOpen && (
                   <span className="absolute inset-0 rounded-full bg-emerald-400 animate-ping opacity-60" />
                 )}
-                
+
                 {/* 3D Sphere Core */}
                 <span className={`absolute inset-0 rounded-full border-2 border-white/30 bg-gradient-to-br shadow-[inset_0_-4px_8px_rgba(0,0,0,0.4),inset_0_4px_8px_rgba(255,255,255,0.4),0_4px_12px_rgba(0,0,0,0.2)] ${isMarketOpen ? 'from-emerald-300 via-emerald-500 to-emerald-700' : 'from-red-300 via-red-500 to-red-700'}`} />
-                
+
                 {/* Highlight reflection */}
                 <span className="absolute top-1 left-2 w-3 h-2 bg-white/40 rounded-full blur-[2px]" />
               </div>
@@ -165,7 +165,10 @@ const Navbar = () => {
             ) : (
               <div className="flex items-center gap-4">
                 <Link to="/login" className="px-6 py-2.5 text-sm font-bold text-zinc-500 hover:text-zinc-900 hover:bg-zinc-50 rounded-xl transition-all no-underline">Sign In</Link>
-                <Link to="/register" className="px-6 py-2.5 text-sm font-bold bg-zinc-900 text-white hover:bg-zinc-800 rounded-xl transition-all shadow-lg shadow-zinc-200 no-underline">Get Started</Link>
+                <Link to="/register" className="px-6 py-2.5 text-sm font-bold bg-zinc-900 text-white hover:bg-zinc-800 rounded-xl transition-all shadow-lg shadow-zinc-200 no-underline flex items-center gap-2 group">
+                  <Rocket className="h-4 w-4 text-zinc-400 group-hover:text-white group-hover:rotate-12 transition-all duration-300" />
+                  Get Started
+                </Link>
               </div>
             )}
           </div>
@@ -220,7 +223,10 @@ const Navbar = () => {
             ) : (
               <div className="flex flex-col gap-3 pt-4 border-t border-zinc-100">
                 <Link to="/login" onClick={() => setMobileOpen(false)} className="w-full py-4 text-center font-bold text-zinc-600 border border-zinc-200 rounded-2xl no-underline">Sign In</Link>
-                <Link to="/register" onClick={() => setMobileOpen(false)} className="w-full py-4 text-center font-bold bg-zinc-900 text-white rounded-2xl no-underline">Get Started</Link>
+                <Link to="/register" onClick={() => setMobileOpen(false)} className="w-full py-4 text-center font-bold bg-zinc-900 text-white rounded-2xl no-underline flex items-center justify-center gap-3 group">
+                  <Rocket className="h-5 w-5 text-zinc-400 group-hover:text-white group-hover:rotate-12 transition-all duration-300" />
+                  Get Started
+                </Link>
               </div>
             )}
           </div>

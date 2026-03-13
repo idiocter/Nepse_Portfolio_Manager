@@ -4,7 +4,7 @@ import marketService from '../services/marketService'
 import {
     TrendingUp, TrendingDown, BarChart3, Shield, Zap,
     PieChart, Eye, ArrowRight, Activity, LineChart,
-    Wallet, Globe, ChevronRight
+    Wallet, Globe, ChevronRight, Rocket, Sparkles
 } from 'lucide-react'
 
 const Landing = () => {
@@ -105,9 +105,9 @@ const Landing = () => {
                         <div className="flex flex-col sm:flex-row items-center justify-center gap-6 animate-fade-in-up stagger-4">
                             <Link
                                 to="/register"
-                                className="w-full sm:w-auto px-10 py-5 bg-zinc-900 text-white rounded-2xl font-bold text-lg hover:bg-zinc-800 hover:scale-[1.02] active:scale-[0.98] transition-all shadow-xl shadow-zinc-200 no-underline flex items-center justify-center gap-3"
+                                className="w-full sm:w-auto px-10 py-5 bg-zinc-900 text-white rounded-2xl font-bold text-lg hover:bg-zinc-800 hover:scale-[1.02] active:scale-[0.98] transition-all shadow-xl shadow-zinc-200 no-underline flex items-center justify-center gap-3 group"
                             >
-                                <img src="/favicon.png" alt="" className="h-6 w-6 brightness-0 invert" />
+                                <Rocket className="h-6 w-6 text-zinc-400 group-hover:text-white group-hover:rotate-12 transition-all duration-300" />
                                 Get Started Free
                                 <ArrowRight className="h-5 w-5" />
                             </Link>
@@ -298,8 +298,9 @@ const Landing = () => {
                         </p>
                         <Link
                             to="/register"
-                            className="px-12 py-6 bg-white text-zinc-950 rounded-2xl font-black text-xl hover:bg-zinc-100 hover:scale-[1.05] active:scale-[0.95] transition-all no-underline inline-flex items-center gap-4 shadow-2xl shadow-white/10"
+                            className="px-12 py-6 bg-white text-zinc-950 rounded-2xl font-black text-xl hover:bg-zinc-100 hover:scale-[1.05] active:scale-[0.95] transition-all no-underline inline-flex items-center gap-4 shadow-2xl shadow-white/10 group"
                         >
+                            <Sparkles className="h-6 w-6 text-zinc-400 group-hover:text-zinc-950 group-hover:scale-110 transition-all duration-300" />
                             Get Started Free
                             <ArrowRight className="h-6 w-6" />
                         </Link>
