@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import marketService from '../services/marketService'
+import authService from '../services/authService'
 import { useAuth } from '../contexts/AuthContext'
 
 import {
@@ -9,7 +10,7 @@ import {
 } from 'lucide-react'
 
 const Watchlist = () => {
-    const { user } = useAuth()
+    const { user, loading: authLoading } = useAuth()
     const [watchlist, setWatchlist] = useState([])
     const [stocks, setStocks] = useState([])
     const [watchlistData, setWatchlistData] = useState([])
@@ -17,35 +18,35 @@ const Watchlist = () => {
     const [searchTerm, setSearchTerm] = useState('')
     const [loading, setLoading] = useState(true)
 
+    const [isInitialized, setIsInitialized] = useState(false)
+
+    // First effect: Load data when user changes
     useEffect(() => {
-        const key = `nepse_watchlist_${user?.id || 'guest'}`
-        const saved = localStorage.getItem(key)
+        if (authLoading) return; // Wait until authentication check is complete
 
-        // Use an old global watchlist as fallback for guest if migration needed
-        if (!saved && !user) {
-            const globalSaved = localStorage.getItem('nepse_watchlist')
-            if (globalSaved) {
-                setWatchlist(JSON.parse(globalSaved))
-                return
-            }
+        if (user && user.watchlist) {
+            setWatchlist(user.watchlist)
+        } else {
+            const key = `nepse_watchlist_guest`
+            const saved = localStorage.getItem(key) || localStorage.getItem('nepse_watchlist')
+            setWatchlist(saved ? JSON.parse(saved) : [])
         }
+        setIsInitialized(true)
+    }, [user, authLoading])
 
-        setWatchlist(saved ? JSON.parse(saved) : [])
-    }, [user])
-
+    // Second effect: Fetch stocks & setup interval
     useEffect(() => {
         fetchStocks()
         const interval = setInterval(fetchStockPrices, 15000)
         return () => clearInterval(interval)
     }, [])
 
+    // Fourth effect: Update display data when stocks or watchlist change
     useEffect(() => {
-        if (watchlist.length >= 0) { // check if initialized
-            const key = `nepse_watchlist_${user?.id || 'guest'}`
-            localStorage.setItem(key, JSON.stringify(watchlist))
+        if (stocks.length > 0 && isInitialized) {
+            updateWatchlistData()
         }
-        if (stocks.length > 0) updateWatchlistData()
-    }, [watchlist, stocks, user])
+    }, [watchlist, stocks, isInitialized])
 
     const fetchStocks = async () => {
         try {
@@ -75,14 +76,40 @@ const Watchlist = () => {
         setWatchlistData(data)
     }
 
-    const addToWatchlist = (symbol) => {
-        if (!watchlist.includes(symbol)) setWatchlist(prev => [...prev, symbol])
+    const addToWatchlist = async (symbol) => {
+        if (!watchlist.includes(symbol)) {
+            const newWatchlist = [...watchlist, symbol]
+            setWatchlist(newWatchlist)
+            if (isInitialized) {
+                if (user) {
+                    try {
+                        await authService.updateWatchlist(newWatchlist)
+                    } catch (error) {
+                        console.error('Failed to update watchlist on server', error)
+                    }
+                } else {
+                    localStorage.setItem('nepse_watchlist_guest', JSON.stringify(newWatchlist))
+                }
+            }
+        }
         setShowSearch(false)
         setSearchTerm('')
     }
 
-    const removeFromWatchlist = (symbol) => {
-        setWatchlist(prev => prev.filter(s => s !== symbol))
+    const removeFromWatchlist = async (symbol) => {
+        const newWatchlist = watchlist.filter(s => s !== symbol)
+        setWatchlist(newWatchlist)
+        if (isInitialized) {
+            if (user) {
+                try {
+                    await authService.updateWatchlist(newWatchlist)
+                } catch (error) {
+                    console.error('Failed to update watchlist on server', error)
+                }
+            } else {
+                localStorage.setItem('nepse_watchlist_guest', JSON.stringify(newWatchlist))
+            }
+        }
     }
 
     const filteredStocks = stocks.filter(s =>

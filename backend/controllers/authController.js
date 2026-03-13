@@ -52,6 +52,7 @@ export const register = async (req, res) => {
         name: user.name,
         email: user.email,
         username: user.username,
+        watchlist: user.watchlist,
       },
     });
   } catch (error) {
@@ -76,6 +77,7 @@ export const login = async (req, res) => {
         email: user.email,
         username: user.username,
         holdings: user.holdings,
+        watchlist: user.watchlist,
       },
     });
   } catch (error) {
@@ -156,6 +158,7 @@ export const googleAuth = async (req, res) => {
         username: user.username,
         avatar: user.avatar,
         holdings: user.holdings,
+        watchlist: user.watchlist,
       },
     });
     console.log("=== Google Auth Completed Successfully ===");
@@ -172,6 +175,21 @@ export const getMe = async (req, res) => {
   try {
     const user = await User.findById(req.user.id).select("-password");
     res.json(user);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+export const updateWatchlist = async (req, res) => {
+  try {
+    const { watchlist } = req.body;
+    const user = await User.findByIdAndUpdate(
+      req.user.id,
+      { watchlist },
+      { new: true }
+    ).select("-password");
+
+    res.json({ watchlist: user.watchlist });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }

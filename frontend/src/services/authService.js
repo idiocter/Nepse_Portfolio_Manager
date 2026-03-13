@@ -21,6 +21,11 @@ const authService = {
         return data;
     },
 
+    updateWatchlist: async (watchlist) => {
+        const { data } = await api.put('/auth/watchlist', { watchlist });
+        return data;
+    },
+
     logout: () => {
         localStorage.removeItem('token');
     }
