@@ -11,7 +11,6 @@ import {
   ArrowUpRight,
   Filter,
   RefreshCw,
-  Building2,
   ChevronLeft,
   ChevronRight
 } from 'lucide-react'
@@ -41,7 +40,6 @@ const Market = () => {
     }
   }
 
-
   const handleSort = (field) => {
     if (sortBy === field) {
       setSortOrder(sortOrder === 'asc' ? 'desc' : 'asc')
@@ -60,7 +58,6 @@ const Market = () => {
       let valA = a[sortBy]
       let valB = b[sortBy]
 
-      // Handle numeric sorts
       if (['lastPrice', 'changePercent', 'volume'].includes(sortBy)) {
         valA = Number(valA) || 0
         valB = Number(valB) || 0
@@ -83,236 +80,295 @@ const Market = () => {
     }
   }
 
+  // Calculate market stats
+  const topGainer = stocks.reduce((max, s) => (s.changePercent > max.changePercent ? s : max), stocks[0] || {})
+  const gainersCount = stocks.filter(s => s.changePercent > 0).length
+  const totalVolume = stocks.reduce((sum, s) => sum + (s.volume || 0), 0)
+
   if (loading && stocks.length === 0) {
     return (
-      <div className="animate-fade-in-up space-y-8 p-6">
-        <div className="h-12 w-64 bg-zinc-100 animate-pulse rounded-2xl mb-8" />
+      <div className="min-h-screen bg-slate-50 p-8 space-y-8">
+        <div className="h-10 w-64 bg-slate-200 animate-pulse rounded-xl" />
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           {[1, 2, 3].map(i => (
-            <div key={i} className="h-48 bg-zinc-100 animate-pulse rounded-4xl" />
+            <div key={i} className="h-40 bg-white rounded-2xl border border-slate-200 animate-pulse" />
           ))}
         </div>
-        <div className="h-96 bg-zinc-50 animate-pulse rounded-4xl" />
+        <div className="h-[500px] bg-white rounded-2xl border border-slate-200 animate-pulse" />
       </div>
     )
   }
 
   return (
-    <div className="animate-fade-in-up space-y-8 pb-12">
-      {/* Header Section */}
-      <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
-        <div>
-          <h1 className="text-4xl font-black text-zinc-900 tracking-tighter flex items-center gap-4">
-            <Activity className="h-10 w-10" />
-            Market Overview
-          </h1>
-          <p className="text-zinc-500 font-bold mt-2 uppercase tracking-widest text-xs">
-            Live Ticker Intel • {stocks.length} Securities Listed
-          </p>
-        </div>
-
-        <div className="flex flex-wrap items-center gap-4">
-          <div className="relative group min-w-75">
-            <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-zinc-400 group-focus-within:text-zinc-900 transition-colors" />
-            <input
-              type="text"
-              placeholder="Search ticker or company..."
-              value={searchTerm}
-              onChange={(e) => { setSearchTerm(e.target.value); setCurrentPage(1) }}
-              className="w-full pl-12 pr-4 py-3 bg-white border border-zinc-200 rounded-2xl font-bold text-sm focus:outline-none focus:ring-2 focus:ring-zinc-900/5 focus:border-zinc-900 transition-all shadow-sm"
-            />
+    <div className="min-h-screen bg-slate-50 p-8">
+      <div className="max-w-7xl mx-auto space-y-8">
+        
+        {/* Header - Clean & Spaced */}
+        <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6">
+          <div className="space-y-2">
+            <h1 className="text-3xl font-bold text-slate-900 tracking-tight">
+              Market Overview
+            </h1>
+            <p className="text-sm text-slate-500">
+              {stocks.length} Securities Listed • Live Data
+            </p>
           </div>
-          <button
-            onClick={fetchStocks}
-            className="p-3.5 bg-zinc-900 text-white rounded-2xl hover:bg-zinc-800 transition-all shadow-lg active:scale-95"
-          >
-            <RefreshCw className={`h-4 w-4 ${loading ? 'animate-spin' : ''}`} />
-          </button>
-        </div>
-      </div>
 
-      {/* Market Stats (Summary) */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <div className="bg-zinc-900 rounded-4xl p-8 text-white relative overflow-hidden shadow-2xl group">
-          <div className="relative z-10">
-            <p className="text-zinc-400 font-black uppercase tracking-[0.2em] text-[10px] mb-4">Top Ticker</p>
-            <h3 className="text-4xl font-black tracking-tighter mb-2">
-              {stocks.reduce((max, s) => (s.changePercent > max.changePercent ? s : max), stocks[0] || {}).symbol || '—'}
-            </h3>
-            <div className="flex items-center gap-2 text-emerald-400">
-              <TrendingUp className="h-5 w-5" />
-              <span className="text-xl font-black">
-                +{stocks.reduce((max, s) => (s.changePercent > max.changePercent ? s : max), stocks[0] || {}).changePercent?.toFixed(2) || '0.00'}%
-              </span>
+          <div className="flex items-center gap-4">
+            <div className="relative w-full sm:w-80">
+              <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
+              <input
+                type="text"
+                placeholder="Search ticker or company..."
+                value={searchTerm}
+                onChange={(e) => { setSearchTerm(e.target.value); setCurrentPage(1) }}
+                className="w-full pl-11 pr-4 py-3 bg-white border border-slate-300 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-slate-900/5 focus:border-slate-900 transition-all shadow-sm"
+              />
+            </div>
+            <button
+              onClick={fetchStocks}
+              className="p-3 bg-slate-900 text-white rounded-xl hover:bg-slate-800 transition-all shadow-lg active:scale-95"
+            >
+              <RefreshCw className={`h-5 w-5 ${loading ? 'animate-spin' : ''}`} />
+            </button>
+          </div>
+        </div>
+
+        {/* Market Stats - Clean Cards */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          {/* Top Gainer */}
+          <div className="bg-slate-900 rounded-2xl p-8 text-white shadow-lg">
+            <div className="flex items-center justify-between mb-6">
+              <div className="flex items-center gap-3">
+                <div className="p-3 bg-white/10 rounded-xl">
+                  <TrendingUp className="h-5 w-5 text-emerald-400" />
+                </div>
+                <span className="text-xs font-semibold text-slate-400 uppercase tracking-wider">Top Gainer</span>
+              </div>
+            </div>
+            <div className="space-y-2">
+              <h3 className="text-3xl font-bold tracking-tight">
+                {topGainer?.symbol || '—'}
+              </h3>
+              <div className="flex items-center gap-2 text-emerald-400">
+                <ArrowUpRight className="h-4 w-4" />
+                <span className="text-lg font-semibold">
+                  +{topGainer?.changePercent?.toFixed(2) || '0.00'}%
+                </span>
+              </div>
             </div>
           </div>
-          <div className="absolute top-0 right-0 p-8 opacity-10 transform translate-x-4 -translate-y-4 group-hover:translate-x-0 group-hover:translate-y-0 transition-transform duration-500">
-            <TrendingUp className="h-32 w-32" />
+
+          {/* Market Heat */}
+          <div className="bg-white rounded-2xl p-8 border border-slate-200 shadow-sm">
+            <div className="flex items-center gap-3 mb-6">
+              <div className="p-3 bg-slate-100 rounded-xl">
+                <Activity className="h-5 w-5 text-slate-600" />
+              </div>
+              <span className="text-xs font-semibold text-slate-500 uppercase tracking-wider">Market Heat</span>
+            </div>
+            <div className="space-y-2">
+              <h3 className="text-3xl font-bold text-slate-900 tracking-tight">
+                {gainersCount} <span className="text-slate-400 text-2xl">/ {stocks.length}</span>
+              </h3>
+              <p className="text-sm text-slate-500">Securities in the green</p>
+            </div>
+            {/* Progress Bar */}
+            <div className="mt-4 h-2 bg-slate-100 rounded-full overflow-hidden">
+              <div 
+                className="h-full bg-emerald-500 rounded-full" 
+                style={{ width: `${stocks.length ? (gainersCount / stocks.length) * 100 : 0}%` }}
+              />
+            </div>
+          </div>
+
+          {/* Daily Volume */}
+          <div className="bg-white rounded-2xl p-8 border border-slate-200 shadow-sm">
+            <div className="flex items-center gap-3 mb-6">
+              <div className="p-3 bg-slate-100 rounded-xl">
+                <BarChart3 className="h-5 w-5 text-slate-600" />
+              </div>
+              <span className="text-xs font-semibold text-slate-500 uppercase tracking-wider">Daily Volume</span>
+            </div>
+            <div className="space-y-2">
+              <h3 className="text-3xl font-bold text-slate-900 tracking-tight tabular-nums">
+                {totalVolume.toLocaleString()}
+              </h3>
+              <p className="text-sm text-slate-500">Total trades today</p>
+            </div>
           </div>
         </div>
 
-        <div className="bg-white border border-zinc-200 rounded-4xl p-8 shadow-sm group hover:border-zinc-300 transition-all">
-          <p className="text-zinc-400 font-black uppercase tracking-[0.2em] text-[10px] mb-4">Market Heat</p>
-          <h3 className="text-4xl font-black tracking-tighter mb-2 text-zinc-900">
-            {stocks.filter(s => s.changePercent > 0).length} / {stocks.length}
-          </h3>
-          <p className="text-zinc-500 font-bold text-sm">Securities currently in the green</p>
-        </div>
-
-        <div className="bg-zinc-100 rounded-4xl p-8 border border-zinc-200 shadow-sm relative overflow-hidden">
-          <p className="text-zinc-400 font-black uppercase tracking-[0.2em] text-[10px] mb-4">Daily Volume</p>
-          <h3 className="text-3xl font-black tracking-tighter mb-1 text-zinc-900">
-            {stocks.reduce((sum, s) => sum + (s.volume || 0), 0).toLocaleString()}
-          </h3>
-          <p className="text-zinc-500 font-bold text-sm">Total trades logged today</p>
-          <BarChart3 className="absolute -bottom-2 -right-2 h-24 w-24 text-zinc-200" />
-        </div>
-      </div>
-
-      {/* Stocks Table */}
-      <div className="bg-white border border-zinc-200 rounded-[40px] shadow-sm overflow-hidden">
-        <div className="px-10 py-8 border-b border-zinc-100 flex items-center justify-between">
-          <h3 className="text-xl font-black text-zinc-900 tracking-tight flex items-center gap-3">
-            <Filter className="h-5 w-5" />
-            Live Market Feed
-          </h3>
-          <div className="flex items-center gap-4">
-            <span className="text-xs font-black text-zinc-400 uppercase tracking-widest hidden md:block">Sort By</span>
-            <select
-              value={sortBy}
-              onChange={(e) => handleSort(e.target.value)}
-              className="bg-zinc-50 border-none rounded-xl px-4 py-2 text-xs font-black uppercase tracking-tight focus:ring-2 focus:ring-zinc-900/5 transition-all text-zinc-600 cursor-pointer"
-            >
-              <option value="symbol">Symbol</option>
-              <option value="sector">Sector</option>
-              <option value="lastPrice">Price</option>
-              <option value="changePercent">Change</option>
-              <option value="volume">Volume</option>
-            </select>
-          </div>
-        </div>
-
-        <div className="overflow-x-auto">
-          <table className="w-full text-left border-collapse">
-            <thead>
-              <tr className="bg-zinc-50/50 border-b border-zinc-100">
-                <th className="px-10 py-6 text-xs font-black text-zinc-400 uppercase tracking-widest">Ticker Int</th>
-                <th className="px-6 py-6 text-xs font-black text-zinc-400 uppercase tracking-widest cursor-pointer hover:text-zinc-900" onClick={() => handleSort('sector')}>Sector</th>
-                <th className="px-6 py-6 text-xs font-black text-zinc-400 uppercase tracking-widest">Security Name</th>
-                <th className="px-6 py-6 text-right text-xs font-black text-zinc-400 uppercase tracking-widest cursor-pointer hover:text-zinc-900" onClick={() => handleSort('lastPrice')}>LTP</th>
-                <th className="px-6 py-6 text-right text-xs font-black text-zinc-400 uppercase tracking-widest cursor-pointer hover:text-zinc-900" onClick={() => handleSort('changePercent')}>Change</th>
-                <th className="px-6 py-6 text-right text-xs font-black text-zinc-400 uppercase tracking-widest cursor-pointer hover:text-zinc-900" onClick={() => handleSort('volume')}>Volume</th>
-                <th className="px-10 py-6 text-center text-xs font-black text-zinc-400 uppercase tracking-widest">Connect</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-zinc-100 px-10">
-              {currentStocks.map((stock) => {
-                const isPositive = stock.changePercent >= 0
-                return (
-                  <tr key={stock.symbol} className="hover:bg-zinc-50/50 transition-colors group">
-                    <td className="px-10 py-6">
-                      <div className="flex items-center gap-4">
-                        <div className="bg-zinc-100 w-10 h-10 rounded-xl flex items-center justify-center font-black text-xs text-zinc-900 group-hover:bg-zinc-900 group-hover:text-white transition-all duration-300">
-                          {stock.symbol?.charAt(0)}
-                        </div>
-                        <span className="font-black text-zinc-900 tracking-tight">{stock.symbol}</span>
-                      </div>
-                    </td>
-                    <td className="px-6 py-6">
-                      <span className="px-2.5 py-1 bg-zinc-100 text-zinc-600 text-[10px] font-black uppercase tracking-tight rounded-md border border-zinc-200">
-                        {stock.sector || 'N/A'}
-                      </span>
-                    </td>
-                    <td className="px-6 py-6">
-                      <p className="text-sm font-bold text-zinc-500 uppercase tracking-tight truncate max-w-50">{stock.name}</p>
-                    </td>
-                    <td className="px-6 py-6 text-right">
-                      <p className="font-black text-zinc-900 tabular-nums">{formatCurrency(stock.lastPrice)}</p>
-                    </td>
-                    <td className="px-6 py-6 text-right">
-                      <div className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[10px] font-black ${isPositive ? 'bg-emerald-50 text-emerald-600' : 'bg-rose-50 text-rose-600'}`}>
-                        {isPositive ? <TrendingUp className="h-3 w-3" /> : <TrendingDown className="h-3 w-3" />}
-                        {formatPercent(stock.changePercent)}
-                      </div>
-                    </td>
-                    <td className="px-6 py-6 text-right">
-                      <p className="text-xs font-bold text-zinc-400 tabular-nums">{formatVolume(stock.volume)}</p>
-                    </td>
-
-                    <td className="px-10 py-6 text-center">
-                      <Link
-                        to={`/stock/${stock.symbol}`}
-                        className="p-2 border border-zinc-200 rounded-xl text-zinc-400 hover:text-zinc-900 hover:border-zinc-900 hover:bg-zinc-50 transition-all inline-flex active:scale-95"
-                      >
-                        <ArrowUpRight className="h-4 w-4" />
-                      </Link>
-                    </td>
-                  </tr>
-                )
-              })}
-              {currentStocks.length === 0 && (
-                <tr>
-                  <td colSpan="6" className="px-10 py-20 text-center">
-                    <div className="flex flex-col items-center gap-4">
-                      <Search className="h-10 w-10 text-zinc-200" />
-                      <p className="text-xs font-black text-zinc-400 uppercase tracking-widest">No matching tickers found in the archive</p>
-                    </div>
-                  </td>
-                </tr>
-              )}
-            </tbody>
-          </table>
-        </div>
-
-        {/* Pagination Section */}
-        {totalPages > 1 && (
-          <div className="px-10 py-8 bg-zinc-50/50 border-t border-zinc-100 flex flex-col md:flex-row items-center justify-between gap-6">
-            <p className="text-xs font-bold text-zinc-400 uppercase tracking-widest">
-              Showing <span className="text-zinc-900">{(currentPage - 1) * itemsPerPage + 1}</span> to <span className="text-zinc-900">{Math.min(currentPage * itemsPerPage, filteredStocks.length)}</span> of <span className="text-zinc-900">{filteredStocks.length}</span> Securities
-            </p>
-
+        {/* Stocks Table - Clean & Spacious */}
+        <div className="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
+          {/* Table Header */}
+          <div className="px-8 py-6 border-b border-slate-200 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
             <div className="flex items-center gap-3">
-              <button
-                onClick={() => goToPage(currentPage - 1)}
-                disabled={currentPage === 1}
-                className="p-3 bg-white border border-zinc-200 rounded-2xl text-zinc-600 hover:text-zinc-900 hover:border-zinc-300 disabled:opacity-40 disabled:cursor-not-allowed transition-all shadow-sm"
+              <div className="p-2 bg-slate-100 rounded-lg">
+                <Filter className="h-5 w-5 text-slate-600" />
+              </div>
+              <h3 className="text-lg font-bold text-slate-900">Live Market Feed</h3>
+            </div>
+            <div className="flex items-center gap-3">
+              <span className="text-sm text-slate-500">Sort by</span>
+              <select
+                value={sortBy}
+                onChange={(e) => handleSort(e.target.value)}
+                className="bg-slate-50 border border-slate-200 rounded-lg px-4 py-2 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-slate-900/5 cursor-pointer"
               >
-                <ChevronLeft className="h-5 w-5" />
-              </button>
+                <option value="symbol">Symbol</option>
+                <option value="sector">Sector</option>
+                <option value="lastPrice">Price</option>
+                <option value="changePercent">Change</option>
+                <option value="volume">Volume</option>
+              </select>
+            </div>
+          </div>
 
-              <div className="flex items-center gap-2">
-                {Array.from({ length: Math.min(5, totalPages) }, (_, i) => {
-                  let pageNum
-                  if (totalPages <= 5) pageNum = i + 1
-                  else if (currentPage <= 3) pageNum = i + 1
-                  else if (currentPage >= totalPages - 2) pageNum = totalPages - 4 + i
-                  else pageNum = currentPage - 2 + i
-
+          {/* Table */}
+          <div className="overflow-x-auto">
+            <table className="w-full text-left border-collapse">
+              <thead>
+                <tr className="bg-slate-50 border-b border-slate-200">
+                  <th className="px-8 py-5 text-xs font-semibold text-slate-500 uppercase tracking-wider">Symbol</th>
+                  <th 
+                    className="px-6 py-5 text-xs font-semibold text-slate-500 uppercase tracking-wider cursor-pointer hover:text-slate-900 transition-colors" 
+                    onClick={() => handleSort('sector')}
+                  >
+                    Sector
+                  </th>
+                  <th className="px-6 py-5 text-xs font-semibold text-slate-500 uppercase tracking-wider">Name</th>
+                  <th 
+                    className="px-6 py-5 text-right text-xs font-semibold text-slate-500 uppercase tracking-wider cursor-pointer hover:text-slate-900 transition-colors" 
+                    onClick={() => handleSort('lastPrice')}
+                  >
+                    LTP
+                  </th>
+                  <th 
+                    className="px-6 py-5 text-right text-xs font-semibold text-slate-500 uppercase tracking-wider cursor-pointer hover:text-slate-900 transition-colors" 
+                    onClick={() => handleSort('changePercent')}
+                  >
+                    Change
+                  </th>
+                  <th 
+                    className="px-6 py-5 text-right text-xs font-semibold text-slate-500 uppercase tracking-wider cursor-pointer hover:text-slate-900 transition-colors" 
+                    onClick={() => handleSort('volume')}
+                  >
+                    Volume
+                  </th>
+                  <th className="px-8 py-5 text-center text-xs font-semibold text-slate-500 uppercase tracking-wider">Action</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-slate-100">
+                {currentStocks.map((stock) => {
+                  const isPositive = stock.changePercent >= 0
                   return (
-                    <button
-                      key={pageNum}
-                      onClick={() => goToPage(pageNum)}
-                      className={`w-12 h-12 rounded-2xl text-sm font-black transition-all ${currentPage === pageNum
-                        ? 'bg-zinc-900 text-white shadow-lg'
-                        : 'bg-white border border-zinc-200 text-zinc-500 hover:border-zinc-900 hover:text-zinc-900'
-                        }`}
-                    >
-                      {pageNum}
-                    </button>
+                    <tr key={stock.symbol} className="hover:bg-slate-50/50 transition-colors">
+                      <td className="px-8 py-5">
+                        <div className="flex items-center gap-4">
+                          <div className="w-10 h-10 bg-slate-100 rounded-lg flex items-center justify-center font-bold text-sm text-slate-900">
+                            {stock.symbol?.charAt(0)}
+                          </div>
+                          <span className="font-bold text-slate-900">{stock.symbol}</span>
+                        </div>
+                      </td>
+                      <td className="px-6 py-5">
+                        <span className="px-3 py-1 bg-slate-100 text-slate-600 text-xs font-medium rounded-md">
+                          {stock.sector || 'N/A'}
+                        </span>
+                      </td>
+                      <td className="px-6 py-5">
+                        <p className="text-sm font-medium text-slate-600 truncate max-w-xs">{stock.name}</p>
+                      </td>
+                      <td className="px-6 py-5 text-right">
+                        <p className="font-bold text-slate-900 tabular-nums">{formatCurrency(stock.lastPrice)}</p>
+                      </td>
+                      <td className="px-6 py-5 text-right">
+                        <div className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold ${isPositive ? 'bg-emerald-50 text-emerald-700' : 'bg-red-50 text-red-700'}`}>
+                          {isPositive ? <TrendingUp className="h-3 w-3" /> : <TrendingDown className="h-3 w-3" />}
+                          {formatPercent(stock.changePercent)}
+                        </div>
+                      </td>
+                      <td className="px-6 py-5 text-right">
+                        <p className="text-sm font-medium text-slate-500 tabular-nums">{formatVolume(stock.volume)}</p>
+                      </td>
+                      <td className="px-8 py-5 text-center">
+                        <Link
+                          to={`/stock/${stock.symbol}`}
+                          className="inline-flex p-2 border border-slate-200 rounded-lg text-slate-400 hover:text-slate-900 hover:border-slate-900 hover:bg-slate-50 transition-all"
+                        >
+                          <ArrowUpRight className="h-4 w-4" />
+                        </Link>
+                      </td>
+                    </tr>
                   )
                 })}
-              </div>
-
-              <button
-                onClick={() => goToPage(currentPage + 1)}
-                disabled={currentPage === totalPages}
-                className="p-3 bg-white border border-zinc-200 rounded-2xl text-zinc-600 hover:text-zinc-900 hover:border-zinc-300 disabled:opacity-40 disabled:cursor-not-allowed transition-all shadow-sm"
-              >
-                <ChevronRight className="h-5 w-5" />
-              </button>
-            </div>
+                {currentStocks.length === 0 && (
+                  <tr>
+                    <td colSpan="7" className="px-8 py-20 text-center">
+                      <div className="flex flex-col items-center gap-4">
+                        <div className="p-4 bg-slate-100 rounded-full">
+                          <Search className="h-6 w-6 text-slate-400" />
+                        </div>
+                        <p className="text-sm text-slate-500">No matching securities found</p>
+                      </div>
+                    </td>
+                  </tr>
+                )}
+              </tbody>
+            </table>
           </div>
-        )}
+
+          {/* Pagination */}
+          {totalPages > 1 && (
+            <div className="px-8 py-6 bg-slate-50 border-t border-slate-200 flex flex-col sm:flex-row items-center justify-between gap-4">
+              <p className="text-sm text-slate-500">
+                Showing <span className="font-semibold text-slate-900">{(currentPage - 1) * itemsPerPage + 1}</span> to <span className="font-semibold text-slate-900">{Math.min(currentPage * itemsPerPage, filteredStocks.length)}</span> of <span className="font-semibold text-slate-900">{filteredStocks.length}</span> results
+              </p>
+
+              <div className="flex items-center gap-2">
+                <button
+                  onClick={() => goToPage(currentPage - 1)}
+                  disabled={currentPage === 1}
+                  className="p-2.5 bg-white border border-slate-200 rounded-lg text-slate-600 hover:text-slate-900 hover:border-slate-300 disabled:opacity-40 disabled:cursor-not-allowed transition-all shadow-sm"
+                >
+                  <ChevronLeft className="h-5 w-5" />
+                </button>
+
+                <div className="flex items-center gap-1">
+                  {Array.from({ length: Math.min(5, totalPages) }, (_, i) => {
+                    let pageNum
+                    if (totalPages <= 5) pageNum = i + 1
+                    else if (currentPage <= 3) pageNum = i + 1
+                    else if (currentPage >= totalPages - 2) pageNum = totalPages - 4 + i
+                    else pageNum = currentPage - 2 + i
+
+                    return (
+                      <button
+                        key={pageNum}
+                        onClick={() => goToPage(pageNum)}
+                        className={`w-10 h-10 rounded-lg text-sm font-semibold transition-all ${currentPage === pageNum
+                          ? 'bg-slate-900 text-white shadow-md'
+                          : 'bg-white border border-slate-200 text-slate-600 hover:border-slate-300 hover:text-slate-900'
+                        }`}
+                      >
+                        {pageNum}
+                      </button>
+                    )
+                  })}
+                </div>
+
+                <button
+                  onClick={() => goToPage(currentPage + 1)}
+                  disabled={currentPage === totalPages}
+                  className="p-2.5 bg-white border border-slate-200 rounded-lg text-slate-600 hover:text-slate-900 hover:border-slate-300 disabled:opacity-40 disabled:cursor-not-allowed transition-all shadow-sm"
+                >
+                  <ChevronRight className="h-5 w-5" />
+                </button>
+              </div>
+            </div>
+          )}
+        </div>
       </div>
     </div>
   )
