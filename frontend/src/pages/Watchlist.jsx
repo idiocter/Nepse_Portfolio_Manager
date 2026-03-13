@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import marketService from '../services/marketService'
+import { useAuth } from '../contexts/AuthContext'
 
 import {
     Eye, Plus, X, Search, TrendingUp, TrendingDown,
@@ -8,15 +9,29 @@ import {
 } from 'lucide-react'
 
 const Watchlist = () => {
-    const [watchlist, setWatchlist] = useState(() => {
-        const saved = localStorage.getItem('nepse_watchlist')
-        return saved ? JSON.parse(saved) : []
-    })
+    const { user } = useAuth()
+    const [watchlist, setWatchlist] = useState([])
     const [stocks, setStocks] = useState([])
     const [watchlistData, setWatchlistData] = useState([])
     const [showSearch, setShowSearch] = useState(false)
     const [searchTerm, setSearchTerm] = useState('')
     const [loading, setLoading] = useState(true)
+
+    useEffect(() => {
+        const key = `nepse_watchlist_${user?.id || 'guest'}`
+        const saved = localStorage.getItem(key)
+
+        // Use an old global watchlist as fallback for guest if migration needed
+        if (!saved && !user) {
+            const globalSaved = localStorage.getItem('nepse_watchlist')
+            if (globalSaved) {
+                setWatchlist(JSON.parse(globalSaved))
+                return
+            }
+        }
+
+        setWatchlist(saved ? JSON.parse(saved) : [])
+    }, [user])
 
     useEffect(() => {
         fetchStocks()
@@ -25,9 +40,12 @@ const Watchlist = () => {
     }, [])
 
     useEffect(() => {
-        localStorage.setItem('nepse_watchlist', JSON.stringify(watchlist))
+        if (watchlist.length >= 0) { // check if initialized
+            const key = `nepse_watchlist_${user?.id || 'guest'}`
+            localStorage.setItem(key, JSON.stringify(watchlist))
+        }
         if (stocks.length > 0) updateWatchlistData()
-    }, [watchlist, stocks])
+    }, [watchlist, stocks, user])
 
     const fetchStocks = async () => {
         try {
