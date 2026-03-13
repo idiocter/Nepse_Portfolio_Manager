@@ -28,7 +28,6 @@ const Dashboard = () => {
   const [loading, setLoading] = useState(true)
   const [lastUpdated, setLastUpdated] = useState(new Date())
 
-  // Separate data fetching from timestamp updates
   const fetchPortfolio = useCallback(async () => {
     try {
       const data = await portfolioService.getHoldings()
@@ -43,12 +42,10 @@ const Dashboard = () => {
 
   useEffect(() => {
     fetchPortfolio()
-    // Poll every 10 seconds for data (not every 1 second)
     const dataInterval = setInterval(fetchPortfolio, 10000)
     return () => clearInterval(dataInterval)
   }, [fetchPortfolio])
 
-  // Separate effect for live timestamp (updates every second without fetching data)
   useEffect(() => {
     const timeInterval = setInterval(() => {
       setLastUpdated(new Date())
@@ -63,165 +60,191 @@ const Dashboard = () => {
 
   if (loading) {
     return (
-      <div className="animate-fade-in-up space-y-8 p-6">
-        <div className="h-8 w-64 bg-zinc-100 animate-pulse rounded-lg mb-2" />
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-          {[1, 2, 3].map(i => (
-            <div key={i} className="bg-white border border-zinc-100 rounded-3xl p-8 shadow-sm">
-              <div className="h-4 w-24 bg-zinc-100 animate-pulse rounded mb-4" />
-              <div className="h-10 w-48 bg-zinc-100 animate-pulse rounded-lg" />
-            </div>
+      <div className="min-h-screen bg-slate-50 p-8 space-y-8">
+        <div className="h-10 w-64 bg-slate-200 animate-pulse rounded-lg" />
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+          {[1, 2, 3, 4].map(i => (
+            <div key={i} className="h-40 bg-white rounded-2xl border border-slate-200 animate-pulse" />
           ))}
         </div>
-        <div className="bg-white border border-zinc-100 rounded-3xl p-8 shadow-sm h-80">
-          <div className="h-full w-full bg-zinc-50 animate-pulse rounded-2xl" />
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+          <div className="lg:col-span-2 h-[500px] bg-white rounded-2xl border border-slate-200 animate-pulse" />
+          <div className="h-[500px] bg-white rounded-2xl border border-slate-200 animate-pulse" />
         </div>
       </div>
     )
   }
 
   return (
-    <div className="animate-fade-in-up space-y-8 pb-12">
-      {/* Header */}
-      <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-6">
-        <div>
-          <h1 className="text-3xl font-black text-zinc-900 flex items-center gap-4 tracking-tighter">
-            <LayoutDashboard className="h-8 w-8 text-zinc-900" />
-            Welcome back, {user?.name?.split(' ')[0]}
-          </h1>
-          <div className="flex items-center gap-2 mt-2 text-sm font-bold text-zinc-400 uppercase tracking-widest">
-            <Clock className="h-4 w-4" />
-            Live Analytics • {formatTime(lastUpdated)}
-          </div>
-        </div>
-        <button
-          onClick={fetchPortfolio}
-          className="px-6 py-3 bg-white border border-zinc-200 text-zinc-700 rounded-xl font-bold text-sm hover:bg-zinc-50 hover:border-zinc-300 transition-all flex items-center gap-3 shadow-sm active:scale-95"
-        >
-          <RefreshCw className="h-4 w-4" /> Refresh Data
-        </button>
-      </div>
-
-
-      {/* Quick Stats */}
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-        <div className="bg-white border border-zinc-200 rounded-2xl p-5 shadow-sm">
-          <div className="flex items-center justify-between mb-3">
-            <div className="p-2 bg-zinc-100 rounded-xl">
-              <Wallet className="h-5 w-5 text-zinc-700" />
+    <div className="min-h-screen bg-slate-50 p-8">
+      <div className="max-w-7xl mx-auto space-y-8">
+        
+        {/* Header - Proper Spacing */}
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-6">
+          <div className="space-y-2">
+            <h1 className="text-3xl font-bold text-slate-900 tracking-tight">
+              Dashboard
+            </h1>
+            <div className="flex items-center gap-2 text-sm text-slate-500">
+              <Clock className="h-4 w-4" />
+              <span>Updated {formatTime(lastUpdated)}</span>
             </div>
-            <span className="text-xs font-bold text-zinc-400 uppercase tracking-wider">Positions</span>
           </div>
-          <p className="text-2xl font-black text-zinc-900">{totalHoldings}</p>
-          <p className="text-xs font-bold text-zinc-500 mt-1">Total Holdings</p>
+          <button
+            onClick={fetchPortfolio}
+            className="flex items-center gap-2 px-5 py-2.5 bg-white border border-slate-300 text-slate-700 rounded-xl text-sm font-semibold hover:bg-slate-50 hover:border-slate-400 transition-all active:scale-95 shadow-sm"
+          >
+            <RefreshCw className="h-4 w-4" />
+            Refresh Data
+          </button>
         </div>
 
-        <div className="bg-white border border-zinc-200 rounded-2xl p-5 shadow-sm">
-          <div className="flex items-center justify-between mb-3">
-            <div className="p-2 bg-zinc-100 rounded-xl">
-              <TrendingUp className="h-5 w-5 text-zinc-700" />
-            </div>
-            <span className="text-xs font-bold text-zinc-400 uppercase tracking-wider">Winners</span>
-          </div>
-          <p className="text-2xl font-black text-zinc-900">{profitableStocks}</p>
-          <p className="text-xs font-bold text-zinc-500 mt-1">In Profit</p>
-        </div>
-
-        <div className="bg-white border border-zinc-200 rounded-2xl p-5 shadow-sm">
-          <div className="flex items-center justify-between mb-3">
-            <div className="p-2 bg-zinc-100 rounded-xl">
-              <TrendingDown className="h-5 w-5 text-zinc-700" />
-            </div>
-            <span className="text-xs font-bold text-zinc-400 uppercase tracking-wider">Losers</span>
-          </div>
-          <p className="text-2xl font-black text-zinc-900">{lossStocks}</p>
-          <p className="text-xs font-bold text-zinc-500 mt-1">In Loss</p>
-        </div>
-
-        {/* Top Pick */}
-        <div className="bg-zinc-100 border-2 border-zinc-200 rounded-2xl p-5 shadow-sm">
-          <div className="flex items-center justify-between mb-3">
-            <div className="p-2 bg-white rounded-xl shadow-sm">
-              <Zap className="h-5 w-5 text-zinc-700" />
-            </div>
-            <span className="text-xs font-bold text-zinc-500 uppercase tracking-wider">Top Pick</span>
-          </div>
-          <p className="text-xl font-black text-zinc-900 truncate">{topGainer?.symbol || '—'}</p>
-          <div className="flex items-center gap-1 mt-1">
-            {topGainer?.changePercent >= 0 ? (
-              <ArrowUpRight className="h-3 w-3 text-zinc-600" />
-            ) : (
-              <ArrowDownRight className="h-3 w-3 text-zinc-600" />
-            )}
-            <span className="text-xs font-bold text-zinc-600">
-              {topGainer?.changePercent ? `${Math.abs(topGainer.changePercent).toFixed(2)}%` : '0%'}
-            </span>
-          </div>
-        </div>
-      </div>
-
-      <PortfolioSummary summary={portfolio.summary} />
-
-      {/* Main Content */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
-        {/* Holdings */}
-        <div className="lg:col-span-8">
-          <div className="bg-white border border-zinc-200 rounded-3xl shadow-sm overflow-hidden">
-            <div className="px-6 py-4 border-b border-zinc-100 flex items-center justify-between">
-              <div className="flex items-center gap-3">
-                <Activity className="h-5 w-5 text-zinc-700" />
-                <h3 className="font-black text-zinc-900 tracking-tight">Your Holdings</h3>
-              </div>
-              <span className="text-xs font-bold text-zinc-500 bg-zinc-100 px-3 py-1.5 rounded-lg">
-                {totalHoldings} Stocks
-              </span>
-            </div>
-            <HoldingsTable holdings={portfolio.holdings} />
-          </div>
-        </div>
-
-        {/* Sidebar - Sticky to prevent scroll issues */}
-        <div className="lg:col-span-4 space-y-6 lg:sticky lg:top-6">
-          {/* Allocation Chart */}
-          <div className="bg-white border border-zinc-200 rounded-3xl shadow-sm p-6">
+        {/* Stats Grid - Proper Gaps & Padding */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+          {/* Positions */}
+          <div className="bg-white rounded-2xl p-6 border border-slate-200 shadow-sm">
             <div className="flex items-center gap-3 mb-4">
-              <PieChart className="h-5 w-5 text-zinc-700" />
-              <h3 className="font-black text-zinc-900 tracking-tight">Allocation</h3>
-            </div>
-            <AllocationChart holdings={portfolio.holdings} />
-          </div>
-
-          {/* Top Movers */}
-          <div className="bg-white border border-zinc-200 rounded-3xl shadow-sm overflow-hidden">
-            <div className="px-6 py-4 border-b border-zinc-100">
-              <div className="flex items-center gap-3">
-                <BarChart3 className="h-5 w-5 text-zinc-700" />
-                <h3 className="font-black text-zinc-900 tracking-tight">Market Movers</h3>
+              <div className="p-3 bg-slate-100 rounded-xl">
+                <Wallet className="h-5 w-5 text-slate-600" />
               </div>
+              <span className="text-xs font-semibold text-slate-500 uppercase tracking-wider">Positions</span>
             </div>
-            <div className="p-6">
-              <TopMovers />
+            <div className="space-y-1">
+              <p className="text-3xl font-bold text-slate-900 tabular-nums">{totalHoldings}</p>
+              <p className="text-sm text-slate-500">Total Holdings</p>
             </div>
           </div>
 
-          {/* Market Overview */}
-          <div className="bg-zinc-100 border border-zinc-200 rounded-3xl p-6">
+          {/* Winners */}
+          <div className="bg-white rounded-2xl p-6 border border-slate-200 shadow-sm">
             <div className="flex items-center gap-3 mb-4">
-              <Target className="h-5 w-5 text-zinc-600" />
-              <h3 className="font-bold text-zinc-900">Market Status</h3>
+              <div className="p-3 bg-emerald-50 rounded-xl">
+                <TrendingUp className="h-5 w-5 text-emerald-600" />
+              </div>
+              <span className="text-xs font-semibold text-emerald-600 uppercase tracking-wider">Winners</span>
             </div>
-            <div className="space-y-3">
-              <div className="flex items-center justify-between py-2 border-b border-zinc-200">
-                <span className="text-sm font-bold text-zinc-500">NEPSE Index</span>
-                <span className="text-sm font-black text-zinc-900">2,145.67</span>
+            <div className="space-y-1">
+              <p className="text-3xl font-bold text-slate-900 tabular-nums">{profitableStocks}</p>
+              <p className="text-sm text-slate-500">In Profit</p>
+            </div>
+          </div>
+
+          {/* Losers */}
+          <div className="bg-white rounded-2xl p-6 border border-slate-200 shadow-sm">
+            <div className="flex items-center gap-3 mb-4">
+              <div className="p-3 bg-red-50 rounded-xl">
+                <TrendingDown className="h-5 w-5 text-red-600" />
               </div>
-              <div className="flex items-center justify-between py-2 border-b border-zinc-200">
-                <span className="text-sm font-bold text-zinc-500">Turnover</span>
-                <span className="text-sm font-black text-zinc-900">Rs. 1.2B</span>
+              <span className="text-xs font-semibold text-red-600 uppercase tracking-wider">Losers</span>
+            </div>
+            <div className="space-y-1">
+              <p className="text-3xl font-bold text-slate-900 tabular-nums">{lossStocks}</p>
+              <p className="text-sm text-slate-500">In Loss</p>
+            </div>
+          </div>
+
+          {/* Top Pick - Featured Card */}
+          <div className="bg-slate-900 rounded-2xl p-6 text-white shadow-lg">
+            <div className="flex items-center gap-3 mb-4">
+              <div className="p-3 bg-white/10 rounded-xl">
+                <Zap className="h-5 w-5 text-amber-400" />
               </div>
-              <div className="flex items-center justify-between py-2">
-                <span className="text-sm font-bold text-zinc-500">Market Cap</span>
-                <span className="text-sm font-black text-zinc-900">Rs. 3.4T</span>
+              <span className="text-xs font-semibold text-slate-400 uppercase tracking-wider">Top Pick</span>
+            </div>
+            <div className="space-y-2">
+              <p className="text-2xl font-bold truncate">{topGainer?.symbol || '—'}</p>
+              <div className="flex items-center gap-1.5">
+                {topGainer?.changePercent >= 0 ? (
+                  <ArrowUpRight className="h-4 w-4 text-emerald-400" />
+                ) : (
+                  <ArrowDownRight className="h-4 w-4 text-red-400" />
+                )}
+                <span className={`text-sm font-semibold ${topGainer?.changePercent >= 0 ? 'text-emerald-400' : 'text-red-400'}`}>
+                  {topGainer?.changePercent ? `${Math.abs(topGainer.changePercent).toFixed(2)}%` : '0%'}
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Portfolio Summary - Full Width with Padding */}
+        <div className="py-2">
+          <PortfolioSummary summary={portfolio.summary} />
+        </div>
+
+        {/* Main Content Grid - Proper Gaps */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
+          
+          {/* Holdings - Main Table */}
+          <div className="lg:col-span-8">
+            <div className="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
+              <div className="px-8 py-5 border-b border-slate-200 flex items-center justify-between">
+                <div className="flex items-center gap-3">
+                  <div className="p-2 bg-slate-100 rounded-lg">
+                    <Activity className="h-5 w-5 text-slate-600" />
+                  </div>
+                  <h3 className="text-lg font-bold text-slate-900">Your Holdings</h3>
+                </div>
+                <span className="text-sm font-medium text-slate-500 bg-slate-100 px-3 py-1.5 rounded-lg">
+                  {totalHoldings} Stocks
+                </span>
+              </div>
+              <div className="p-2">
+                <HoldingsTable holdings={portfolio.holdings} />
+              </div>
+            </div>
+          </div>
+
+          {/* Sidebar - Sticky with Proper Spacing */}
+          <div className="lg:col-span-4 space-y-8 lg:sticky lg:top-8 lg:self-start">
+            
+            {/* Allocation */}
+            <div className="bg-white rounded-2xl border border-slate-200 shadow-sm p-8">
+              <div className="flex items-center gap-3 mb-6">
+                <div className="p-2 bg-slate-100 rounded-lg">
+                  <PieChart className="h-5 w-5 text-slate-600" />
+                </div>
+                <h3 className="text-lg font-bold text-slate-900">Allocation</h3>
+              </div>
+              <AllocationChart holdings={portfolio.holdings} />
+            </div>
+
+            {/* Top Movers */}
+            <div className="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
+              <div className="px-8 py-5 border-b border-slate-200">
+                <div className="flex items-center gap-3">
+                  <div className="p-2 bg-slate-100 rounded-lg">
+                    <BarChart3 className="h-5 w-5 text-slate-600" />
+                  </div>
+                  <h3 className="text-lg font-bold text-slate-900">Top Movers</h3>
+                </div>
+              </div>
+              <div className="p-6">
+                <TopMovers />
+              </div>
+            </div>
+
+            {/* Market Overview */}
+            <div className="bg-slate-900 rounded-2xl p-8 text-white shadow-lg">
+              <div className="flex items-center gap-3 mb-6">
+                <div className="p-2 bg-white/10 rounded-lg">
+                  <Target className="h-5 w-5 text-slate-400" />
+                </div>
+                <h3 className="text-lg font-bold">Market Overview</h3>
+              </div>
+              <div className="space-y-4">
+                <div className="flex items-center justify-between py-3 border-b border-slate-800">
+                  <span className="text-sm text-slate-400">NEPSE Index</span>
+                  <span className="text-lg font-bold tabular-nums">2,145.67</span>
+                </div>
+                <div className="flex items-center justify-between py-3 border-b border-slate-800">
+                  <span className="text-sm text-slate-400">Turnover</span>
+                  <span className="text-lg font-bold tabular-nums">Rs. 1.2B</span>
+                </div>
+                <div className="flex items-center justify-between py-3">
+                  <span className="text-sm text-slate-400">Market Cap</span>
+                  <span className="text-lg font-bold tabular-nums">Rs. 3.4T</span>
+                </div>
               </div>
             </div>
           </div>
