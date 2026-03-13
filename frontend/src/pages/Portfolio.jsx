@@ -3,6 +3,7 @@ import portfolioService from '../services/portfolioService'
 import { formatCurrency, formatPercent, formatVolume } from '../utils/formatters'
 import { Plus, Pencil, Trash2, Wallet, TrendingUp, TrendingDown, RefreshCw } from 'lucide-react'
 import HoldingForm from '../components/Portfolio/HoldingForm'
+import ConfirmModal from '../components/UI/ConfirmModal'
 
 const Portfolio = () => {
   const [holdings, setHoldings] = useState([])
@@ -10,6 +11,7 @@ const Portfolio = () => {
   const [showForm, setShowForm] = useState(false)
   const [editingHolding, setEditingHolding] = useState(null)
   const [loading, setLoading] = useState(true)
+  const [deleteModal, setDeleteModal] = useState({ isOpen: false, symbol: '' })
 
   useEffect(() => {
     fetchHoldings()
@@ -31,12 +33,17 @@ const Portfolio = () => {
     }
   }
 
-  const handleDelete = async (symbol) => {
-    if (!confirm(`Are you sure you want to delete ${symbol}?`)) return
+  const handleDelete = (symbol) => {
+    setDeleteModal({ isOpen: true, symbol })
+  }
+
+  const confirmDelete = async () => {
     try {
-      await portfolioService.deleteHolding(symbol)
+      await portfolioService.deleteHolding(deleteModal.symbol)
       fetchHoldings()
-    } catch (error) { alert('Error deleting holding') }
+    } catch (error) {
+      console.error('Error deleting holding:', error)
+    }
   }
 
   const handleEdit = (holding) => { setEditingHolding(holding); setShowForm(true) }
@@ -236,6 +243,15 @@ const Portfolio = () => {
             editingHolding={editingHolding}
           />
         )}
+
+        <ConfirmModal
+          isOpen={deleteModal.isOpen}
+          onClose={() => setDeleteModal({ isOpen: false, symbol: '' })}
+          onConfirm={confirmDelete}
+          title="Remove Holding"
+          message={`Are you sure you want to remove ${deleteModal.symbol} from your portfolio? This action cannot be undone.`}
+          confirmText="Yes, Remove"
+        />
       </div>
     </div>
   )

@@ -8,6 +8,7 @@ import {
     Eye, Plus, X, Search, TrendingUp, TrendingDown,
     Star, ArrowUpRight, Bookmark
 } from 'lucide-react'
+import ConfirmModal from '../components/UI/ConfirmModal'
 
 const Watchlist = () => {
     const { user, loading: authLoading } = useAuth()
@@ -17,6 +18,7 @@ const Watchlist = () => {
     const [showSearch, setShowSearch] = useState(false)
     const [searchTerm, setSearchTerm] = useState('')
     const [loading, setLoading] = useState(true)
+    const [deleteModal, setDeleteModal] = useState({ isOpen: false, symbol: '' })
 
     const [isInitialized, setIsInitialized] = useState(false)
 
@@ -93,7 +95,12 @@ const Watchlist = () => {
         setSearchTerm('')
     }
 
-    const removeFromWatchlist = async (symbol) => {
+    const removeFromWatchlist = (symbol) => {
+        setDeleteModal({ isOpen: true, symbol })
+    }
+
+    const confirmRemove = async () => {
+        const symbol = deleteModal.symbol
         const newWatchlist = watchlist.filter(s => s !== symbol)
         setWatchlist(newWatchlist)
         if (isInitialized) {
@@ -134,7 +141,7 @@ const Watchlist = () => {
     return (
         <div className="min-h-screen bg-slate-50 p-8">
             <div className="max-w-7xl mx-auto space-y-8">
-                
+
                 {/* Header - Clean & Spaced */}
                 <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-6">
                     <div className="space-y-2">
@@ -145,11 +152,11 @@ const Watchlist = () => {
                             {watchlist.length} {watchlist.length === 1 ? 'stock' : 'stocks'} tracked
                         </p>
                     </div>
-                    <button 
-                        onClick={() => setShowSearch(true)} 
+                    <button
+                        onClick={() => setShowSearch(true)}
                         className="flex items-center gap-2 px-5 py-3 bg-slate-900 text-white rounded-xl font-semibold hover:bg-slate-800 transition-all shadow-lg active:scale-95"
                     >
-                        <Plus className="h-5 w-5" /> 
+                        <Plus className="h-5 w-5" />
                         Add Stock
                     </button>
                 </div>
@@ -163,8 +170,8 @@ const Watchlist = () => {
                             const price = stock.lastPrice || stock.lastTradedPrice || 0
 
                             return (
-                                <div 
-                                    key={stock.symbol} 
+                                <div
+                                    key={stock.symbol}
                                     className="group bg-white rounded-2xl p-6 border border-slate-200 shadow-sm hover:shadow-md hover:border-slate-300 transition-all"
                                 >
                                     {/* Header */}
@@ -180,7 +187,7 @@ const Watchlist = () => {
                                                 </p>
                                             </div>
                                         </div>
-                                        <button 
+                                        <button
                                             onClick={() => removeFromWatchlist(stock.symbol)}
                                             className="p-2 rounded-lg text-slate-400 hover:text-red-600 hover:bg-red-50 transition-all opacity-0 group-hover:opacity-100"
                                             title="Remove from watchlist"
@@ -200,11 +207,11 @@ const Watchlist = () => {
                                                 {isPositive ? '+' : ''}{change.toFixed(2)}%
                                             </div>
                                         </div>
-                                        <Link 
-                                            to={`/stock/${stock.symbol}`} 
+                                        <Link
+                                            to={`/stock/${stock.symbol}`}
                                             className="flex items-center gap-1.5 px-4 py-2 border border-slate-200 rounded-lg text-sm font-medium text-slate-600 hover:border-slate-900 hover:text-slate-900 hover:bg-slate-50 transition-all"
                                         >
-                                            Details 
+                                            Details
                                             <ArrowUpRight className="h-4 w-4" />
                                         </Link>
                                     </div>
@@ -222,11 +229,11 @@ const Watchlist = () => {
                         <p className="text-sm text-slate-500 mb-8 max-w-md mx-auto">
                             Add stocks to track their prices and performance without adding them to your portfolio.
                         </p>
-                        <button 
-                            onClick={() => setShowSearch(true)} 
+                        <button
+                            onClick={() => setShowSearch(true)}
                             className="inline-flex items-center gap-2 px-6 py-3 bg-slate-900 text-white rounded-xl font-semibold hover:bg-slate-800 transition-all shadow-lg"
                         >
-                            <Plus className="h-5 w-5" /> 
+                            <Plus className="h-5 w-5" />
                             Add Your First Stock
                         </button>
                     </div>
@@ -240,7 +247,7 @@ const Watchlist = () => {
                             <div className="px-6 py-5 border-b border-slate-200">
                                 <div className="flex items-center justify-between mb-4">
                                     <h2 className="text-lg font-bold text-slate-900">Add to Watchlist</h2>
-                                    <button 
+                                    <button
                                         onClick={() => { setShowSearch(false); setSearchTerm('') }}
                                         className="p-2 rounded-lg text-slate-400 hover:text-slate-600 hover:bg-slate-100 transition-all"
                                     >
@@ -249,13 +256,13 @@ const Watchlist = () => {
                                 </div>
                                 <div className="relative">
                                     <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-slate-400" />
-                                    <input 
-                                        type="text" 
-                                        value={searchTerm} 
+                                    <input
+                                        type="text"
+                                        value={searchTerm}
                                         onChange={(e) => setSearchTerm(e.target.value)}
-                                        placeholder="Search symbol or company name..." 
+                                        placeholder="Search symbol or company name..."
                                         className="w-full pl-12 pr-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-slate-900/5 focus:border-slate-900 transition-all"
-                                        autoFocus 
+                                        autoFocus
                                     />
                                 </div>
                             </div>
@@ -265,8 +272,8 @@ const Watchlist = () => {
                                 {searchTerm && filteredStocks.length > 0 ? (
                                     <div className="divide-y divide-slate-100">
                                         {filteredStocks.map(stock => (
-                                            <button 
-                                                key={stock.symbol} 
+                                            <button
+                                                key={stock.symbol}
                                                 onClick={() => addToWatchlist(stock.symbol)}
                                                 className="w-full flex items-center justify-between px-6 py-4 hover:bg-slate-50 transition-colors text-left"
                                             >
@@ -301,6 +308,15 @@ const Watchlist = () => {
                         </div>
                     </div>
                 )}
+
+                <ConfirmModal
+                    isOpen={deleteModal.isOpen}
+                    onClose={() => setDeleteModal({ isOpen: false, symbol: '' })}
+                    onConfirm={confirmRemove}
+                    title="Remove from Watchlist"
+                    message={`Are you sure you want to remove ${deleteModal.symbol} from your watchlist?`}
+                    confirmText="Remove"
+                />
             </div>
         </div>
     )
