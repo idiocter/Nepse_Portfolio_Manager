@@ -40,7 +40,7 @@ const Dashboard = () => {
   if (loading) {
     return (
       <div className="max-w-[1400px] mx-auto px-4 py-6 space-y-4">
-        <div className="h-7 w-48 bg-sunk animate-pulse rounded-[3px]" />
+        <div className="h-7 w-48 bg-sunk animate-pulse rounded-lg" />
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-px bg-line border border-line">
           {[1, 2, 3, 4].map(i => <div key={i} className="h-24 bg-panel animate-pulse" />)}
         </div>

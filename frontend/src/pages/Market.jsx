@@ -66,7 +66,7 @@ const Market = () => {
   if (loading && stocks.length === 0) {
     return (
       <div className="max-w-[1400px] mx-auto px-4 py-6 space-y-4">
-        <div className="h-7 w-48 bg-sunk animate-pulse rounded-[3px]" />
+        <div className="h-7 w-48 bg-sunk animate-pulse rounded-lg" />
         <div className="h-96 panel animate-pulse" />
       </div>
     )
@@ -173,7 +173,7 @@ const Market = () => {
                 else pageNum = currentPage - 1 + i
                 return (
                   <button key={pageNum} onClick={() => goToPage(pageNum)}
-                    className={`w-7 h-7 text-[12px] font-mono rounded-[3px] border transition-colors ${currentPage === pageNum ? 'bg-ink text-paper border-ink' : 'border-line text-muted hover:border-line-strong'}`}>
+                    className={`w-7 h-7 text-[12px] font-mono rounded-lg border transition-colors ${currentPage === pageNum ? 'bg-ink text-paper border-ink' : 'border-line text-muted hover:border-line-strong'}`}>
                     {pageNum}
                   </button>
                 )

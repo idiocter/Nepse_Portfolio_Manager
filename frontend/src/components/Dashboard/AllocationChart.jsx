@@ -2,21 +2,21 @@ import { useState, useEffect } from 'react'
 import axios from 'axios'
 import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip, Legend } from 'recharts'
 
-// Warm terminal palette — ordered to keep adjacent sectors distinct
+// Modern palette — vivid, distinct, readable on dark surfaces
 const COLORS = [
-  '#1a1714', // Banking - ink
-  '#b3541e', // Hydro Power - accent amber
-  '#117a3d', // Microfinance - up green
-  '#a67c00', // Life Insurance - gold
-  '#c0322b', // Non-Life Insurance - down red
-  '#6b6259', // Hotels & Tourism - muted
-  '#7a5c3e', // Development Bank - umber
-  '#3d6b5c', // Finance - slate green
-  '#8a4b6b', // Mutual Fund - mauve
-  '#4a5a7a', // Investment - steel
-  '#9c6b3a', // Manufacturing - bronze
-  '#5a7a3d', // Trading - olive
-  '#a39a8d', // Others - faint
+  '#5b7cfa', // Banking - indigo
+  '#f59e0b', // Hydro Power - amber
+  '#34d399', // Microfinance - emerald
+  '#fbbf24', // Life Insurance - gold
+  '#f87171', // Non-Life Insurance - rose
+  '#22d3ee', // Hotels & Tourism - cyan
+  '#a78bfa', // Development Bank - violet
+  '#2dd4bf', // Finance - teal
+  '#f472b6', // Mutual Fund - pink
+  '#60a5fa', // Investment - sky
+  '#fb923c', // Manufacturing - orange
+  '#a3e635', // Trading - lime
+  '#94a3b8', // Others - slate
 ]
 
 const ALL_SECTORS = [
@@ -41,7 +41,7 @@ const CustomTooltip = ({ active, payload }) => {
     return (
       <div className="panel p-3 shadow-lg max-w-[260px]">
         <div className="flex items-center gap-2 mb-2 border-b border-line pb-2">
-          <div className="w-2 h-2 rounded-[2px] flex-shrink-0" style={{ backgroundColor: payload[0].fill }} />
+          <div className="w-2 h-2 rounded-md flex-shrink-0" style={{ backgroundColor: payload[0].fill }} />
           <p className="label truncate">{data.name}</p>
         </div>
         <p className="text-lg font-semibold text-ink tnum mb-2">Rs. {payload[0].value.toLocaleString()}</p>
@@ -111,7 +111,7 @@ const AllocationChart = ({ holdings }) => {
   if (data.length === 0) {
     return (
       <div className="h-48 flex items-center justify-center">
-        <div className="px-4 py-3 border border-dashed border-line rounded-[3px]">
+        <div className="px-4 py-3 border border-dashed border-line rounded-lg">
           <p className="label">AWAITING POSITIONS</p>
         </div>
       </div>

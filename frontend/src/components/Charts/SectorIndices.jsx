@@ -31,7 +31,7 @@ const SectorIndices = () => {
             {sectors.map((sector) => {
                 const isPositive = sector.change >= 0
                 return (
-                    <div key={sector.id} className="flex items-center justify-between px-2 py-1.5 hover:bg-sunk transition-colors rounded-[2px]">
+                    <div key={sector.id} className="flex items-center justify-between px-2 py-1.5 hover:bg-sunk transition-colors rounded-md">
                         <div className="min-w-0">
                             <p className="text-[11px] font-semibold text-ink truncate max-w-[120px]">
                                 {sector.index.replace(' Index', '').replace(' SubIndex', '')}

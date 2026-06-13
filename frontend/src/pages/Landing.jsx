@@ -204,7 +204,7 @@ const Landing = () => {
             {/* Footer */}
             <footer className="max-w-[1400px] mx-auto px-4 py-8 flex flex-col sm:flex-row items-center justify-between gap-4">
                 <div className="flex items-center gap-2">
-                    <div className="w-6 h-6 bg-panel border border-line p-0.5 rounded-[2px] flex items-center justify-center">
+                    <div className="w-6 h-6 bg-panel border border-line p-0.5 rounded-md flex items-center justify-center">
                         <img src="/favicon.png" alt="" className="w-full h-full object-contain" />
                     </div>
                     <span className="text-[13px] font-semibold text-ink">NEPSE·TERM</span>

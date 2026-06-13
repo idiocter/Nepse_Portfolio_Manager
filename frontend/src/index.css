@@ -3,33 +3,40 @@
 @import "tailwindcss";
 
 /* ============================================================
-   NEPSE Terminal — design tokens
-   Warm paper + ink, mono numerals, hairline rules.
-   Single light theme. Color carries meaning (up/down/accent).
+   NEPSE — design tokens
+   Modern dark UI: deep neutral surfaces, soft borders,
+   rounded corners, subtle depth. Color carries meaning.
    ============================================================ */
 @theme {
   --font-sans: 'IBM Plex Sans', system-ui, -apple-system, sans-serif;
   --font-mono: 'IBM Plex Mono', ui-monospace, 'SF Mono', Menlo, monospace;
 
   /* surfaces */
-  --color-paper: #f3f1ea;   /* app background — warm newsprint */
-  --color-panel: #ffffff;   /* card / table surface */
-  --color-sunk:  #ece9e0;   /* inset / header rows */
+  --color-paper: #0c0e12;   /* app background — deep neutral */
+  --color-panel: #16191f;   /* card / table surface (raised) */
+  --color-sunk:  #1e222a;   /* inset / header rows / hover */
 
   /* ink */
-  --color-ink:   #1a1714;   /* primary text */
-  --color-muted: #6b6259;   /* secondary text */
-  --color-faint: #a39a8d;   /* tertiary / labels */
+  --color-ink:   #e9ecf1;   /* primary text */
+  --color-muted: #9097a3;   /* secondary text */
+  --color-faint: #5c636f;   /* tertiary / labels */
 
   /* rules */
-  --color-line:  #ddd8cc;   /* hairline borders */
-  --color-line-strong: #c7c0b0;
+  --color-line:  #242832;   /* soft borders */
+  --color-line-strong: #343a47;
 
   /* data semantics */
-  --color-up:    #117a3d;   /* gains */
-  --color-down:  #c0322b;   /* losses */
-  --color-accent: #b3541e;  /* terminal amber — brand / active / focus */
-  --color-accent-soft: #f0e2d3;
+  --color-up:    #34d399;   /* gains — emerald */
+  --color-down:  #f87171;   /* losses — rose */
+  --color-accent: #5b7cfa;  /* brand / active / focus — indigo */
+  --color-accent-soft: #1a2036;
+
+  /* elevation */
+  --shadow-panel: 0 1px 2px rgba(0,0,0,0.4), 0 4px 16px rgba(0,0,0,0.25);
+
+  /* radii */
+  --radius-control: 8px;
+  --radius-panel: 14px;
 }
 
 /* ============================================================
@@ -68,11 +75,12 @@ body {
    Reusable terminal primitives
    ============================================================ */
 @layer components {
-  /* a panel = white surface, hairline border, near-square corners */
+  /* a panel = raised surface, soft border, rounded corners, subtle depth */
   .panel {
     background-color: var(--color-panel);
     border: 1px solid var(--color-line);
-    border-radius: 3px;
+    border-radius: var(--radius-panel);
+    box-shadow: var(--shadow-panel);
   }
 
   /* eyebrow / column label — tiny mono caps */
@@ -91,50 +99,52 @@ body {
     align-items: center;
     justify-content: center;
     gap: 0.5rem;
-    font-size: 12px;
+    font-size: 13px;
     font-weight: 600;
-    letter-spacing: 0.02em;
-    padding: 0.5rem 0.9rem;
-    border-radius: 3px;
+    letter-spacing: 0.01em;
+    padding: 0.6rem 1.1rem;
+    border-radius: var(--radius-control);
     border: 1px solid transparent;
-    transition: background-color .12s, border-color .12s, color .12s;
+    transition: background-color .15s, border-color .15s, color .15s, filter .15s, transform .05s;
     cursor: pointer;
     text-decoration: none;
   }
+  .btn:active { transform: translateY(0.5px); }
+
   .btn-primary {
-    background-color: var(--color-ink);
-    color: var(--color-paper);
+    background-color: var(--color-accent);
+    color: #fff;
   }
-  .btn-primary:hover { background-color: #000; }
+  .btn-primary:hover { filter: brightness(1.08); }
 
   .btn-accent {
     background-color: var(--color-accent);
     color: #fff;
   }
-  .btn-accent:hover { filter: brightness(0.92); }
+  .btn-accent:hover { filter: brightness(1.08); }
 
   .btn-ghost {
-    background-color: var(--color-panel);
-    border-color: var(--color-line);
+    background-color: transparent;
+    border-color: var(--color-line-strong);
     color: var(--color-ink);
   }
-  .btn-ghost:hover { border-color: var(--color-line-strong); background-color: var(--color-sunk); }
+  .btn-ghost:hover { border-color: var(--color-accent); background-color: var(--color-sunk); }
 
   /* form field */
   .field {
     width: 100%;
-    background-color: var(--color-panel);
+    background-color: var(--color-sunk);
     border: 1px solid var(--color-line);
-    border-radius: 3px;
-    padding: 0.6rem 0.8rem;
+    border-radius: var(--radius-control);
+    padding: 0.7rem 0.9rem;
     font-size: 14px;
     color: var(--color-ink);
     outline: none;
-    transition: border-color .12s, box-shadow .12s;
+    transition: border-color .15s, box-shadow .15s;
   }
   .field:focus {
     border-color: var(--color-accent);
-    box-shadow: 0 0 0 1px var(--color-accent);
+    box-shadow: 0 0 0 3px var(--color-accent-soft);
   }
   .field::placeholder { color: var(--color-faint); }
 
@@ -142,17 +152,17 @@ body {
   .chip {
     display: inline-flex;
     align-items: center;
-    gap: 0.25rem;
+    gap: 0.3rem;
     font-family: var(--font-mono);
     font-size: 11px;
     font-weight: 500;
-    padding: 0.1rem 0.4rem;
-    border-radius: 2px;
-    border: 1px solid var(--color-line);
+    padding: 0.15rem 0.5rem;
+    border-radius: 999px;
+    border: 1px solid var(--color-line-strong);
     color: var(--color-muted);
   }
 
-  /* dense data table */
+  /* data table */
   .dt { width: 100%; border-collapse: collapse; }
   .dt thead th {
     font-family: var(--font-mono);
@@ -162,16 +172,17 @@ body {
     text-transform: uppercase;
     color: var(--color-faint);
     text-align: left;
-    padding: 0.55rem 0.75rem;
-    background-color: var(--color-sunk);
+    padding: 0.7rem 1rem;
+    background-color: transparent;
     border-bottom: 1px solid var(--color-line);
     white-space: nowrap;
   }
   .dt tbody td {
-    padding: 0.5rem 0.75rem;
+    padding: 0.75rem 1rem;
     border-bottom: 1px solid var(--color-line);
     font-size: 13px;
   }
+  .dt tbody tr { transition: background-color .12s; }
   .dt tbody tr:hover { background-color: var(--color-sunk); }
   .dt tbody tr:last-child td { border-bottom: none; }
 }

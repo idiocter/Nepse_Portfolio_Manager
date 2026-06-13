@@ -2,10 +2,10 @@ import { useEffect, useRef, useState } from 'react'
 import { createChart, ColorType, CrosshairMode, CandlestickSeries, HistogramSeries, LineSeries } from 'lightweight-charts'
 import { BarChart3, Zap } from 'lucide-react'
 
-const UP = '#117a3d'
-const DOWN = '#c0322b'
-const EMA20 = '#b3541e'   // accent amber
-const EMA50 = '#1a1714'   // ink
+const UP = '#34d399'
+const DOWN = '#f87171'
+const EMA20 = '#5b7cfa'   // accent indigo
+const EMA50 = '#e9ecf1'   // ink
 
 const StockChart = ({ data, symbol }) => {
   const chartContainerRef = useRef(null)
@@ -21,23 +21,23 @@ const StockChart = ({ data, symbol }) => {
 
     const chart = createChart(chartContainerRef.current, {
       layout: {
-        background: { type: ColorType.Solid, color: '#ffffff' },
-        textColor: '#6b6259',
+        background: { type: ColorType.Solid, color: '#16191f' },
+        textColor: '#9097a3',
         fontSize: 11,
         fontFamily: "'IBM Plex Mono', monospace",
       },
       grid: {
-        vertLines: { color: 'rgba(221, 216, 204, 0.5)' },
-        horzLines: { color: 'rgba(221, 216, 204, 0.5)' },
+        vertLines: { color: 'rgba(36, 40, 50, 0.7)' },
+        horzLines: { color: 'rgba(36, 40, 50, 0.7)' },
       },
       crosshair: {
         mode: CrosshairMode.Normal,
-        vertLine: { color: '#b3541e', width: 1, style: 3, labelBackgroundColor: '#1a1714' },
-        horzLine: { color: '#b3541e', width: 1, style: 3, labelBackgroundColor: '#1a1714' },
+        vertLine: { color: '#5b7cfa', width: 1, style: 3, labelBackgroundColor: '#1e222a' },
+        horzLine: { color: '#5b7cfa', width: 1, style: 3, labelBackgroundColor: '#1e222a' },
       },
-      rightPriceScale: { borderColor: '#ddd8cc', textColor: '#6b6259', scaleMargins: { top: 0.1, bottom: 0.25 } },
+      rightPriceScale: { borderColor: '#242832', textColor: '#9097a3', scaleMargins: { top: 0.1, bottom: 0.25 } },
       timeScale: {
-        borderColor: '#ddd8cc', timeVisible: true,
+        borderColor: '#242832', timeVisible: true,
         tickMarkFormatter: (time) => { const d = new Date(time); return `${d.getMonth() + 1}/${d.getDate()}` },
       },
       handleScroll: { mouseWheel: true, pressedMouseMove: true },
@@ -49,13 +49,13 @@ const StockChart = ({ data, symbol }) => {
     })
     const ema20Series = chart.addSeries(LineSeries, { color: EMA20, lineWidth: 1.5, priceLineVisible: false, lastValueVisible: false, title: 'EMA 20', visible: showEMA20 })
     const ema50Series = chart.addSeries(LineSeries, { color: EMA50, lineWidth: 1.5, priceLineVisible: false, lastValueVisible: false, title: 'EMA 50', visible: showEMA50 })
-    const volumeSeries = chart.addSeries(HistogramSeries, { color: '#ece9e0', priceFormat: { type: 'volume' }, priceScaleId: '', visible: showVolume })
+    const volumeSeries = chart.addSeries(HistogramSeries, { color: '#1e222a', priceFormat: { type: 'volume' }, priceScaleId: '', visible: showVolume })
     volumeSeries.priceScale().applyOptions({ scaleMargins: { top: 0.8, bottom: 0 } })
 
     const formattedData = data.map(item => ({ time: item.date, open: item.open, high: item.high, low: item.low, close: item.close }))
     const volumeData = data.map(item => ({
       time: item.date, value: item.volume,
-      color: item.close >= item.open ? 'rgba(17, 122, 61, 0.18)' : 'rgba(192, 50, 43, 0.18)',
+      color: item.close >= item.open ? 'rgba(52, 211, 153, 0.22)' : 'rgba(248, 113, 113, 0.22)',
     }))
 
     const calculateEMA = (data, period) => {
@@ -96,7 +96,7 @@ const StockChart = ({ data, symbol }) => {
   }, [showVolume, showEMA20, showEMA50])
 
   const toggle = (active, color) =>
-    `flex items-center gap-1 px-2 py-1 rounded-[2px] border text-[10px] font-mono uppercase tracking-wider transition-colors ${active ? 'text-paper border-transparent' : 'text-muted border-line hover:border-line-strong'}`
+    `flex items-center gap-1 px-2 py-1 rounded-md border text-[10px] font-mono uppercase tracking-wider transition-colors ${active ? 'text-paper border-transparent' : 'text-muted border-line hover:border-line-strong'}`
 
   return (
     <div className="panel h-full flex flex-col overflow-hidden">
@@ -109,7 +109,7 @@ const StockChart = ({ data, symbol }) => {
           <button onClick={() => setShowEMA50(!showEMA50)} className={toggle(showEMA50)} style={showEMA50 ? { background: EMA50 } : {}}>
             <Zap className="h-3 w-3" /> EMA50
           </button>
-          <button onClick={() => setShowVolume(!showVolume)} className={toggle(showVolume)} style={showVolume ? { background: '#1a1714' } : {}}>
+          <button onClick={() => setShowVolume(!showVolume)} className={toggle(showVolume)} style={showVolume ? { background: '#9097a3' } : {}}>
             <BarChart3 className="h-3 w-3" /> VOL
           </button>
         </div>

@@ -72,7 +72,7 @@ const Watchlist = () => {
     if (loading) {
         return (
             <div className="max-w-[1400px] mx-auto px-4 py-6 space-y-4">
-                <div className="h-7 w-48 bg-sunk animate-pulse rounded-[3px]" />
+                <div className="h-7 w-48 bg-sunk animate-pulse rounded-lg" />
                 <div className="h-64 panel animate-pulse" />
             </div>
         )

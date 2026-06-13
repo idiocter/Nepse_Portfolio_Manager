@@ -69,7 +69,7 @@ const Navbar = () => {
 
           {/* Logo */}
           <Link to={user ? '/dashboard' : '/'} className="flex items-center gap-2.5 no-underline group">
-            <div className="w-8 h-8 bg-panel border border-line flex items-center justify-center overflow-hidden p-1 rounded-[2px]">
+            <div className="w-8 h-8 bg-panel border border-line flex items-center justify-center overflow-hidden p-1 rounded-md">
               <img src="/favicon.png" alt="NEPSE" className="w-full h-full object-contain" />
             </div>
             <span className="text-[15px] font-bold text-ink tracking-tight">
@@ -100,12 +100,12 @@ const Navbar = () => {
               <div className="relative">
                 <button
                   onClick={() => setProfileOpen(!profileOpen)}
-                  className="flex items-center gap-2 pl-1 pr-2 py-1 border border-line rounded-[3px] hover:border-line-strong transition-colors"
+                  className="flex items-center gap-2 pl-1 pr-2 py-1 border border-line rounded-lg hover:border-line-strong transition-colors"
                 >
                   {user.avatar ? (
-                    <img src={user.avatar} alt={user.name} className="h-6 w-6 rounded-[2px] object-cover" />
+                    <img src={user.avatar} alt={user.name} className="h-6 w-6 rounded-md object-cover" />
                   ) : (
-                    <div className="h-6 w-6 rounded-[2px] bg-ink flex items-center justify-center">
+                    <div className="h-6 w-6 rounded-md bg-ink flex items-center justify-center">
                       <span className="text-[11px] font-semibold text-paper">{user.name?.charAt(0)?.toUpperCase()}</span>
                     </div>
                   )}
@@ -122,15 +122,15 @@ const Navbar = () => {
                         <p className="text-[11px] text-muted truncate font-mono">{user.email}</p>
                       </div>
                       <Link to="/profile?tab=overview" onClick={() => setProfileOpen(false)}
-                        className="flex items-center gap-2.5 px-3 py-2 rounded-[2px] text-[13px] font-medium text-muted hover:text-ink hover:bg-sunk transition-colors no-underline">
+                        className="flex items-center gap-2.5 px-3 py-2 rounded-md text-[13px] font-medium text-muted hover:text-ink hover:bg-sunk transition-colors no-underline">
                         <User className="h-3.5 w-3.5" /> Profile
                       </Link>
                       <Link to="/profile?tab=preferences" onClick={() => setProfileOpen(false)}
-                        className="flex items-center gap-2.5 px-3 py-2 rounded-[2px] text-[13px] font-medium text-muted hover:text-ink hover:bg-sunk transition-colors no-underline">
+                        className="flex items-center gap-2.5 px-3 py-2 rounded-md text-[13px] font-medium text-muted hover:text-ink hover:bg-sunk transition-colors no-underline">
                         <Settings className="h-3.5 w-3.5" /> Settings
                       </Link>
                       <button onClick={() => { setProfileOpen(false); handleLogout() }}
-                        className="w-full flex items-center gap-2.5 px-3 py-2 rounded-[2px] text-[13px] font-medium down hover:bg-[var(--color-down)]/8 transition-colors">
+                        className="w-full flex items-center gap-2.5 px-3 py-2 rounded-md text-[13px] font-medium down hover:bg-[var(--color-down)]/8 transition-colors">
                         <LogOut className="h-3.5 w-3.5" /> Sign Out
                       </button>
                     </div>
@@ -162,7 +162,7 @@ const Navbar = () => {
           <div className="max-w-[1400px] mx-auto px-4 py-3 space-y-0.5">
             {navLinks.map(link => (
               <Link key={link.to} to={link.to} onClick={() => setMobileOpen(false)}
-                className={`flex items-center gap-2.5 px-3 py-2.5 rounded-[2px] text-[13px] font-medium transition-colors no-underline ${isActive(link.to)
+                className={`flex items-center gap-2.5 px-3 py-2.5 rounded-md text-[13px] font-medium transition-colors no-underline ${isActive(link.to)
                   ? 'bg-sunk text-ink' : 'text-muted hover:text-ink'}`}>
                 {link.icon} {link.label}
               </Link>
@@ -175,15 +175,15 @@ const Navbar = () => {
                   <p className="text-[11px] text-muted truncate font-mono">{user.email}</p>
                 </div>
                 <Link to="/profile?tab=overview" onClick={() => setMobileOpen(false)}
-                  className="flex items-center gap-2.5 px-3 py-2.5 rounded-[2px] text-[13px] font-medium text-muted hover:text-ink transition-colors no-underline">
+                  className="flex items-center gap-2.5 px-3 py-2.5 rounded-md text-[13px] font-medium text-muted hover:text-ink transition-colors no-underline">
                   <User className="h-3.5 w-3.5" /> Profile
                 </Link>
                 <Link to="/profile?tab=preferences" onClick={() => setMobileOpen(false)}
-                  className="flex items-center gap-2.5 px-3 py-2.5 rounded-[2px] text-[13px] font-medium text-muted hover:text-ink transition-colors no-underline">
+                  className="flex items-center gap-2.5 px-3 py-2.5 rounded-md text-[13px] font-medium text-muted hover:text-ink transition-colors no-underline">
                   <Settings className="h-3.5 w-3.5" /> Settings
                 </Link>
                 <button onClick={() => { setMobileOpen(false); handleLogout() }}
-                  className="w-full flex items-center gap-2.5 px-3 py-2.5 rounded-[2px] text-[13px] font-medium down transition-colors">
+                  className="w-full flex items-center gap-2.5 px-3 py-2.5 rounded-md text-[13px] font-medium down transition-colors">
                   <LogOut className="h-3.5 w-3.5" /> Sign Out
                 </button>
               </>

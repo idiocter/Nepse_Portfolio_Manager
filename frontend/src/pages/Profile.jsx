@@ -41,7 +41,7 @@ const Profile = () => {
 
     const Toggle = ({ on, onClick, disabled }) => (
         <button onClick={onClick} disabled={disabled}
-            className={`relative inline-flex h-5 w-9 items-center rounded-[3px] border transition-colors flex-shrink-0 ${on ? 'bg-ink border-ink' : 'bg-sunk border-line'} ${disabled ? 'opacity-50' : ''}`}>
+            className={`relative inline-flex h-5 w-9 items-center rounded-lg border transition-colors flex-shrink-0 ${on ? 'bg-ink border-ink' : 'bg-sunk border-line'} ${disabled ? 'opacity-50' : ''}`}>
             <span className={`inline-block h-3.5 w-3.5 transform transition-transform ${on ? 'translate-x-[18px] bg-paper' : 'translate-x-[2px] bg-faint'}`} />
         </button>
     )
@@ -51,9 +51,9 @@ const Profile = () => {
             {/* Header */}
             <div className="panel p-5 flex flex-col sm:flex-row items-start sm:items-center gap-4">
                 {user?.avatar ? (
-                    <img src={user.avatar} alt={user.name} className="w-14 h-14 rounded-[3px] object-cover border border-line" />
+                    <img src={user.avatar} alt={user.name} className="w-14 h-14 rounded-lg object-cover border border-line" />
                 ) : (
-                    <div className="w-14 h-14 rounded-[3px] bg-ink flex items-center justify-center">
+                    <div className="w-14 h-14 rounded-lg bg-ink flex items-center justify-center">
                         <span className="text-xl font-semibold text-paper">{user?.name?.charAt(0)?.toUpperCase() || 'U'}</span>
                     </div>
                 )}
@@ -91,12 +91,12 @@ const Profile = () => {
                     <div className="flex lg:flex-col gap-1 overflow-x-auto no-scrollbar">
                         {menuItems.map(item => (
                             <button key={item.id} onClick={() => handleSectionChange(item.id)}
-                                className={`flex items-center gap-2 px-3 py-2 rounded-[3px] text-[13px] font-medium transition-colors whitespace-nowrap lg:w-full ${activeSection === item.id ? 'bg-ink text-paper' : 'text-muted hover:text-ink hover:bg-sunk'}`}>
+                                className={`flex items-center gap-2 px-3 py-2 rounded-lg text-[13px] font-medium transition-colors whitespace-nowrap lg:w-full ${activeSection === item.id ? 'bg-ink text-paper' : 'text-muted hover:text-ink hover:bg-sunk'}`}>
                                 {item.icon} {item.label}
                             </button>
                         ))}
                         <button onClick={logout}
-                            className="flex items-center gap-2 px-3 py-2 rounded-[3px] text-[13px] font-medium down hover:bg-[var(--color-down)]/8 transition-colors whitespace-nowrap lg:w-full lg:mt-2 lg:border-t lg:border-line lg:rounded-none lg:pt-3">
+                            className="flex items-center gap-2 px-3 py-2 rounded-lg text-[13px] font-medium down hover:bg-[var(--color-down)]/8 transition-colors whitespace-nowrap lg:w-full lg:mt-2 lg:border-t lg:border-line lg:rounded-none lg:pt-3">
                             <LogOut className="h-3.5 w-3.5" /> Sign Out
                         </button>
                     </div>
@@ -138,7 +138,7 @@ const Profile = () => {
                                     { icon: <Shield className="h-4 w-4" />, t: 'Authentication', d: user?.googleId ? 'Secured with Google OAuth 2.0' : 'Email and password authentication' },
                                     { icon: <Calendar className="h-4 w-4" />, t: 'Session Expiry', d: 'Sessions expire after 30 days of inactivity' },
                                 ].map(row => (
-                                    <div key={row.t} className="flex items-start gap-3 p-3 border border-line rounded-[3px]">
+                                    <div key={row.t} className="flex items-start gap-3 p-3 border border-line rounded-lg">
                                         <span className="text-faint mt-0.5">{row.icon}</span>
                                         <div>
                                             <h4 className="text-[13px] font-semibold text-ink">{row.t}</h4>
