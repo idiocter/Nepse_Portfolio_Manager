@@ -3,7 +3,7 @@ import { Link, useLocation, useNavigate } from 'react-router-dom'
 import { useAuth } from '../../contexts/AuthContext'
 import {
   LogOut, User, PieChart, Home,
-  Activity, Eye, Menu, X, ChevronDown, Rocket, Settings
+  Activity, Eye, Menu, X, ChevronDown, Settings
 } from 'lucide-react'
 
 const Navbar = () => {
@@ -13,70 +13,79 @@ const Navbar = () => {
   const [mobileOpen, setMobileOpen] = useState(false)
   const [profileOpen, setProfileOpen] = useState(false)
   const [isMarketOpen, setIsMarketOpen] = useState(false)
-  const [showTooltip, setShowTooltip] = useState(false)
+  const [now, setNow] = useState(new Date())
 
   useEffect(() => {
-    const checkMarketStatus = () => {
-      const now = new Date();
-      const nepalTimeString = now.toLocaleString("en-US", { timeZone: "Asia/Kathmandu" });
-      const nepalTime = new Date(nepalTimeString);
+    const tick = () => {
+      const n = new Date()
+      setNow(n)
+      const nepal = new Date(n.toLocaleString('en-US', { timeZone: 'Asia/Kathmandu' }))
+      const day = nepal.getDay()
+      const hours = nepal.getHours()
+      setIsMarketOpen(day >= 0 && day <= 4 && hours >= 11 && hours < 15)
+    }
+    tick()
+    const interval = setInterval(tick, 1000)
+    return () => clearInterval(interval)
+  }, [])
 
-      const day = nepalTime.getDay();
-      const hours = nepalTime.getHours();
-
-      const isOpenDay = day >= 0 && day <= 4;
-      const isOpenTime = hours >= 11 && hours < 15;
-
-      setIsMarketOpen(isOpenDay && isOpenTime);
-    };
-
-    checkMarketStatus();
-    const interval = setInterval(checkMarketStatus, 60000);
-    return () => clearInterval(interval);
-  }, []);
-
-  const handleLogout = () => {
-    logout()
-    navigate('/login')
-  }
-
+  const handleLogout = () => { logout(); navigate('/login') }
   const isActive = (path) => location.pathname === path
 
   const navLinks = user
     ? [
-      { to: '/dashboard', label: 'Dashboard', icon: <Home className="h-4 w-4 md:h-4 md:w-4" /> },
-      { to: '/portfolio', label: 'Portfolio', icon: <PieChart className="h-4 w-4 md:h-4 md:w-4" /> },
-      { to: '/market', label: 'Market', icon: <Activity className="h-4 w-4 md:h-4 md:w-4" /> },
-      { to: '/watchlist', label: 'Watchlist', icon: <Eye className="h-4 w-4 md:h-4 md:w-4" /> },
+      { to: '/dashboard', label: 'Dashboard', icon: <Home className="h-3.5 w-3.5" /> },
+      { to: '/portfolio', label: 'Portfolio', icon: <PieChart className="h-3.5 w-3.5" /> },
+      { to: '/market', label: 'Market', icon: <Activity className="h-3.5 w-3.5" /> },
+      { to: '/watchlist', label: 'Watchlist', icon: <Eye className="h-3.5 w-3.5" /> },
     ]
     : [
-      { to: '/market', label: 'Market', icon: <Activity className="h-4 w-4 md:h-4 md:w-4" /> },
+      { to: '/market', label: 'Market', icon: <Activity className="h-3.5 w-3.5" /> },
     ]
 
-  return (
-    <nav className="bg-white dark:bg-zinc-950 border-b border-zinc-100 dark:border-zinc-800 sticky top-0 z-50 shadow-sm transition-colors duration-300">
-      <div className="container mx-auto px-4 sm:px-6">
-        <div className="flex justify-between items-center h-16 md:h-20">
+  const nepalTime = new Date(now.toLocaleString('en-US', { timeZone: 'Asia/Kathmandu' }))
+    .toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit', second: '2-digit' })
 
-          {/* Logo - Responsive sizing */}
-          <Link to={user ? '/dashboard' : '/'} className="flex items-center gap-2 md:gap-3 no-underline group">
-            <div className="w-8 h-8 md:w-10 md:h-10 rounded-xl bg-white dark:bg-zinc-900 flex items-center justify-center shadow-lg border border-zinc-100 dark:border-zinc-800 group-hover:scale-105 transition-transform duration-300 overflow-hidden p-1">
+  return (
+    <nav className="bg-panel border-b border-line sticky top-0 z-50">
+      {/* status strip */}
+      <div className="bg-ink text-paper">
+        <div className="max-w-[1400px] mx-auto px-4 h-7 flex items-center justify-between text-[11px]">
+          <div className="flex items-center gap-2">
+            <span className={`h-1.5 w-1.5 rounded-full ${isMarketOpen ? 'bg-[var(--color-up)] animate-blink' : 'bg-[var(--color-down)]'}`} />
+            <span className="font-mono tracking-wide">
+              NEPSE {isMarketOpen ? 'OPEN' : 'CLOSED'}
+            </span>
+          </div>
+          <div className="font-mono tracking-wide text-paper/70 flex items-center gap-3">
+            <span className="hidden sm:inline">KATHMANDU</span>
+            <span className="tnum text-paper">{nepalTime}</span>
+          </div>
+        </div>
+      </div>
+
+      <div className="max-w-[1400px] mx-auto px-4">
+        <div className="flex justify-between items-center h-14">
+
+          {/* Logo */}
+          <Link to={user ? '/dashboard' : '/'} className="flex items-center gap-2.5 no-underline group">
+            <div className="w-8 h-8 bg-panel border border-line flex items-center justify-center overflow-hidden p-1 rounded-[2px]">
               <img src="/favicon.png" alt="NEPSE" className="w-full h-full object-contain" />
             </div>
-            <span className="text-lg md:text-xl font-black text-zinc-900 dark:text-white tracking-tighter">
-              NEPSE<span className="text-zinc-500">Tracker</span>
+            <span className="text-[15px] font-bold text-ink tracking-tight">
+              NEPSE<span className="accent">·TERM</span>
             </span>
           </Link>
 
           {/* Desktop Nav */}
-          <div className="hidden md:flex items-center gap-1">
+          <div className="hidden md:flex items-center">
             {navLinks.map(link => (
               <Link
                 key={link.to}
                 to={link.to}
-                className={`flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-bold transition-all duration-200 no-underline ${isActive(link.to)
-                  ? 'bg-zinc-100 dark:bg-zinc-900 text-zinc-900 dark:text-zinc-100 shadow-sm'
-                  : 'text-zinc-400 dark:text-zinc-500 hover:text-zinc-900 dark:hover:text-zinc-100 hover:bg-zinc-50 dark:hover:bg-zinc-900'
+                className={`flex items-center gap-1.5 px-3.5 h-14 text-[13px] font-medium transition-colors no-underline border-b-2 -mb-px ${isActive(link.to)
+                  ? 'text-ink border-[var(--color-accent)]'
+                  : 'text-muted border-transparent hover:text-ink'
                   }`}
               >
                 {link.icon}
@@ -86,207 +95,102 @@ const Navbar = () => {
           </div>
 
           {/* Right side - Desktop */}
-          <div className="hidden md:flex items-center gap-4">
-
-            {/* 3D Market Status Sphere with Bottom Tooltip */}
-            <div
-              className="relative flex flex-col items-center"
-              onMouseEnter={() => setShowTooltip(true)}
-              onMouseLeave={() => setShowTooltip(false)}
-            >
-              {/* 3D Sphere */}
-              <div className={`relative w-8 h-8 rounded-full shadow-xl transition-all duration-300 hover:scale-110 hover:-translate-y-1 ${isMarketOpen ? 'shadow-emerald-500/50' : 'shadow-red-500/50'}`}>
-                {/* Ping animation when open */}
-                {isMarketOpen && (
-                  <span className="absolute inset-0 rounded-full bg-emerald-400 animate-ping opacity-60" />
-                )}
-
-                {/* 3D Sphere Core */}
-                <span className={`absolute inset-0 rounded-full border-2 border-white/30 bg-gradient-to-br shadow-[inset_0_-4px_8px_rgba(0,0,0,0.4),inset_0_4px_8px_rgba(255,255,255,0.4),0_4px_12px_rgba(0,0,0,0.2)] ${isMarketOpen ? 'from-emerald-300 via-emerald-500 to-emerald-700' : 'from-red-300 via-red-500 to-red-700'}`} />
-
-                {/* Highlight reflection */}
-                <span className="absolute top-1 left-2 w-3 h-2 bg-white/40 rounded-full blur-[2px]" />
-              </div>
-
-              {/* Tooltip - Bottom */}
-              {showTooltip && (
-                <div className="absolute top-full mt-2 px-3 py-1.5 bg-slate-900 text-white text-xs font-bold rounded-lg whitespace-nowrap shadow-lg">
-                  {isMarketOpen ? 'Market Open' : 'Market Closed'}
-                  <div className="absolute -top-1 left-1/2 -translate-x-1/2 w-2 h-2 bg-slate-900 rotate-45" />
-                </div>
-              )}
-            </div>
-
-
-
+          <div className="hidden md:flex items-center gap-3">
             {user ? (
               <div className="relative">
                 <button
                   onClick={() => setProfileOpen(!profileOpen)}
-                  className="flex items-center gap-3 px-4 py-2 rounded-2xl border border-transparent hover:border-zinc-100 dark:hover:border-zinc-800 hover:bg-zinc-50 dark:hover:bg-zinc-900 transition-all duration-200"
+                  className="flex items-center gap-2 pl-1 pr-2 py-1 border border-line rounded-[3px] hover:border-line-strong transition-colors"
                 >
                   {user.avatar ? (
-                    <img src={user.avatar} alt={user.name} className="h-9 w-9 rounded-xl object-cover ring-2 ring-zinc-100 dark:ring-zinc-800" />
+                    <img src={user.avatar} alt={user.name} className="h-6 w-6 rounded-[2px] object-cover" />
                   ) : (
-                    <div className="h-9 w-9 rounded-xl bg-zinc-900 dark:bg-zinc-100 flex items-center justify-center">
-                      <span className="text-sm font-black text-white dark:text-zinc-900">{user.name?.charAt(0)?.toUpperCase()}</span>
+                    <div className="h-6 w-6 rounded-[2px] bg-ink flex items-center justify-center">
+                      <span className="text-[11px] font-semibold text-paper">{user.name?.charAt(0)?.toUpperCase()}</span>
                     </div>
                   )}
-                  <span className="text-sm font-black text-zinc-900 dark:text-zinc-100 transition-colors">{user.name?.split(' ')[0]}</span>
-                  <ChevronDown className={`h-4 w-4 text-zinc-400 transition-transform duration-300 ${profileOpen ? 'rotate-180' : ''}`} />
+                  <span className="text-[13px] font-medium text-ink">{user.name?.split(' ')[0]}</span>
+                  <ChevronDown className={`h-3.5 w-3.5 text-faint transition-transform ${profileOpen ? 'rotate-180' : ''}`} />
                 </button>
 
                 {profileOpen && (
                   <>
                     <div className="fixed inset-0 z-40" onClick={() => setProfileOpen(false)} />
-                    <div className="absolute right-0 top-full mt-3 w-64 bg-white dark:bg-zinc-900 rounded-2xl shadow-2xl shadow-zinc-200 dark:shadow-none border border-zinc-100 dark:border-zinc-800 p-2.5 z-50">
-                      <div className="px-4 py-3 border-b border-zinc-100 dark:border-zinc-800 mb-2 transition-colors">
-                        <p className="text-sm font-black text-zinc-900 dark:text-zinc-100">{user.name}</p>
-                        {user.username && <p className="text-[10px] font-black text-zinc-400 dark:text-zinc-500 uppercase tracking-widest my-0.5">@{user.username}</p>}
-                        <p className="text-xs font-bold text-zinc-400 dark:text-zinc-500 truncate">{user.email}</p>
+                    <div className="absolute right-0 top-full mt-1.5 w-60 panel shadow-lg p-1.5 z-50">
+                      <div className="px-3 py-2.5 border-b border-line mb-1">
+                        <p className="text-[13px] font-semibold text-ink">{user.name}</p>
+                        <p className="text-[11px] text-muted truncate font-mono">{user.email}</p>
                       </div>
-                      <Link
-                        to="/profile?tab=overview"
-                        className="flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-bold text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-100 hover:bg-zinc-50 dark:hover:bg-zinc-800 transition-all no-underline"
-                        onClick={() => setProfileOpen(false)}
-                      >
-                        <User className="h-4 w-4 text-zinc-400" />
-                        My Profile
+                      <Link to="/profile?tab=overview" onClick={() => setProfileOpen(false)}
+                        className="flex items-center gap-2.5 px-3 py-2 rounded-[2px] text-[13px] font-medium text-muted hover:text-ink hover:bg-sunk transition-colors no-underline">
+                        <User className="h-3.5 w-3.5" /> Profile
                       </Link>
-                      <Link
-                        to="/profile?tab=preferences"
-                        className="flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-bold text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-100 hover:bg-zinc-50 dark:hover:bg-zinc-800 transition-all no-underline"
-                        onClick={() => setProfileOpen(false)}
-                      >
-                        <Settings className="h-4 w-4 text-zinc-400" />
-                        Settings
+                      <Link to="/profile?tab=preferences" onClick={() => setProfileOpen(false)}
+                        className="flex items-center gap-2.5 px-3 py-2 rounded-[2px] text-[13px] font-medium text-muted hover:text-ink hover:bg-sunk transition-colors no-underline">
+                        <Settings className="h-3.5 w-3.5" /> Settings
                       </Link>
-                      <button
-                        onClick={() => { setProfileOpen(false); handleLogout() }}
-                        className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-bold text-rose-600 hover:bg-rose-50 dark:hover:bg-rose-950/30 transition-all"
-                      >
-                        <LogOut className="h-4 w-4" />
-                        Sign Out
+                      <button onClick={() => { setProfileOpen(false); handleLogout() }}
+                        className="w-full flex items-center gap-2.5 px-3 py-2 rounded-[2px] text-[13px] font-medium down hover:bg-[var(--color-down)]/8 transition-colors">
+                        <LogOut className="h-3.5 w-3.5" /> Sign Out
                       </button>
                     </div>
                   </>
                 )}
               </div>
             ) : (
-              <div className="flex items-center gap-4">
-                <Link to="/login" className="px-6 py-2.5 text-sm font-black text-zinc-400 dark:text-zinc-500 hover:text-zinc-900 dark:hover:text-zinc-100 hover:bg-zinc-50 dark:hover:bg-zinc-900 uppercase tracking-widest rounded-xl transition-all no-underline">Sign In</Link>
-                <Link to="/register" className="px-6 py-2.5 text-sm font-black bg-zinc-900 dark:bg-zinc-100 text-white dark:text-zinc-900 hover:bg-zinc-800 dark:hover:bg-zinc-200 uppercase tracking-widest rounded-xl transition-all shadow-lg shadow-zinc-200 dark:shadow-none no-underline flex items-center gap-2 group">
-                  <Rocket className="h-4 w-4 text-zinc-400 dark:text-zinc-500 group-hover:text-white dark:group-hover:text-zinc-900 group-hover:rotate-12 transition-all duration-300" />
-                  Get Started
-                </Link>
+              <div className="flex items-center gap-2">
+                <Link to="/login" className="btn btn-ghost no-underline">Sign In</Link>
+                <Link to="/register" className="btn btn-accent no-underline">Get Started</Link>
               </div>
             )}
           </div>
 
-          {/* Mobile header right side */}
-          <div className="flex md:hidden items-center gap-3">
-            {/* Market Status Indicator - Mobile */}
-            <div className="relative">
-              <div className={`relative w-6 h-6 rounded-full shadow-lg ${isMarketOpen ? 'shadow-emerald-500/50' : 'shadow-red-500/50'}`}>
-                {isMarketOpen && (
-                  <span className="absolute inset-0 rounded-full bg-emerald-400 animate-ping opacity-60" />
-                )}
-                <span className={`absolute inset-0 rounded-full border-2 border-white/30 bg-gradient-to-br shadow-[inset_0_-2px_4px_rgba(0,0,0,0.4),inset_0_2px_4px_rgba(255,255,255,0.4),0_2px_6px_rgba(0,0,0,0.2)] ${isMarketOpen ? 'from-emerald-300 via-emerald-500 to-emerald-700' : 'from-red-300 via-red-500 to-red-700'}`} />
-                <span className="absolute top-0.5 left-1.5 w-2 h-1.5 bg-white/40 rounded-full blur-[1px]" />
-              </div>
-            </div>
-
-
-
-
-
-            {/* Mobile menu button */}
-            <button
-              onClick={() => setMobileOpen(!mobileOpen)}
-              className="p-2 text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-100 transition-colors rounded-lg hover:bg-zinc-50 dark:hover:bg-zinc-900"
-              aria-label="Toggle menu"
-            >
-              {mobileOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
-            </button>
-          </div>
+          {/* Mobile button */}
+          <button
+            onClick={() => setMobileOpen(!mobileOpen)}
+            className="md:hidden p-2 text-muted hover:text-ink transition-colors"
+            aria-label="Toggle menu"
+          >
+            {mobileOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+          </button>
         </div>
       </div>
 
-      {/* Mobile Menu - Improved */}
+      {/* Mobile Menu */}
       {mobileOpen && (
-        <div className="md:hidden bg-white dark:bg-zinc-950 border-t border-zinc-100 dark:border-zinc-800 absolute w-full left-0 shadow-xl transition-colors duration-300">
-          <div className="container mx-auto px-4 py-4 space-y-1">
-            {/* Navigation Links */}
+        <div className="md:hidden bg-panel border-t border-line absolute w-full left-0 shadow-lg">
+          <div className="max-w-[1400px] mx-auto px-4 py-3 space-y-0.5">
             {navLinks.map(link => (
-              <Link
-                key={link.to}
-                to={link.to}
-                onClick={() => setMobileOpen(false)}
-                className={`flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-bold transition-all no-underline ${isActive(link.to)
-                  ? 'bg-zinc-100 dark:bg-zinc-900 text-zinc-900 dark:text-zinc-100'
-                  : 'text-zinc-500 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-100 hover:bg-zinc-50 dark:hover:bg-zinc-900'
-                  }`}
-              >
-                {link.icon}
-                {link.label}
+              <Link key={link.to} to={link.to} onClick={() => setMobileOpen(false)}
+                className={`flex items-center gap-2.5 px-3 py-2.5 rounded-[2px] text-[13px] font-medium transition-colors no-underline ${isActive(link.to)
+                  ? 'bg-sunk text-ink' : 'text-muted hover:text-ink'}`}>
+                {link.icon} {link.label}
               </Link>
             ))}
-
-            {/* Divider */}
-            <div className="border-t border-zinc-100 dark:border-zinc-800 my-3 transition-colors"></div>
-
-            {/* User Section */}
+            <div className="border-t border-line my-2" />
             {user ? (
-              <div className="space-y-1">
-                {/* User Info Header */}
-                <div className="px-4 py-3 mb-2 transition-colors">
-                  <p className="text-sm font-black text-zinc-900 dark:text-zinc-100">{user.name}</p>
-                  {user.username && <p className="text-[10px] font-black text-zinc-400 dark:text-zinc-500 uppercase tracking-widest my-0.5">@{user.username}</p>}
-                  <p className="text-xs font-bold text-zinc-400 dark:text-zinc-500 truncate">{user.email}</p>
+              <>
+                <div className="px-3 py-2">
+                  <p className="text-[13px] font-semibold text-ink">{user.name}</p>
+                  <p className="text-[11px] text-muted truncate font-mono">{user.email}</p>
                 </div>
-
-                <Link
-                  to="/profile?tab=overview"
-                  onClick={() => setMobileOpen(false)}
-                  className="flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-black text-zinc-400 dark:text-zinc-500 hover:text-zinc-900 dark:hover:text-zinc-100 hover:bg-zinc-50 dark:hover:bg-zinc-900 transition-all no-underline uppercase tracking-widest"
-                >
-                  <User className="h-4 w-4" />
-                  My Profile
+                <Link to="/profile?tab=overview" onClick={() => setMobileOpen(false)}
+                  className="flex items-center gap-2.5 px-3 py-2.5 rounded-[2px] text-[13px] font-medium text-muted hover:text-ink transition-colors no-underline">
+                  <User className="h-3.5 w-3.5" /> Profile
                 </Link>
-
-                <Link
-                  to="/profile?tab=preferences"
-                  onClick={() => setMobileOpen(false)}
-                  className="flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-black text-zinc-400 dark:text-zinc-500 hover:text-zinc-900 dark:hover:text-zinc-100 hover:bg-zinc-50 dark:hover:bg-zinc-900 transition-all no-underline uppercase tracking-widest"
-                >
-                  <Settings className="h-4 w-4" />
-                  Settings
+                <Link to="/profile?tab=preferences" onClick={() => setMobileOpen(false)}
+                  className="flex items-center gap-2.5 px-3 py-2.5 rounded-[2px] text-[13px] font-medium text-muted hover:text-ink transition-colors no-underline">
+                  <Settings className="h-3.5 w-3.5" /> Settings
                 </Link>
-                <button
-                  onClick={() => { setMobileOpen(false); handleLogout() }}
-                  className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-bold text-rose-600 hover:bg-rose-50 transition-all"
-                >
-                  <LogOut className="h-4 w-4" />
-                  Sign Out
+                <button onClick={() => { setMobileOpen(false); handleLogout() }}
+                  className="w-full flex items-center gap-2.5 px-3 py-2.5 rounded-[2px] text-[13px] font-medium down transition-colors">
+                  <LogOut className="h-3.5 w-3.5" /> Sign Out
                 </button>
-              </div>
+              </>
             ) : (
-              <div className="flex flex-col gap-2 pt-2 transition-colors">
-                <Link
-                  to="/login"
-                  onClick={() => setMobileOpen(false)}
-                  className="w-full py-3 text-center font-black text-zinc-400 dark:text-zinc-500 border border-zinc-100 dark:border-zinc-800 rounded-xl no-underline text-xs uppercase tracking-widest hover:bg-zinc-50 dark:hover:bg-zinc-900 transition-all"
-                >
-                  Sign In
-                </Link>
-                <Link
-                  to="/register"
-                  onClick={() => setMobileOpen(false)}
-                  className="w-full py-3 text-center font-black bg-zinc-900 dark:bg-zinc-100 text-white dark:text-zinc-900 rounded-xl no-underline flex items-center justify-center gap-2 group text-xs uppercase tracking-widest transition-all"
-                >
-                  <Rocket className="h-4 w-4 text-zinc-400 dark:text-zinc-500 group-hover:text-white dark:group-hover:text-zinc-900 group-hover:rotate-12 transition-all duration-300" />
-                  Get Started
-                </Link>
+              <div className="flex flex-col gap-2 pt-1">
+                <Link to="/login" onClick={() => setMobileOpen(false)} className="btn btn-ghost w-full no-underline">Sign In</Link>
+                <Link to="/register" onClick={() => setMobileOpen(false)} className="btn btn-accent w-full no-underline">Get Started</Link>
               </div>
             )}
           </div>

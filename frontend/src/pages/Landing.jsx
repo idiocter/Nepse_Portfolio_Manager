@@ -2,9 +2,8 @@ import { Link } from 'react-router-dom'
 import { useState, useEffect } from 'react'
 import marketService from '../services/marketService'
 import {
-    TrendingUp, TrendingDown, BarChart3, Shield, Zap,
-    PieChart, Eye, ArrowRight, Activity, LineChart,
-    Wallet, Globe, ChevronRight, Rocket, Sparkles
+    TrendingUp, TrendingDown, ArrowRight, ArrowUpRight,
+    PieChart, Eye, Activity, LineChart, Shield, BarChart3
 } from 'lucide-react'
 
 const Landing = () => {
@@ -12,323 +11,210 @@ const Landing = () => {
     const [losers, setLosers] = useState([])
 
     useEffect(() => {
-        fetchMarketData()
-    }, [])
-
-    const fetchMarketData = async () => {
-        try {
-            const [gainersData, losersData] = await Promise.all([
+        (async () => {
+            const [g, l] = await Promise.all([
                 marketService.getGainers().catch(() => ([])),
                 marketService.getLosers().catch(() => ([]))
             ])
-            setGainers(gainersData?.slice(0, 5) || [])
-            setLosers(losersData?.slice(0, 5) || [])
-        } catch (error) {
-            console.error('Error fetching market data:', error)
-        }
-    }
+            setGainers(g?.slice(0, 6) || [])
+            setLosers(l?.slice(0, 6) || [])
+        })()
+    }, [])
+
+    const tape = [...gainers, ...losers]
 
     const features = [
-        {
-            icon: <PieChart className="h-6 w-6 sm:h-7 sm:w-7" />,
-            title: 'Portfolio Tracking',
-            description: 'Track all your NEPSE holdings in one place with real-time profit/loss calculations.',
-            color: 'bg-zinc-100 text-zinc-700'
-        },
-        {
-            icon: <Activity className="h-6 w-6 sm:h-7 sm:w-7" />,
-            title: 'Live Market Data',
-            description: 'Get real-time stock prices, market indices, and trading volumes during market hours.',
-            color: 'bg-zinc-100 text-zinc-700'
-        },
-        {
-            icon: <LineChart className="h-6 w-6 sm:h-7 sm:w-7" />,
-            title: 'Price Charts',
-            description: 'Interactive candlestick charts with historical price data for informed decisions.',
-            color: 'bg-zinc-100 text-zinc-700'
-        },
-        {
-            icon: <TrendingUp className="h-6 w-6 sm:h-7 sm:w-7" />,
-            title: 'Top Movers',
-            description: 'Track top gainers and losers in real-time to spot market opportunities.',
-            color: 'bg-zinc-100 text-zinc-700'
-        },
-        {
-            icon: <Eye className="h-6 w-6 sm:h-7 sm:w-7" />,
-            title: 'Watchlist',
-            description: 'Monitor stocks you\'re interested in without adding them to your portfolio.',
-            color: 'bg-zinc-100 text-zinc-700'
-        },
-        {
-            icon: <Shield className="h-6 w-6 sm:h-7 sm:w-7" />,
-            title: 'Secure & Private',
-            description: 'Your portfolio data is encrypted and protected with Google OAuth authentication.',
-            color: 'bg-zinc-100 text-zinc-700'
-        }
+        { icon: <PieChart className="h-4 w-4" />, title: 'Portfolio Ledger', description: 'Every NEPSE holding with live mark-to-market P&L, cost basis and weight.' },
+        { icon: <Activity className="h-4 w-4" />, title: 'Live Tape', description: 'Streaming last-traded prices, indices and turnover through the session.' },
+        { icon: <LineChart className="h-4 w-4" />, title: 'Candles + EMAs', description: 'Interactive OHLC charts with EMA overlays and volume histogram.' },
+        { icon: <TrendingUp className="h-4 w-4" />, title: 'Movers Scan', description: 'Top gainers and losers ranked in real time across all sectors.' },
+        { icon: <Eye className="h-4 w-4" />, title: 'Watch Sheet', description: 'Track names you do not own yet without cluttering your book.' },
+        { icon: <Shield className="h-4 w-4" />, title: 'Secured Access', description: 'Google OAuth 2.0 and encrypted sessions on every request.' },
     ]
 
     const stats = [
-        { label: 'Active Users', value: '2,500+', icon: <Globe className="h-4 w-4 sm:h-5 sm:w-5" /> },
-        { label: 'Stocks Tracked', value: '250+', icon: <BarChart3 className="h-4 w-4 sm:h-5 sm:w-5" /> },
-        { label: 'Real-time Updates', value: '10s', icon: <Zap className="h-4 w-4 sm:h-5 sm:w-5" /> },
-        { label: 'Portfolio Value Tracked', value: 'Rs. 50Cr+', icon: <Wallet className="h-4 w-4 sm:h-5 sm:w-5" /> },
+        { k: 'SECURITIES', v: '250+' },
+        { k: 'REFRESH', v: '10s' },
+        { k: 'USERS', v: '2,500+' },
+        { k: 'TRACKED', v: 'Rs.50Cr+' },
     ]
 
     return (
-        <div className="bg-white dark:bg-zinc-950 selection:bg-zinc-300 dark:selection:bg-zinc-800 transition-colors duration-300">
-            {/* Hero Section */}
-            <section className="relative min-h-[80vh] sm:min-h-[90vh] flex items-center pt-16 sm:pt-24 pb-16 sm:pb-32 overflow-hidden">
-                <div className="absolute inset-0 overflow-hidden pointer-events-none">
-                    <div className="absolute top-0 left-1/4 w-[300px] h-[300px] sm:w-[500px] sm:h-[500px] bg-zinc-50 dark:bg-zinc-900/50 rounded-full blur-[80px] sm:blur-[120px] opacity-60 animate-float" />
-                    <div className="absolute bottom-0 right-1/4 w-[250px] h-[250px] sm:w-[400px] sm:h-[400px] bg-zinc-100 dark:bg-zinc-900/30 rounded-full blur-[60px] sm:blur-[100px] opacity-40 animate-float" style={{ animationDelay: '2s' }} />
-                </div>
-
-                <div className="container mx-auto px-4 sm:px-6 relative z-10">
-                    <div className="max-w-5xl mx-auto text-center">
-                        <div className="animate-fade-in-up stagger-1 mb-6 sm:mb-8">
-                            <span className="inline-block px-3 sm:px-4 py-1 sm:py-1.5 rounded-full bg-zinc-100 dark:bg-zinc-900 text-zinc-600 dark:text-zinc-400 text-[10px] sm:text-xs font-bold tracking-widest uppercase">
-                                🚀 Premium Portfolio Tracker for Nepal
-                            </span>
+        <div>
+            {/* Live tape */}
+            <div className="bg-ink text-paper overflow-hidden border-b border-ink">
+                <div className="max-w-[1400px] mx-auto relative">
+                    {tape.length > 0 ? (
+                        <div className="flex whitespace-nowrap animate-ticker">
+                            {[...tape, ...tape].map((s, i) => {
+                                const up = (s.changePercent || 0) >= 0
+                                return (
+                                    <span key={i} className="inline-flex items-center gap-2 px-4 py-1.5 text-[12px] font-mono border-r border-paper/10">
+                                        <span className="font-semibold">{s.symbol}</span>
+                                        <span className="text-paper/60 tnum">{s.lastPrice?.toFixed(2)}</span>
+                                        <span className={up ? 'text-[var(--color-up)]' : 'text-[var(--color-down)]'}>
+                                            {up ? '▲' : '▼'}{Math.abs(s.changePercent || 0).toFixed(2)}%
+                                        </span>
+                                    </span>
+                                )
+                            })}
                         </div>
+                    ) : (
+                        <div className="px-4 py-1.5 text-[12px] font-mono text-paper/40">CONNECTING TO MARKET FEED…</div>
+                    )}
+                </div>
+            </div>
 
-                        <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-8xl font-black text-zinc-900 dark:text-zinc-100 mb-6 sm:mb-8 leading-[1.1] sm:leading-[1.05] tracking-tight animate-fade-in-up stagger-2">
-                            Master Your <span className="text-zinc-600 dark:text-zinc-400">NEPSE</span><br />
-                            Assets With Precision.
+            {/* Hero */}
+            <section className="max-w-[1400px] mx-auto px-4 pt-14 pb-12 border-b border-line">
+                <div className="grid lg:grid-cols-12 gap-8 items-center">
+                    <div className="lg:col-span-7">
+                        <p className="label mb-4">NEPSE · PORTFOLIO TERMINAL</p>
+                        <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-ink tracking-tight leading-[1.05]">
+                            Run your NEPSE book<br />like a <span className="accent">trading desk.</span>
                         </h1>
-
-                        <p className="text-base sm:text-lg md:text-xl lg:text-2xl text-zinc-500 dark:text-zinc-400 mb-8 sm:mb-14 max-w-3xl mx-auto leading-relaxed font-medium animate-fade-in-up stagger-3 px-2 sm:px-0">
-                            A sophisticated, real-time analytics platform designed for the modern Nepalese investor.
-                            Track holdings, analyze trends, and grow your wealth with confidence.
+                        <p className="mt-5 text-[15px] text-muted max-w-xl leading-relaxed">
+                            Real-time prices, mark-to-market P&L, candlestick charts and sector indices —
+                            in one dense, no-nonsense workspace built for Nepalese investors.
                         </p>
+                        <div className="mt-7 flex flex-wrap gap-3">
+                            <Link to="/register" className="btn btn-accent text-[13px] px-5 py-2.5 no-underline">
+                                Open Terminal <ArrowRight className="h-4 w-4" />
+                            </Link>
+                            <Link to="/market" className="btn btn-ghost text-[13px] px-5 py-2.5 no-underline">
+                                <BarChart3 className="h-4 w-4" /> Browse Market
+                            </Link>
+                        </div>
 
-                        <div className="flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-6 animate-fade-in-up stagger-4 px-4 sm:px-0">
-                            <Link
-                                to="/register"
-                                className="w-full sm:w-auto px-6 sm:px-10 py-4 sm:py-5 bg-zinc-900 dark:bg-zinc-100 text-white dark:text-zinc-900 rounded-xl sm:rounded-2xl font-bold text-base sm:text-lg hover:bg-zinc-800 dark:hover:bg-zinc-200 hover:scale-[1.02] active:scale-[0.98] transition-all shadow-xl shadow-zinc-200 dark:shadow-zinc-950 no-underline flex items-center justify-center gap-2 sm:gap-3 group"
-                            >
-                                <Rocket className="h-5 w-5 sm:h-6 sm:w-6 text-zinc-400 dark:text-zinc-500 group-hover:text-white dark:group-hover:text-zinc-900 group-hover:rotate-12 transition-all duration-300" />
-                                Get Started Free
-                                <ArrowRight className="h-4 w-4 sm:h-5 sm:w-5" />
-                            </Link>
-                            <Link
-                                to="/market"
-                                className="w-full sm:w-auto px-6 sm:px-10 py-4 sm:py-5 bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 text-zinc-700 dark:text-zinc-300 rounded-xl sm:rounded-2xl font-bold text-base sm:text-lg hover:bg-zinc-50 dark:hover:bg-zinc-800/50 hover:border-zinc-300 dark:hover:border-zinc-700 hover:scale-[1.02] active:scale-[0.98] transition-all no-underline flex items-center justify-center gap-2 sm:gap-3"
-                            >
-                                <BarChart3 className="h-4 w-4 sm:h-5 sm:w-5" />
-                                Explore Market
-                            </Link>
+                        <div className="mt-9 grid grid-cols-4 border-y border-line divide-x divide-[var(--color-line)]">
+                            {stats.map(s => (
+                                <div key={s.k} className="py-3 px-2 first:pl-0">
+                                    <p className="tnum text-xl sm:text-2xl text-ink">{s.v}</p>
+                                    <p className="label mt-0.5">{s.k}</p>
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+
+                    {/* Movers panel */}
+                    <div className="lg:col-span-5">
+                        <div className="panel overflow-hidden">
+                            <div className="flex items-center justify-between px-3 py-2 bg-sunk border-b border-line">
+                                <span className="label">TOP MOVERS</span>
+                                <span className="flex items-center gap-1.5 label">
+                                    <span className="h-1.5 w-1.5 rounded-full bg-[var(--color-up)] animate-blink" /> LIVE
+                                </span>
+                            </div>
+                            <table className="dt">
+                                <thead>
+                                    <tr><th>Symbol</th><th className="text-right">LTP</th><th className="text-right">%Chg</th></tr>
+                                </thead>
+                                <tbody>
+                                    {(tape.length ? tape.slice(0, 8) : Array.from({ length: 6 })).map((s, i) => {
+                                        if (!s) return <tr key={i}><td colSpan={3} className="h-8" /></tr>
+                                        const up = (s.changePercent || 0) >= 0
+                                        return (
+                                            <tr key={i}>
+                                                <td className="font-semibold">{s.symbol}</td>
+                                                <td className="text-right tnum">{s.lastPrice?.toFixed(2)}</td>
+                                                <td className={`text-right tnum ${up ? 'up' : 'down'}`}>
+                                                    {up ? '+' : ''}{(s.changePercent || 0).toFixed(2)}%
+                                                </td>
+                                            </tr>
+                                        )
+                                    })}
+                                </tbody>
+                            </table>
                         </div>
                     </div>
                 </div>
             </section>
 
-            {/* Live Market Ticker */}
-            {(gainers.length > 0 || losers.length > 0) && (
-                <section className="py-4 sm:py-6 border-y border-zinc-100 dark:border-zinc-800 bg-zinc-50/50 dark:bg-zinc-900/30">
-                    <div className="container mx-auto px-4 sm:px-6">
-                        <div className="flex items-center gap-4 sm:gap-8 overflow-x-auto py-2 no-scrollbar">
-                            <span className="text-[10px] font-black text-zinc-400 dark:text-zinc-500 uppercase tracking-[0.2em] whitespace-nowrap flex items-center gap-2">
-                                <Activity className="h-3 w-3" />
-                                Market Live
-                            </span>
-                            {gainers.slice(0, 3).map(stock => (
-                                <div key={stock.symbol} className="flex items-center gap-2 sm:gap-3 whitespace-nowrap text-xs sm:text-sm">
-                                    <span className="font-bold text-zinc-900 dark:text-zinc-100">{stock.symbol}</span>
-                                    <span className="text-zinc-500 dark:text-zinc-400 font-medium">Rs. {stock.lastPrice?.toFixed(2)}</span>
-                                    <span className="text-emerald-600 dark:text-emerald-400 font-bold flex items-center gap-0.5">
-                                        <TrendingUp className="h-3 w-3" />
-                                        +{stock.changePercent?.toFixed(2)}%
-                                    </span>
-                                </div>
-                            ))}
-                            {losers.slice(0, 3).map(stock => (
-                                <div key={stock.symbol} className="flex items-center gap-2 sm:gap-3 whitespace-nowrap text-xs sm:text-sm">
-                                    <span className="font-bold text-zinc-900 dark:text-zinc-100">{stock.symbol}</span>
-                                    <span className="text-zinc-500 dark:text-zinc-400 font-medium">Rs. {stock.lastPrice?.toFixed(2)}</span>
-                                    <span className="text-rose-600 dark:text-rose-400 font-bold flex items-center gap-0.5">
-                                        <TrendingDown className="h-3 w-3" />
-                                        {stock.changePercent?.toFixed(2)}%
-                                    </span>
-                                </div>
-                            ))}
+            {/* Features */}
+            <section className="max-w-[1400px] mx-auto px-4 py-12 border-b border-line">
+                <div className="flex items-end justify-between mb-6">
+                    <h2 className="text-2xl font-bold text-ink tracking-tight">Everything on one screen</h2>
+                    <span className="label hidden sm:block">06 MODULES</span>
+                </div>
+                <div className="grid sm:grid-cols-2 lg:grid-cols-3 border-t border-l border-line">
+                    {features.map((f, i) => (
+                        <div key={f.title} className="border-r border-b border-line p-5 hover:bg-sunk transition-colors">
+                            <div className="flex items-center gap-2 mb-3">
+                                <span className="accent">{f.icon}</span>
+                                <span className="label">{String(i + 1).padStart(2, '0')}</span>
+                            </div>
+                            <h3 className="text-[15px] font-semibold text-ink mb-1.5">{f.title}</h3>
+                            <p className="text-[13px] text-muted leading-relaxed">{f.description}</p>
                         </div>
-                    </div>
-                </section>
-            )}
-
-            {/* Stats */}
-            <section className="py-16 sm:py-24 lg:py-32">
-                <div className="container mx-auto px-4 sm:px-6">
-                    <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-6 lg:gap-8">
-                        {stats.map((stat, index) => (
-                            <div
-                                key={stat.label}
-                                className={`p-4 sm:p-6 lg:p-8 rounded-2xl sm:rounded-3xl bg-white dark:bg-zinc-900 border border-zinc-100 dark:border-zinc-800 shadow-sm text-center animate-fade-in-up stagger-${index + 1} transition-all duration-300`}
-                            >
-                                <div className="flex items-center justify-center mb-2 sm:mb-4 text-zinc-400 dark:text-zinc-500">
-                                    {stat.icon}
-                                </div>
-                                <p className="text-xl sm:text-2xl lg:text-4xl font-black text-zinc-900 dark:text-zinc-100 mb-1 sm:mb-2 tracking-tighter">{stat.value}</p>
-                                <p className="text-[10px] sm:text-xs font-bold text-zinc-400 dark:text-zinc-500 uppercase tracking-widest">{stat.label}</p>
-                            </div>
-                        ))}
-                    </div>
+                    ))}
                 </div>
             </section>
 
-            {/* Features - FIXED: Added dark:bg-zinc-950 */}
-            <section className="py-16 sm:py-24 lg:py-32 bg-white dark:bg-zinc-950">
-                <div className="container mx-auto px-4 sm:px-6">
-                    <div className="text-center mb-12 sm:mb-16 lg:mb-24">
-                        <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-6xl font-black text-zinc-900 dark:text-zinc-100 mb-4 sm:mb-6 tracking-tight">
-                            Everything to <span className="text-zinc-500 dark:text-zinc-400">Invest Smarter.</span>
-                        </h2>
-                        <p className="text-zinc-500 dark:text-zinc-400 text-base sm:text-lg lg:text-xl max-w-2xl mx-auto font-medium leading-relaxed px-4 sm:px-0">
-                            Sophisticated tools and real-time insights to help you manage your NEPSE portfolio with unparalleled clarity.
-                        </p>
-                    </div>
-
-                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 lg:gap-8">
-                        {features.map((feature, index) => (
-                            <div
-                                key={feature.title}
-                                className={`p-6 sm:p-8 lg:p-10 rounded-2xl sm:rounded-3xl border border-zinc-100 dark:border-zinc-800 bg-zinc-50/30 dark:bg-zinc-900/30 hover:bg-white dark:hover:bg-zinc-900 hover:shadow-xl dark:hover:shadow-zinc-950/50 hover:border-transparent dark:hover:border-transparent transition-all duration-500 animate-fade-in-up stagger-${index + 1}`}
-                            >
-                                <div className={`w-12 h-12 sm:w-14 sm:h-14 lg:w-16 lg:h-16 rounded-xl sm:rounded-2xl ${feature.color} dark:bg-zinc-800 dark:text-zinc-400 flex items-center justify-center mb-4 sm:mb-6 lg:mb-8`}>
-                                    {feature.icon}
-                                </div>
-                                <h3 className="text-lg sm:text-xl lg:text-2xl font-bold text-zinc-900 dark:text-zinc-100 mb-2 sm:mb-4 tracking-tight">{feature.title}</h3>
-                                <p className="text-zinc-500 dark:text-zinc-400 leading-relaxed text-sm sm:text-base lg:text-lg font-medium">{feature.description}</p>
-                            </div>
-                        ))}
-                    </div>
-                </div>
-            </section>
-
-            {/* Market Preview - FIXED: Added dark mode classes */}
+            {/* Gainers / Losers split */}
             {gainers.length > 0 && (
-                <section className="py-16 sm:py-24 lg:py-32">
-                    <div className="container mx-auto px-4 sm:px-6">
-                        <div className="text-center mb-8 sm:mb-12 lg:mb-16">
-                            <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-black text-zinc-900 dark:text-zinc-100 mb-4 sm:mb-6 tracking-tight">
-                                Today&apos;s <span className="text-zinc-500 dark:text-zinc-400">Market Dynamics.</span>
-                            </h2>
-                            <p className="text-zinc-500 dark:text-zinc-400 text-sm sm:text-base lg:text-lg font-medium">Real-time performance of NEPSE&apos;s active securities.</p>
-                        </div>
-
-                        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6 lg:gap-8 max-w-5xl mx-auto">
-                            {/* Top Gainers - FIXED: Added dark mode */}
-                            <div className="p-4 sm:p-6 lg:p-8 rounded-2xl sm:rounded-3xl bg-white dark:bg-zinc-900 border border-zinc-100 dark:border-zinc-800 shadow-sm relative overflow-hidden">
-                                <div className="absolute top-0 right-0 w-24 h-24 sm:w-32 sm:h-32 bg-emerald-50 dark:bg-emerald-900/10 rounded-full blur-2xl sm:blur-3xl opacity-40 -mr-8 -mt-8 sm:-mr-10 sm:-mt-10" />
-                                <div className="flex items-center gap-2 sm:gap-3 mb-4 sm:mb-8 relative z-10">
-                                    <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-lg sm:rounded-xl bg-emerald-100 dark:bg-emerald-900/30 flex items-center justify-center">
-                                        <TrendingUp className="h-4 w-4 sm:h-5 sm:w-5 text-emerald-600 dark:text-emerald-400" />
-                                    </div>
-                                    <h3 className="text-lg sm:text-xl font-bold text-zinc-900 dark:text-zinc-100">Top Gainers</h3>
+                <section className="max-w-[1400px] mx-auto px-4 py-12 border-b border-line">
+                    <h2 className="text-2xl font-bold text-ink tracking-tight mb-6">Today's session</h2>
+                    <div className="grid lg:grid-cols-2 gap-px bg-line border border-line">
+                        {[{ t: 'GAINERS', d: gainers, up: true }, { t: 'LOSERS', d: losers, up: false }].map(col => (
+                            <div key={col.t} className="bg-panel">
+                                <div className="flex items-center gap-2 px-3 py-2 bg-sunk border-b border-line">
+                                    {col.up ? <TrendingUp className="h-3.5 w-3.5 up" /> : <TrendingDown className="h-3.5 w-3.5 down" />}
+                                    <span className="label">TOP {col.t}</span>
                                 </div>
-                                <div className="space-y-2 sm:space-y-4 relative z-10">
-                                    {gainers.map((stock, i) => (
-                                        <div key={stock.symbol} className="flex items-center justify-between p-3 sm:p-4 rounded-xl sm:rounded-2xl bg-zinc-50 dark:bg-zinc-800/50 hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-colors">
-                                            <div className="flex items-center gap-2 sm:gap-4 min-w-0">
-                                                <span className="text-[10px] font-black text-zinc-300 dark:text-zinc-600 w-3 sm:w-4">{i + 1}</span>
-                                                <div className="min-w-0">
-                                                    <p className="font-bold text-zinc-900 dark:text-zinc-100 text-sm sm:text-base">{stock.symbol}</p>
-                                                    {/* FIXED: Removed redundant sm:text-[10px] */}
-                                                    <p className="text-[10px] font-bold text-zinc-400 dark:text-zinc-500 uppercase tracking-wider truncate max-w-[100px] sm:max-w-[150px]">{stock.name}</p>
-                                                </div>
-                                            </div>
-                                            <div className="text-right flex-shrink-0">
-                                                <p className="font-bold text-zinc-900 dark:text-zinc-100 text-sm sm:text-base">Rs. {stock.lastPrice?.toFixed(2)}</p>
-                                                <p className="text-xs sm:text-sm font-black text-emerald-600 dark:text-emerald-400">+{stock.changePercent?.toFixed(2)}%</p>
-                                            </div>
-                                        </div>
-                                    ))}
-                                </div>
+                                <table className="dt">
+                                    <tbody>
+                                        {col.d.map((s, i) => {
+                                            const up = (s.changePercent || 0) >= 0
+                                            return (
+                                                <tr key={s.symbol}>
+                                                    <td className="text-faint tnum w-8">{i + 1}</td>
+                                                    <td className="font-semibold">{s.symbol}</td>
+                                                    <td className="text-muted text-[12px] truncate max-w-[160px]">{s.name}</td>
+                                                    <td className="text-right tnum">{s.lastPrice?.toFixed(2)}</td>
+                                                    <td className={`text-right tnum ${up ? 'up' : 'down'}`}>{up ? '+' : ''}{(s.changePercent || 0).toFixed(2)}%</td>
+                                                </tr>
+                                            )
+                                        })}
+                                    </tbody>
+                                </table>
                             </div>
-
-                            {/* Top Losers */}
-                            <div className="p-4 sm:p-6 lg:p-8 rounded-2xl sm:rounded-3xl bg-white dark:bg-zinc-900 border border-zinc-100 dark:border-zinc-800 shadow-sm relative overflow-hidden transition-all duration-300">
-                                <div className="absolute top-0 right-0 w-24 h-24 sm:w-32 sm:h-32 bg-rose-50 dark:bg-rose-900/10 rounded-full blur-2xl sm:blur-3xl opacity-40 -mr-8 -mt-8 sm:-mr-10 sm:-mt-10" />
-                                <div className="flex items-center gap-2 sm:gap-3 mb-4 sm:mb-8 relative z-10">
-                                    <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-lg sm:rounded-xl bg-rose-100 dark:bg-rose-900/30 flex items-center justify-center transition-colors">
-                                        <TrendingDown className="h-4 w-4 sm:h-5 sm:w-5 text-rose-600 dark:text-rose-400" />
-                                    </div>
-                                    <h3 className="text-lg sm:text-xl font-bold text-zinc-900 dark:text-zinc-100">Top Losers</h3>
-                                </div>
-                                <div className="space-y-2 sm:space-y-4 relative z-10">
-                                    {losers.map((stock, i) => (
-                                        <div key={stock.symbol} className="flex items-center justify-between p-3 sm:p-4 rounded-xl sm:rounded-2xl bg-zinc-50 dark:bg-zinc-800/50 hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-colors">
-                                            <div className="flex items-center gap-2 sm:gap-4 min-w-0">
-                                                <span className="text-[10px] font-black text-zinc-300 dark:text-zinc-600 w-3 sm:w-4">{i + 1}</span>
-                                                <div className="min-w-0">
-                                                    <p className="font-bold text-zinc-900 dark:text-zinc-100 text-sm sm:text-base">{stock.symbol}</p>
-                                                    {/* FIXED: Removed redundant sm:text-[10px] */}
-                                                    <p className="text-[10px] font-bold text-zinc-400 dark:text-zinc-500 uppercase tracking-wider truncate max-w-[100px] sm:max-w-[150px]">{stock.name}</p>
-                                                </div>
-                                            </div>
-                                            <div className="text-right flex-shrink-0">
-                                                <p className="font-bold text-zinc-900 dark:text-zinc-100 text-sm sm:text-base">Rs. {stock.lastPrice?.toFixed(2)}</p>
-                                                <p className="text-xs sm:text-sm font-black text-rose-600 dark:text-rose-400">{stock.changePercent?.toFixed(2)}%</p>
-                                            </div>
-                                        </div>
-                                    ))}
-                                </div>
-                            </div>
-                        </div>
-
-                        <div className="text-center mt-8 sm:mt-12">
-                            <Link to="/market" className="px-6 sm:px-8 py-3 sm:py-3.5 bg-zinc-50 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 text-zinc-700 dark:text-zinc-300 rounded-lg sm:rounded-xl font-bold text-xs sm:text-sm hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-all no-underline inline-flex items-center gap-2 sm:gap-3">
-                                View Full Market
-                                <ChevronRight className="h-3 w-3 sm:h-4 sm:w-4" />
-                            </Link>
-                        </div>
+                        ))}
                     </div>
-                </section>
-            )}
-
-            {/* CTA - FIXED: Removed unnecessary dark: variants since bg is always dark */}
-            <section className="py-24 sm:py-32 lg:py-48 px-4 sm:px-6 bg-zinc-950">
-                <div className="container mx-auto">
-                    <div className="max-w-4xl mx-auto text-center">
-                        <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-7xl font-black text-white mb-6 sm:mb-8 tracking-tighter leading-[1.1]">
-                            Ready to Master Your <br />
-                            <span className="text-zinc-500">Financial Future?</span>
-                        </h2>
-                        <p className="text-zinc-400 text-base sm:text-lg md:text-xl lg:text-2xl mb-10 sm:mb-16 max-w-2xl mx-auto font-medium leading-relaxed px-2 sm:px-0">
-                            Join the elite circle of Nepalese investors who trade with data-backed precision.
-                        </p>
-                        <Link
-                            to="/register"
-                            className="px-8 sm:px-12 py-4 sm:py-6 bg-white text-zinc-950 rounded-xl sm:rounded-2xl font-black text-base sm:text-xl hover:bg-zinc-100 hover:scale-[1.05] active:scale-[0.95] transition-all no-underline inline-flex items-center gap-2 sm:gap-4 shadow-2xl shadow-white/10 group"
-                        >
-                            <Sparkles className="h-5 w-5 sm:h-6 sm:w-6 text-zinc-400 group-hover:text-zinc-950 group-hover:scale-110 transition-all duration-300" />
-                            Get Started Free
-                            <ArrowRight className="h-5 w-5 sm:h-6 sm:w-6" />
+                    <div className="mt-4">
+                        <Link to="/market" className="btn btn-ghost no-underline">
+                            Full market <ArrowUpRight className="h-3.5 w-3.5" />
                         </Link>
                     </div>
+                </section>
+            )}
+
+            {/* CTA */}
+            <section className="bg-ink text-paper">
+                <div className="max-w-[1400px] mx-auto px-4 py-16 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6">
+                    <div>
+                        <h2 className="text-3xl font-bold tracking-tight">Start tracking in under a minute.</h2>
+                        <p className="mt-2 text-paper/60 text-[15px]">Free to use. No card. Your book stays private.</p>
+                    </div>
+                    <Link to="/register" className="btn btn-accent text-[14px] px-6 py-3 no-underline shrink-0">
+                        Open Terminal <ArrowRight className="h-4 w-4" />
+                    </Link>
                 </div>
             </section>
 
             {/* Footer */}
-            <footer className="bg-white dark:bg-zinc-950 py-12 sm:py-16 lg:py-24 border-t border-zinc-100 dark:border-zinc-900 transition-colors">
-                <div className="container mx-auto px-4 sm:px-6">
-                    <div className="flex flex-col items-center gap-6 sm:gap-8 lg:gap-12">
-                        <div className="flex items-center gap-3">
-                            <div className="w-8 h-8 sm:w-10 sm:h-10 bg-white dark:bg-zinc-900 border border-zinc-100 dark:border-zinc-800 p-1 sm:p-1.5 rounded-xl flex items-center justify-center shadow-sm">
-                                <img src="/favicon.png" alt="" className="w-full h-full object-contain" />
-                            </div>
-                            <span className="text-lg sm:text-xl font-black text-zinc-900 dark:text-zinc-100 tracking-tighter">NEPSE Tracker</span>
-                        </div>
-                        <div className="flex flex-wrap items-center justify-center gap-6 sm:gap-10">
-                            <Link to="/market" className="text-xs sm:text-sm font-bold text-zinc-400 dark:text-zinc-500 hover:text-zinc-900 dark:hover:text-zinc-100 transition-colors no-underline uppercase tracking-widest">Market</Link>
-                            <Link to="/login" className="text-xs sm:text-sm font-bold text-zinc-400 dark:text-zinc-500 hover:text-zinc-900 dark:hover:text-zinc-100 transition-colors no-underline uppercase tracking-widest">Login</Link>
-                            <Link to="/register" className="text-xs sm:text-sm font-bold text-zinc-400 dark:text-zinc-500 hover:text-zinc-900 dark:hover:text-zinc-100 transition-colors no-underline uppercase tracking-widest">Register</Link>
-                        </div>
-                        <p className="text-[10px] sm:text-xs font-bold text-zinc-300 dark:text-zinc-700 uppercase tracking-widest text-center">
-                            © {new Date().getFullYear()} NEPSE Tracker. Digital precision.
-                        </p>
+            <footer className="max-w-[1400px] mx-auto px-4 py-8 flex flex-col sm:flex-row items-center justify-between gap-4">
+                <div className="flex items-center gap-2">
+                    <div className="w-6 h-6 bg-panel border border-line p-0.5 rounded-[2px] flex items-center justify-center">
+                        <img src="/favicon.png" alt="" className="w-full h-full object-contain" />
                     </div>
+                    <span className="text-[13px] font-semibold text-ink">NEPSE·TERM</span>
                 </div>
+                <div className="flex items-center gap-5">
+                    <Link to="/market" className="label hover:text-ink no-underline">MARKET</Link>
+                    <Link to="/login" className="label hover:text-ink no-underline">LOGIN</Link>
+                    <Link to="/register" className="label hover:text-ink no-underline">REGISTER</Link>
+                </div>
+                <p className="label">© {new Date().getFullYear()} NEPSE TERMINAL</p>
             </footer>
         </div>
     )

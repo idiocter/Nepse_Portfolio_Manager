@@ -2,20 +2,21 @@ import { useState, useEffect } from 'react'
 import axios from 'axios'
 import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip, Legend } from 'recharts'
 
+// Warm terminal palette — ordered to keep adjacent sectors distinct
 const COLORS = [
-  '#2563eb', // Banking - blue-600
-  '#06b6d4', // Hydro Power - cyan-500
-  '#10b981', // Microfinance - emerald-500
-  '#f59e0b', // Life Insurance - amber-500
-  '#f43f5e', // Non-Life Insurance - rose-500
-  '#f97316', // Hotels & Tourism - orange-500
-  '#8b5cf6', // Development Bank - violet-500
-  '#6366f1', // Finance - indigo-500
-  '#d946ef', // Mutual Fund - fuchsia-500
-  '#0ea5e9', // Investment - sky-500
-  '#ec4899', // Manufacturing & Processing - pink-500
-  '#14b8a6', // Trading - teal-500
-  '#94a3b8', // Others - slate-400
+  '#1a1714', // Banking - ink
+  '#b3541e', // Hydro Power - accent amber
+  '#117a3d', // Microfinance - up green
+  '#a67c00', // Life Insurance - gold
+  '#c0322b', // Non-Life Insurance - down red
+  '#6b6259', // Hotels & Tourism - muted
+  '#7a5c3e', // Development Bank - umber
+  '#3d6b5c', // Finance - slate green
+  '#8a4b6b', // Mutual Fund - mauve
+  '#4a5a7a', // Investment - steel
+  '#9c6b3a', // Manufacturing - bronze
+  '#5a7a3d', // Trading - olive
+  '#a39a8d', // Others - faint
 ]
 
 const ALL_SECTORS = [
@@ -38,29 +39,24 @@ const CustomTooltip = ({ active, payload }) => {
   if (active && payload && payload.length) {
     const data = payload[0].payload;
     return (
-      <div className="bg-white/95 dark:bg-zinc-900/95 backdrop-blur-md border border-zinc-100 dark:border-zinc-800 rounded-xl sm:rounded-2xl p-3 sm:p-4 shadow-2xl max-w-[280px] sm:max-w-xs transition-colors duration-300">
-        <div className="flex items-center gap-2 sm:gap-3 mb-2 sm:mb-3 border-b border-zinc-50 dark:border-zinc-800 pb-2">
-          <div className="w-2 h-2 rounded-full flex-shrink-0" style={{ backgroundColor: payload[0].fill }} />
-          <p className="text-[10px] font-black text-zinc-900 dark:text-zinc-100 uppercase tracking-widest leading-none mt-0.5 truncate">{data.name}</p>
+      <div className="panel p-3 shadow-lg max-w-[260px]">
+        <div className="flex items-center gap-2 mb-2 border-b border-line pb-2">
+          <div className="w-2 h-2 rounded-[2px] flex-shrink-0" style={{ backgroundColor: payload[0].fill }} />
+          <p className="label truncate">{data.name}</p>
         </div>
-
-        <p className="text-lg sm:text-xl font-black text-zinc-900 dark:text-zinc-100 tracking-tighter mb-3 sm:mb-4">
-          Rs. {payload[0].value.toLocaleString()}
-        </p>
-
-        <div className="space-y-1.5 sm:space-y-2 max-h-32 sm:max-h-40 overflow-y-auto custom-scrollbar pr-2">
+        <p className="text-lg font-semibold text-ink tnum mb-2">Rs. {payload[0].value.toLocaleString()}</p>
+        <div className="space-y-1 max-h-40 overflow-y-auto custom-scrollbar pr-1">
           {data.stocks.map((stock, i) => (
-            <div key={i} className="flex items-center justify-between gap-2 sm:gap-4 text-[9px] sm:text-[10px] font-bold">
-              <span className="text-zinc-400 dark:text-zinc-500 uppercase tracking-wider truncate">{stock.symbol}</span>
-              <span className="text-zinc-900 dark:text-zinc-200 tabular-nums flex-shrink-0">{stock.qty.toLocaleString()} Shares</span>
-              <span className="text-zinc-500 dark:text-zinc-400 tabular-nums flex-shrink-0">Rs. {stock.val.toLocaleString()}</span>
+            <div key={i} className="flex items-center justify-between gap-3 text-[11px] font-mono">
+              <span className="text-muted truncate">{stock.symbol}</span>
+              <span className="text-faint tnum flex-shrink-0">{stock.qty.toLocaleString()}</span>
+              <span className="text-ink tnum flex-shrink-0">{stock.val.toLocaleString()}</span>
             </div>
           ))}
         </div>
-
-        <div className="mt-2 sm:mt-3 pt-2 sm:pt-3 border-t border-zinc-50 dark:border-zinc-800 flex items-center justify-between text-[8px] sm:text-[10px] font-bold text-zinc-300 dark:text-zinc-600 uppercase tracking-widest">
-          <span>{data.stocks.length} Positions</span>
-          <span>{((payload[0].value / data.total) * 100).toFixed(1)}% Weight</span>
+        <div className="mt-2 pt-2 border-t border-line flex items-center justify-between label">
+          <span>{data.stocks.length} POS</span>
+          <span>{((payload[0].value / data.total) * 100).toFixed(1)}% WT</span>
         </div>
       </div>
     );
@@ -114,16 +110,16 @@ const AllocationChart = ({ holdings }) => {
 
   if (data.length === 0) {
     return (
-      <div className="h-48 sm:h-64 flex flex-col items-center justify-center space-y-3 sm:space-y-4">
-        <div className="p-3 sm:p-4 bg-zinc-50 dark:bg-zinc-900 rounded-xl sm:rounded-2xl border border-dashed border-zinc-200 dark:border-zinc-800">
-          <p className="text-[10px] font-black text-zinc-400 dark:text-zinc-500 uppercase tracking-widest">Awaiting Transactions...</p>
+      <div className="h-48 flex items-center justify-center">
+        <div className="px-4 py-3 border border-dashed border-line rounded-[3px]">
+          <p className="label">AWAITING POSITIONS</p>
         </div>
       </div>
     )
   }
 
   return (
-    <div className="h-72 sm:h-80 lg:h-96 w-full -mt-2 sm:-mt-4 animate-fade-in">
+    <div className="h-72 sm:h-80 lg:h-96 w-full -mt-2">
       <ResponsiveContainer width="100%" height="100%">
         <PieChart>
           <Pie
@@ -173,8 +169,8 @@ const AllocationChart = ({ holdings }) => {
               const hasValue = item && item.value > 0;
 
               return (
-                <span className={`text-[9px] sm:text-[10px] font-black uppercase tracking-widest ml-1 mr-2 sm:mr-3 transition-colors ${hasValue ? 'text-zinc-600 dark:text-zinc-300' : 'text-zinc-300 dark:text-zinc-700'}`}>
-                  {value} <span className={`font-bold ml-1 ${hasValue ? 'text-zinc-400 dark:text-zinc-500' : 'text-zinc-200 dark:text-zinc-800'}`}>{percent}%</span>
+                <span className={`text-[10px] font-mono uppercase tracking-wide ml-1 mr-2 ${hasValue ? 'text-ink' : 'text-faint'}`}>
+                  {value} <span className="text-faint ml-0.5">{percent}%</span>
                 </span>
               )
             }}

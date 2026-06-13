@@ -1,69 +1,33 @@
-import { TrendingUp, TrendingDown, Wallet, PieChart } from 'lucide-react'
+import { TrendingUp, TrendingDown } from 'lucide-react'
 
 const PortfolioSummary = ({ summary }) => {
   const isProfit = (summary.totalPnl || 0) >= 0
 
+  const cells = [
+    { label: 'TOTAL INVESTMENT', value: `Rs. ${(summary.totalInvestment || 0).toLocaleString()}` },
+    { label: 'CURRENT VALUE', value: `Rs. ${(summary.totalCurrent || 0).toLocaleString()}` },
+  ]
+
   return (
-    <div className="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-6 lg:gap-8">
-      {/* Total Investment */}
-      <div className="bg-white dark:bg-zinc-900 border border-zinc-100 dark:border-zinc-800 rounded-2xl sm:rounded-3xl p-5 sm:p-6 lg:p-8 shadow-sm hover:shadow-md transition-all">
-        <div className="flex items-center justify-between gap-3">
-          <div className="min-w-0">
-            <p className="text-[10px] sm:text-xs font-bold text-zinc-400 dark:text-zinc-500 uppercase tracking-widest mb-2 sm:mb-3">Total Investment</p>
-            <p className="text-xl sm:text-2xl lg:text-3xl font-black text-zinc-900 dark:text-zinc-100 tracking-tight truncate">
-              Rs. {(summary.totalInvestment || 0).toLocaleString()}
-            </p>
-          </div>
-          <div className="p-3 sm:p-4 lg:p-5 bg-zinc-50 dark:bg-zinc-800 rounded-xl sm:rounded-2xl flex-shrink-0">
-            <Wallet className="h-5 w-5 sm:h-6 sm:h-7 lg:h-8 lg:w-8 text-zinc-600 dark:text-zinc-400" />
-          </div>
+    <div className="grid grid-cols-1 md:grid-cols-3 border border-line divide-y md:divide-y-0 md:divide-x divide-[var(--color-line)]">
+      {cells.map(c => (
+        <div key={c.label} className="bg-panel p-4">
+          <p className="label">{c.label}</p>
+          <p className="text-2xl font-semibold text-ink tnum mt-1 truncate">{c.value}</p>
         </div>
-      </div>
-
-      {/* Current Value */}
-      <div className="bg-white dark:bg-zinc-900 border border-zinc-100 dark:border-zinc-800 rounded-2xl sm:rounded-3xl p-5 sm:p-6 lg:p-8 shadow-sm hover:shadow-md transition-all">
-        <div className="flex items-center justify-between gap-3">
-          <div className="min-w-0">
-            <p className="text-[10px] sm:text-xs font-bold text-zinc-400 dark:text-zinc-500 uppercase tracking-widest mb-2 sm:mb-3">Current Value</p>
-            <p className="text-xl sm:text-2xl lg:text-3xl font-black text-zinc-900 dark:text-zinc-100 tracking-tight truncate">
-              Rs. {(summary.totalCurrent || 0).toLocaleString()}
-            </p>
-          </div>
-          <div className="p-3 sm:p-4 lg:p-5 bg-zinc-50 dark:bg-zinc-800 rounded-xl sm:rounded-2xl flex-shrink-0">
-            <PieChart className="h-5 w-5 sm:h-6 sm:h-7 lg:h-8 lg:w-8 text-zinc-600 dark:text-zinc-400" />
-          </div>
+      ))}
+      <div className="bg-panel p-4">
+        <p className="label">TOTAL P&L</p>
+        <div className="flex items-center gap-2 mt-1">
+          <p className={`text-2xl font-semibold tnum truncate ${isProfit ? 'up' : 'down'}`}>
+            {isProfit ? '+' : '−'}Rs. {Math.abs(summary.totalPnl || 0).toLocaleString()}
+          </p>
+          {isProfit ? <TrendingUp className="h-4 w-4 up shrink-0" /> : <TrendingDown className="h-4 w-4 down shrink-0" />}
         </div>
+        <p className={`label mt-0.5 ${isProfit ? 'up' : 'down'}`}>
+          {isProfit ? '▲' : '▼'} {Math.abs(summary.totalPnlPercent || 0).toFixed(2)}% RETURN
+        </p>
       </div>
-
-      {/* Total P&L */}
-      <div className="bg-white dark:bg-zinc-900 border border-zinc-100 dark:border-zinc-800 rounded-2xl sm:rounded-3xl p-5 sm:p-6 lg:p-8 shadow-sm hover:shadow-md transition-all">
-        <div className="flex items-center justify-between gap-3">
-          <div className="min-w-0">
-            <p className="text-[10px] sm:text-xs font-bold text-zinc-400 dark:text-zinc-500 uppercase tracking-widest mb-2 sm:mb-3">Total P&L</p>
-            <div className="flex flex-col gap-0.5 sm:gap-1">
-              <div className="flex items-center gap-2 sm:gap-3">
-                <p className={`text-xl sm:text-2xl lg:text-3xl font-black tracking-tight truncate ${isProfit ? 'text-emerald-600 dark:text-emerald-400' : 'text-rose-600 dark:text-rose-400'}`}>
-                  Rs. {Math.abs(summary.totalPnl || 0).toLocaleString()}
-                </p>
-                {isProfit ?
-                  <TrendingUp className="h-4 w-4 sm:h-5 sm:h-6 lg:h-6 lg:w-6 text-emerald-600 dark:text-emerald-400 flex-shrink-0" /> :
-                  <TrendingDown className="h-4 w-4 sm:h-5 sm:h-6 lg:h-6 lg:w-6 text-rose-600 dark:text-rose-400 flex-shrink-0" />
-                }
-              </div>
-              <p className={`text-xs sm:text-sm font-black uppercase tracking-wider ${isProfit ? 'text-emerald-500 dark:text-emerald-500' : 'text-rose-500 dark:text-rose-500'}`}>
-                {isProfit ? '↑' : '↓'}{(summary.totalPnlPercent || 0).toFixed(2)}% Performance
-              </p>
-            </div>
-          </div>
-          <div className={`p-3 sm:p-4 lg:p-5 rounded-xl sm:rounded-2xl flex-shrink-0 ${isProfit ? 'bg-emerald-50 dark:bg-emerald-950/20' : 'bg-rose-50 dark:bg-rose-950/20'}`}>
-            {isProfit ?
-              <TrendingUp className="h-5 w-5 sm:h-6 sm:h-7 lg:h-8 lg:w-8 text-emerald-600 dark:text-emerald-400" /> :
-              <TrendingDown className="h-5 w-5 sm:h-6 sm:h-7 lg:h-8 lg:w-8 text-rose-600 dark:text-rose-400" />
-            }
-          </div>
-        </div>
-      </div>
-
     </div>
   )
 }

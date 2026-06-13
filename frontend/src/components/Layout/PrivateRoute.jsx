@@ -6,10 +6,10 @@ const PrivateRoute = ({ children }) => {
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center min-h-screen p-4">
-        <div className="flex flex-col items-center gap-3 sm:gap-4">
-          <div className="animate-spin rounded-full h-10 w-10 sm:h-12 sm:w-12 border-b-2 border-primary-600"></div>
-          <p className="text-xs sm:text-sm text-slate-500 animate-pulse">Authenticating...</p>
+      <div className="flex items-center justify-center min-h-[60vh] p-4">
+        <div className="flex flex-col items-center gap-3">
+          <div className="animate-spin rounded-full h-8 w-8 border-2 border-line border-b-[var(--color-accent)]" />
+          <p className="label">AUTHENTICATING…</p>
         </div>
       </div>
     )
