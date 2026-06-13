@@ -2,6 +2,8 @@
 
 @import "tailwindcss";
 
+@variant dark (&:where(.dark, .dark *));
+
 @theme {
   --color-primary-50: #eef2ff;
   --color-primary-100: #e0e7ff;
@@ -64,11 +66,15 @@
 /* ========== BASE ========== */
 body {
   font-family: 'Inter', system-ui, -apple-system, sans-serif;
-  background: #ffffff;
-  color: #18181b;
+  @apply bg-white text-zinc-900 transition-colors duration-300;
   min-height: 100vh;
   -webkit-font-smoothing: antialiased;
 }
+
+.dark body {
+  @apply bg-zinc-950 text-zinc-100;
+}
+
 
 .custom-scrollbar::-webkit-scrollbar {
   width: 4px;
@@ -79,10 +85,58 @@ body {
 }
 
 .custom-scrollbar::-webkit-scrollbar-thumb {
-  background: #f4f4f5;
+  @apply bg-zinc-100 dark:bg-zinc-800;
   border-radius: 10px;
 }
 
 .custom-scrollbar::-webkit-scrollbar-thumb:hover {
-  background: #e4e4e7;
+  @apply bg-zinc-200 dark:bg-zinc-700;
+}
+
+/* Custom Animations */
+@keyframes fade-in-up {
+  0% {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-20px);
+  }
+}
+
+@layer utilities {
+  .animate-fade-in-up {
+    animation: fade-in-up 0.6s ease-out forwards;
+  }
+
+  .animate-float {
+    animation: float 6s ease-in-out infinite;
+  }
+
+  /* Stagger delays */
+  .stagger-1 { animation-delay: 0.1s; }
+  .stagger-2 { animation-delay: 0.2s; }
+  .stagger-3 { animation-delay: 0.3s; }
+  .stagger-4 { animation-delay: 0.4s; }
+  .stagger-5 { animation-delay: 0.5s; }
+  .stagger-6 { animation-delay: 0.6s; }
+
+  /* Hide scrollbar utility */
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+  .no-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
 }

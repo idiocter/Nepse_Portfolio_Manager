@@ -3,7 +3,7 @@ import { Link, useLocation, useNavigate } from 'react-router-dom'
 import { useAuth } from '../../contexts/AuthContext'
 import {
   LogOut, User, PieChart, Home,
-  Activity, Eye, Menu, X, ChevronDown, Rocket
+  Activity, Eye, Menu, X, ChevronDown, Rocket, Settings
 } from 'lucide-react'
 
 const Navbar = () => {
@@ -54,16 +54,16 @@ const Navbar = () => {
     ]
 
   return (
-    <nav className="bg-white border-b border-zinc-100 sticky top-0 z-50 shadow-sm">
+    <nav className="bg-white dark:bg-zinc-950 border-b border-zinc-100 dark:border-zinc-800 sticky top-0 z-50 shadow-sm transition-colors duration-300">
       <div className="container mx-auto px-4 sm:px-6">
         <div className="flex justify-between items-center h-16 md:h-20">
 
           {/* Logo - Responsive sizing */}
           <Link to={user ? '/dashboard' : '/'} className="flex items-center gap-2 md:gap-3 no-underline group">
-            <div className="w-8 h-8 md:w-10 md:h-10 rounded-xl bg-white flex items-center justify-center shadow-lg border border-zinc-100 group-hover:scale-105 transition-transform duration-300 overflow-hidden p-1">
+            <div className="w-8 h-8 md:w-10 md:h-10 rounded-xl bg-white dark:bg-zinc-900 flex items-center justify-center shadow-lg border border-zinc-100 dark:border-zinc-800 group-hover:scale-105 transition-transform duration-300 overflow-hidden p-1">
               <img src="/favicon.png" alt="NEPSE" className="w-full h-full object-contain" />
             </div>
-            <span className="text-lg md:text-xl font-black text-zinc-900 tracking-tighter">
+            <span className="text-lg md:text-xl font-black text-zinc-900 dark:text-white tracking-tighter">
               NEPSE<span className="text-zinc-500">Tracker</span>
             </span>
           </Link>
@@ -75,8 +75,8 @@ const Navbar = () => {
                 key={link.to}
                 to={link.to}
                 className={`flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-bold transition-all duration-200 no-underline ${isActive(link.to)
-                  ? 'bg-zinc-100 text-zinc-900 shadow-sm'
-                  : 'text-zinc-400 hover:text-zinc-900 hover:bg-zinc-50'
+                  ? 'bg-zinc-100 dark:bg-zinc-900 text-zinc-900 dark:text-zinc-100 shadow-sm'
+                  : 'text-zinc-400 dark:text-zinc-500 hover:text-zinc-900 dark:hover:text-zinc-100 hover:bg-zinc-50 dark:hover:bg-zinc-900'
                   }`}
               >
                 {link.icon}
@@ -117,43 +117,53 @@ const Navbar = () => {
               )}
             </div>
 
+
+
             {user ? (
               <div className="relative">
                 <button
                   onClick={() => setProfileOpen(!profileOpen)}
-                  className="flex items-center gap-3 px-4 py-2 rounded-2xl border border-transparent hover:border-zinc-100 hover:bg-zinc-50 transition-all duration-200"
+                  className="flex items-center gap-3 px-4 py-2 rounded-2xl border border-transparent hover:border-zinc-100 dark:hover:border-zinc-800 hover:bg-zinc-50 dark:hover:bg-zinc-900 transition-all duration-200"
                 >
                   {user.avatar ? (
-                    <img src={user.avatar} alt={user.name} className="h-9 w-9 rounded-xl object-cover ring-2 ring-zinc-100" />
+                    <img src={user.avatar} alt={user.name} className="h-9 w-9 rounded-xl object-cover ring-2 ring-zinc-100 dark:ring-zinc-800" />
                   ) : (
-                    <div className="h-9 w-9 rounded-xl bg-zinc-900 flex items-center justify-center">
-                      <span className="text-sm font-black text-white">{user.name?.charAt(0)?.toUpperCase()}</span>
+                    <div className="h-9 w-9 rounded-xl bg-zinc-900 dark:bg-zinc-100 flex items-center justify-center">
+                      <span className="text-sm font-black text-white dark:text-zinc-900">{user.name?.charAt(0)?.toUpperCase()}</span>
                     </div>
                   )}
-                  <span className="text-sm font-bold text-zinc-700">{user.name?.split(' ')[0]}</span>
+                  <span className="text-sm font-black text-zinc-900 dark:text-zinc-100 transition-colors">{user.name?.split(' ')[0]}</span>
                   <ChevronDown className={`h-4 w-4 text-zinc-400 transition-transform duration-300 ${profileOpen ? 'rotate-180' : ''}`} />
                 </button>
 
                 {profileOpen && (
                   <>
                     <div className="fixed inset-0 z-40" onClick={() => setProfileOpen(false)} />
-                    <div className="absolute right-0 top-full mt-3 w-64 bg-white rounded-2xl shadow-2xl shadow-zinc-200 border border-zinc-100 p-2.5 z-50">
-                      <div className="px-4 py-3 border-b border-zinc-50 mb-2">
-                        <p className="text-sm font-black text-zinc-900">{user.name}</p>
-                        {user.username && <p className="text-xs font-medium text-primary-600 my-0.5">@{user.username}</p>}
-                        <p className="text-xs font-medium text-zinc-400">{user.email}</p>
+                    <div className="absolute right-0 top-full mt-3 w-64 bg-white dark:bg-zinc-900 rounded-2xl shadow-2xl shadow-zinc-200 dark:shadow-none border border-zinc-100 dark:border-zinc-800 p-2.5 z-50">
+                      <div className="px-4 py-3 border-b border-zinc-100 dark:border-zinc-800 mb-2 transition-colors">
+                        <p className="text-sm font-black text-zinc-900 dark:text-zinc-100">{user.name}</p>
+                        {user.username && <p className="text-[10px] font-black text-zinc-400 dark:text-zinc-500 uppercase tracking-widest my-0.5">@{user.username}</p>}
+                        <p className="text-xs font-bold text-zinc-400 dark:text-zinc-500 truncate">{user.email}</p>
                       </div>
                       <Link
-                        to="/profile"
-                        className="flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-bold text-zinc-600 hover:text-zinc-900 hover:bg-zinc-50 transition-all no-underline"
+                        to="/profile?tab=overview"
+                        className="flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-bold text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-100 hover:bg-zinc-50 dark:hover:bg-zinc-800 transition-all no-underline"
                         onClick={() => setProfileOpen(false)}
                       >
                         <User className="h-4 w-4 text-zinc-400" />
                         My Profile
                       </Link>
+                      <Link
+                        to="/profile?tab=preferences"
+                        className="flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-bold text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-100 hover:bg-zinc-50 dark:hover:bg-zinc-800 transition-all no-underline"
+                        onClick={() => setProfileOpen(false)}
+                      >
+                        <Settings className="h-4 w-4 text-zinc-400" />
+                        Settings
+                      </Link>
                       <button
                         onClick={() => { setProfileOpen(false); handleLogout() }}
-                        className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-bold text-rose-600 hover:bg-rose-50 transition-all"
+                        className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-bold text-rose-600 hover:bg-rose-50 dark:hover:bg-rose-950/30 transition-all"
                       >
                         <LogOut className="h-4 w-4" />
                         Sign Out
@@ -164,9 +174,9 @@ const Navbar = () => {
               </div>
             ) : (
               <div className="flex items-center gap-4">
-                <Link to="/login" className="px-6 py-2.5 text-sm font-bold text-zinc-500 hover:text-zinc-900 hover:bg-zinc-50 rounded-xl transition-all no-underline">Sign In</Link>
-                <Link to="/register" className="px-6 py-2.5 text-sm font-bold bg-zinc-900 text-white hover:bg-zinc-800 rounded-xl transition-all shadow-lg shadow-zinc-200 no-underline flex items-center gap-2 group">
-                  <Rocket className="h-4 w-4 text-zinc-400 group-hover:text-white group-hover:rotate-12 transition-all duration-300" />
+                <Link to="/login" className="px-6 py-2.5 text-sm font-black text-zinc-400 dark:text-zinc-500 hover:text-zinc-900 dark:hover:text-zinc-100 hover:bg-zinc-50 dark:hover:bg-zinc-900 uppercase tracking-widest rounded-xl transition-all no-underline">Sign In</Link>
+                <Link to="/register" className="px-6 py-2.5 text-sm font-black bg-zinc-900 dark:bg-zinc-100 text-white dark:text-zinc-900 hover:bg-zinc-800 dark:hover:bg-zinc-200 uppercase tracking-widest rounded-xl transition-all shadow-lg shadow-zinc-200 dark:shadow-none no-underline flex items-center gap-2 group">
+                  <Rocket className="h-4 w-4 text-zinc-400 dark:text-zinc-500 group-hover:text-white dark:group-hover:text-zinc-900 group-hover:rotate-12 transition-all duration-300" />
                   Get Started
                 </Link>
               </div>
@@ -186,10 +196,14 @@ const Navbar = () => {
               </div>
             </div>
 
+
+
+
+
             {/* Mobile menu button */}
             <button
               onClick={() => setMobileOpen(!mobileOpen)}
-              className="p-2 text-zinc-400 hover:text-zinc-900 transition-colors rounded-lg hover:bg-zinc-50"
+              className="p-2 text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-100 transition-colors rounded-lg hover:bg-zinc-50 dark:hover:bg-zinc-900"
               aria-label="Toggle menu"
             >
               {mobileOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
@@ -200,7 +214,7 @@ const Navbar = () => {
 
       {/* Mobile Menu - Improved */}
       {mobileOpen && (
-        <div className="md:hidden bg-white border-t border-zinc-100 absolute w-full left-0 shadow-xl">
+        <div className="md:hidden bg-white dark:bg-zinc-950 border-t border-zinc-100 dark:border-zinc-800 absolute w-full left-0 shadow-xl transition-colors duration-300">
           <div className="container mx-auto px-4 py-4 space-y-1">
             {/* Navigation Links */}
             {navLinks.map(link => (
@@ -209,8 +223,8 @@ const Navbar = () => {
                 to={link.to}
                 onClick={() => setMobileOpen(false)}
                 className={`flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-bold transition-all no-underline ${isActive(link.to)
-                  ? 'bg-zinc-100 text-zinc-900'
-                  : 'text-zinc-500 hover:text-zinc-900 hover:bg-zinc-50'
+                  ? 'bg-zinc-100 dark:bg-zinc-900 text-zinc-900 dark:text-zinc-100'
+                  : 'text-zinc-500 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-100 hover:bg-zinc-50 dark:hover:bg-zinc-900'
                   }`}
               >
                 {link.icon}
@@ -219,25 +233,34 @@ const Navbar = () => {
             ))}
 
             {/* Divider */}
-            <div className="border-t border-zinc-100 my-3"></div>
+            <div className="border-t border-zinc-100 dark:border-zinc-800 my-3 transition-colors"></div>
 
             {/* User Section */}
             {user ? (
               <div className="space-y-1">
                 {/* User Info Header */}
-                <div className="px-4 py-3 mb-2">
-                  <p className="text-sm font-black text-zinc-900">{user.name}</p>
-                  {user.username && <p className="text-xs font-medium text-primary-600">@{user.username}</p>}
-                  <p className="text-xs font-medium text-zinc-400 truncate">{user.email}</p>
+                <div className="px-4 py-3 mb-2 transition-colors">
+                  <p className="text-sm font-black text-zinc-900 dark:text-zinc-100">{user.name}</p>
+                  {user.username && <p className="text-[10px] font-black text-zinc-400 dark:text-zinc-500 uppercase tracking-widest my-0.5">@{user.username}</p>}
+                  <p className="text-xs font-bold text-zinc-400 dark:text-zinc-500 truncate">{user.email}</p>
                 </div>
-                
+
                 <Link
-                  to="/profile"
+                  to="/profile?tab=overview"
                   onClick={() => setMobileOpen(false)}
-                  className="flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-bold text-zinc-600 hover:text-zinc-900 hover:bg-zinc-50 transition-all no-underline"
+                  className="flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-black text-zinc-400 dark:text-zinc-500 hover:text-zinc-900 dark:hover:text-zinc-100 hover:bg-zinc-50 dark:hover:bg-zinc-900 transition-all no-underline uppercase tracking-widest"
                 >
                   <User className="h-4 w-4" />
                   My Profile
+                </Link>
+
+                <Link
+                  to="/profile?tab=preferences"
+                  onClick={() => setMobileOpen(false)}
+                  className="flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-black text-zinc-400 dark:text-zinc-500 hover:text-zinc-900 dark:hover:text-zinc-100 hover:bg-zinc-50 dark:hover:bg-zinc-900 transition-all no-underline uppercase tracking-widest"
+                >
+                  <Settings className="h-4 w-4" />
+                  Settings
                 </Link>
                 <button
                   onClick={() => { setMobileOpen(false); handleLogout() }}
@@ -248,20 +271,20 @@ const Navbar = () => {
                 </button>
               </div>
             ) : (
-              <div className="flex flex-col gap-2 pt-2">
-                <Link 
-                  to="/login" 
-                  onClick={() => setMobileOpen(false)} 
-                  className="w-full py-3 text-center font-bold text-zinc-600 border border-zinc-200 rounded-xl no-underline text-sm hover:bg-zinc-50 transition-colors"
+              <div className="flex flex-col gap-2 pt-2 transition-colors">
+                <Link
+                  to="/login"
+                  onClick={() => setMobileOpen(false)}
+                  className="w-full py-3 text-center font-black text-zinc-400 dark:text-zinc-500 border border-zinc-100 dark:border-zinc-800 rounded-xl no-underline text-xs uppercase tracking-widest hover:bg-zinc-50 dark:hover:bg-zinc-900 transition-all"
                 >
                   Sign In
                 </Link>
-                <Link 
-                  to="/register" 
-                  onClick={() => setMobileOpen(false)} 
-                  className="w-full py-3 text-center font-bold bg-zinc-900 text-white rounded-xl no-underline flex items-center justify-center gap-2 group text-sm"
+                <Link
+                  to="/register"
+                  onClick={() => setMobileOpen(false)}
+                  className="w-full py-3 text-center font-black bg-zinc-900 dark:bg-zinc-100 text-white dark:text-zinc-900 rounded-xl no-underline flex items-center justify-center gap-2 group text-xs uppercase tracking-widest transition-all"
                 >
-                  <Rocket className="h-4 w-4 text-zinc-400 group-hover:text-white group-hover:rotate-12 transition-all duration-300" />
+                  <Rocket className="h-4 w-4 text-zinc-400 dark:text-zinc-500 group-hover:text-white dark:group-hover:text-zinc-900 group-hover:rotate-12 transition-all duration-300" />
                   Get Started
                 </Link>
               </div>

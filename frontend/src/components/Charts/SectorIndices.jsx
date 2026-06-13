@@ -27,8 +27,8 @@ const SectorIndices = () => {
     if (loading) {
         return (
             <div className="h-full flex flex-col items-center justify-center space-y-3 sm:space-y-4">
-                <div className="animate-spin rounded-full h-6 w-6 sm:h-8 sm:w-8 border-2 border-zinc-100 border-b-zinc-900"></div>
-                <p className="text-[9px] sm:text-[10px] font-black text-zinc-400 uppercase tracking-widest">Indexing Markets...</p>
+                <div className="animate-spin rounded-full h-6 w-6 sm:h-8 sm:w-8 border-2 border-zinc-100 dark:border-zinc-800 border-b-zinc-900 dark:border-b-zinc-100 transition-colors"></div>
+                <p className="text-[9px] sm:text-[10px] font-black text-zinc-400 dark:text-zinc-500 uppercase tracking-widest transition-colors">Indexing Markets...</p>
             </div>
         )
     }
@@ -41,17 +41,17 @@ const SectorIndices = () => {
                     return (
                         <div
                             key={sector.id}
-                            className="group flex items-center justify-between p-2.5 sm:p-3 rounded-xl sm:rounded-2xl bg-zinc-50 border border-zinc-100 hover:border-zinc-200 hover:bg-white transition-all duration-300"
+                            className="group flex items-center justify-between p-2.5 sm:p-3 rounded-xl sm:rounded-2xl bg-zinc-50 dark:bg-zinc-800/50 border border-zinc-100 dark:border-zinc-800 hover:border-zinc-200 dark:hover:border-zinc-700 hover:bg-white dark:hover:bg-zinc-800 transition-all duration-300"
                         >
                             <div className="flex flex-col min-w-0">
-                                <span className="text-[9px] sm:text-[10px] font-black text-zinc-900 uppercase tracking-tight truncate max-w-[100px] sm:max-w-[120px] lg:max-w-[150px]">
+                                <span className="text-[9px] sm:text-[10px] font-black text-zinc-900 dark:text-zinc-100 uppercase tracking-tight truncate max-w-[100px] sm:max-w-[120px] lg:max-w-[150px] transition-colors">
                                     {sector.index.replace(' Index', '').replace(' SubIndex', '')}
                                 </span>
-                                <span className="text-[10px] sm:text-xs font-bold text-zinc-400 tabular-nums">
+                                <span className="text-[10px] sm:text-xs font-bold text-zinc-400 dark:text-zinc-500 tabular-nums transition-colors">
                                     {sector.currentValue.toLocaleString()}
                                 </span>
                             </div>
-                            <div className={`flex flex-col items-end px-2 sm:px-3 py-0.5 sm:py-1 rounded-lg sm:rounded-xl ${isPositive ? 'bg-emerald-50 text-emerald-600' : 'bg-rose-50 text-rose-600'}`}>
+                            <div className={`flex flex-col items-end px-2 sm:px-3 py-0.5 sm:py-1 rounded-lg sm:rounded-xl transition-colors ${isPositive ? 'bg-emerald-50 dark:bg-emerald-950/20 text-emerald-600 dark:text-emerald-400' : 'bg-rose-50 dark:bg-rose-950/20 text-rose-600 dark:text-rose-400'}`}>
                                 <div className="flex items-center gap-0.5 sm:gap-1 font-black text-[9px] sm:text-[10px] tabular-nums">
                                     {isPositive ? <TrendingUp className="h-2.5 w-2.5 sm:h-3 sm:w-3" /> : <TrendingDown className="h-2.5 w-2.5 sm:h-3 sm:w-3" />}
                                     {formatPercent(sector.perChange)}

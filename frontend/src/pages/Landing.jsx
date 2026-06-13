@@ -33,37 +33,37 @@ const Landing = () => {
             icon: <PieChart className="h-6 w-6 sm:h-7 sm:w-7" />,
             title: 'Portfolio Tracking',
             description: 'Track all your NEPSE holdings in one place with real-time profit/loss calculations.',
-            color: 'bg-neutral-100 text-neutral-700'
+            color: 'bg-zinc-100 text-zinc-700'
         },
         {
             icon: <Activity className="h-6 w-6 sm:h-7 sm:w-7" />,
             title: 'Live Market Data',
             description: 'Get real-time stock prices, market indices, and trading volumes during market hours.',
-            color: 'bg-neutral-100 text-neutral-700'
+            color: 'bg-zinc-100 text-zinc-700'
         },
         {
             icon: <LineChart className="h-6 w-6 sm:h-7 sm:w-7" />,
             title: 'Price Charts',
             description: 'Interactive candlestick charts with historical price data for informed decisions.',
-            color: 'bg-neutral-100 text-neutral-700'
+            color: 'bg-zinc-100 text-zinc-700'
         },
         {
             icon: <TrendingUp className="h-6 w-6 sm:h-7 sm:w-7" />,
             title: 'Top Movers',
             description: 'Track top gainers and losers in real-time to spot market opportunities.',
-            color: 'bg-neutral-100 text-neutral-700'
+            color: 'bg-zinc-100 text-zinc-700'
         },
         {
             icon: <Eye className="h-6 w-6 sm:h-7 sm:w-7" />,
             title: 'Watchlist',
             description: 'Monitor stocks you\'re interested in without adding them to your portfolio.',
-            color: 'bg-neutral-100 text-neutral-700'
+            color: 'bg-zinc-100 text-zinc-700'
         },
         {
             icon: <Shield className="h-6 w-6 sm:h-7 sm:w-7" />,
             title: 'Secure & Private',
             description: 'Your portfolio data is encrypted and protected with Google OAuth authentication.',
-            color: 'bg-neutral-100 text-neutral-700'
+            color: 'bg-zinc-100 text-zinc-700'
         }
     ]
 
@@ -75,29 +75,28 @@ const Landing = () => {
     ]
 
     return (
-        <div className="bg-white selection:bg-zinc-200">
-            {/* Hero Section - Reduced padding and font sizes */}
+        <div className="bg-white dark:bg-zinc-950 selection:bg-zinc-300 dark:selection:bg-zinc-800 transition-colors duration-300">
+            {/* Hero Section */}
             <section className="relative min-h-[80vh] sm:min-h-[90vh] flex items-center pt-16 sm:pt-24 pb-16 sm:pb-32 overflow-hidden">
-                {/* Background decoration - smaller on mobile */}
                 <div className="absolute inset-0 overflow-hidden pointer-events-none">
-                    <div className="absolute top-0 left-1/4 w-[300px] h-[300px] sm:w-[500px] sm:h-[500px] bg-zinc-50 rounded-full blur-[80px] sm:blur-[120px] opacity-60 animate-float" />
-                    <div className="absolute bottom-0 right-1/4 w-[250px] h-[250px] sm:w-[400px] sm:h-[400px] bg-neutral-100 rounded-full blur-[60px] sm:blur-[100px] opacity-40 animate-float" style={{ animationDelay: '2s' }} />
+                    <div className="absolute top-0 left-1/4 w-[300px] h-[300px] sm:w-[500px] sm:h-[500px] bg-zinc-50 dark:bg-zinc-900/50 rounded-full blur-[80px] sm:blur-[120px] opacity-60 animate-float" />
+                    <div className="absolute bottom-0 right-1/4 w-[250px] h-[250px] sm:w-[400px] sm:h-[400px] bg-zinc-100 dark:bg-zinc-900/30 rounded-full blur-[60px] sm:blur-[100px] opacity-40 animate-float" style={{ animationDelay: '2s' }} />
                 </div>
 
                 <div className="container mx-auto px-4 sm:px-6 relative z-10">
                     <div className="max-w-5xl mx-auto text-center">
                         <div className="animate-fade-in-up stagger-1 mb-6 sm:mb-8">
-                            <span className="inline-block px-3 sm:px-4 py-1 sm:py-1.5 rounded-full bg-zinc-100 text-zinc-600 text-[10px] sm:text-xs font-bold tracking-widest uppercase">
+                            <span className="inline-block px-3 sm:px-4 py-1 sm:py-1.5 rounded-full bg-zinc-100 dark:bg-zinc-900 text-zinc-600 dark:text-zinc-400 text-[10px] sm:text-xs font-bold tracking-widest uppercase">
                                 🚀 Premium Portfolio Tracker for Nepal
                             </span>
                         </div>
 
-                        <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-8xl font-black text-zinc-900 mb-6 sm:mb-8 leading-[1.1] sm:leading-[1.05] tracking-tight animate-fade-in-up stagger-2">
-                            Master Your <span className="text-zinc-600">NEPSE</span><br />
+                        <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-8xl font-black text-zinc-900 dark:text-zinc-100 mb-6 sm:mb-8 leading-[1.1] sm:leading-[1.05] tracking-tight animate-fade-in-up stagger-2">
+                            Master Your <span className="text-zinc-600 dark:text-zinc-400">NEPSE</span><br />
                             Assets With Precision.
                         </h1>
 
-                        <p className="text-base sm:text-lg md:text-xl lg:text-2xl text-zinc-500 mb-8 sm:mb-14 max-w-3xl mx-auto leading-relaxed font-medium animate-fade-in-up stagger-3 px-2 sm:px-0">
+                        <p className="text-base sm:text-lg md:text-xl lg:text-2xl text-zinc-500 dark:text-zinc-400 mb-8 sm:mb-14 max-w-3xl mx-auto leading-relaxed font-medium animate-fade-in-up stagger-3 px-2 sm:px-0">
                             A sophisticated, real-time analytics platform designed for the modern Nepalese investor.
                             Track holdings, analyze trends, and grow your wealth with confidence.
                         </p>
@@ -105,15 +104,15 @@ const Landing = () => {
                         <div className="flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-6 animate-fade-in-up stagger-4 px-4 sm:px-0">
                             <Link
                                 to="/register"
-                                className="w-full sm:w-auto px-6 sm:px-10 py-4 sm:py-5 bg-zinc-900 text-white rounded-xl sm:rounded-2xl font-bold text-base sm:text-lg hover:bg-zinc-800 hover:scale-[1.02] active:scale-[0.98] transition-all shadow-xl shadow-zinc-200 no-underline flex items-center justify-center gap-2 sm:gap-3 group"
+                                className="w-full sm:w-auto px-6 sm:px-10 py-4 sm:py-5 bg-zinc-900 dark:bg-zinc-100 text-white dark:text-zinc-900 rounded-xl sm:rounded-2xl font-bold text-base sm:text-lg hover:bg-zinc-800 dark:hover:bg-zinc-200 hover:scale-[1.02] active:scale-[0.98] transition-all shadow-xl shadow-zinc-200 dark:shadow-zinc-950 no-underline flex items-center justify-center gap-2 sm:gap-3 group"
                             >
-                                <Rocket className="h-5 w-5 sm:h-6 sm:w-6 text-zinc-400 group-hover:text-white group-hover:rotate-12 transition-all duration-300" />
+                                <Rocket className="h-5 w-5 sm:h-6 sm:w-6 text-zinc-400 dark:text-zinc-500 group-hover:text-white dark:group-hover:text-zinc-900 group-hover:rotate-12 transition-all duration-300" />
                                 Get Started Free
                                 <ArrowRight className="h-4 w-4 sm:h-5 sm:w-5" />
                             </Link>
                             <Link
                                 to="/market"
-                                className="w-full sm:w-auto px-6 sm:px-10 py-4 sm:py-5 bg-white border border-zinc-200 text-zinc-700 rounded-xl sm:rounded-2xl font-bold text-base sm:text-lg hover:bg-zinc-50 hover:border-zinc-300 hover:scale-[1.02] active:scale-[0.98] transition-all no-underline flex items-center justify-center gap-2 sm:gap-3"
+                                className="w-full sm:w-auto px-6 sm:px-10 py-4 sm:py-5 bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 text-zinc-700 dark:text-zinc-300 rounded-xl sm:rounded-2xl font-bold text-base sm:text-lg hover:bg-zinc-50 dark:hover:bg-zinc-800/50 hover:border-zinc-300 dark:hover:border-zinc-700 hover:scale-[1.02] active:scale-[0.98] transition-all no-underline flex items-center justify-center gap-2 sm:gap-3"
                             >
                                 <BarChart3 className="h-4 w-4 sm:h-5 sm:w-5" />
                                 Explore Market
@@ -123,20 +122,20 @@ const Landing = () => {
                 </div>
             </section>
 
-            {/* Live Market Ticker - Better mobile scrolling */}
+            {/* Live Market Ticker */}
             {(gainers.length > 0 || losers.length > 0) && (
-                <section className="py-4 sm:py-6 border-y border-zinc-100 bg-zinc-50/50">
+                <section className="py-4 sm:py-6 border-y border-zinc-100 dark:border-zinc-800 bg-zinc-50/50 dark:bg-zinc-900/30">
                     <div className="container mx-auto px-4 sm:px-6">
                         <div className="flex items-center gap-4 sm:gap-8 overflow-x-auto py-2 no-scrollbar">
-                            <span className="text-[10px] font-black text-zinc-400 uppercase tracking-[0.2em] whitespace-nowrap flex items-center gap-2">
+                            <span className="text-[10px] font-black text-zinc-400 dark:text-zinc-500 uppercase tracking-[0.2em] whitespace-nowrap flex items-center gap-2">
                                 <Activity className="h-3 w-3" />
                                 Market Live
                             </span>
                             {gainers.slice(0, 3).map(stock => (
                                 <div key={stock.symbol} className="flex items-center gap-2 sm:gap-3 whitespace-nowrap text-xs sm:text-sm">
-                                    <span className="font-bold text-zinc-900">{stock.symbol}</span>
-                                    <span className="text-zinc-500 font-medium">Rs. {stock.lastPrice?.toFixed(2)}</span>
-                                    <span className="text-emerald-600 font-bold flex items-center gap-0.5">
+                                    <span className="font-bold text-zinc-900 dark:text-zinc-100">{stock.symbol}</span>
+                                    <span className="text-zinc-500 dark:text-zinc-400 font-medium">Rs. {stock.lastPrice?.toFixed(2)}</span>
+                                    <span className="text-emerald-600 dark:text-emerald-400 font-bold flex items-center gap-0.5">
                                         <TrendingUp className="h-3 w-3" />
                                         +{stock.changePercent?.toFixed(2)}%
                                     </span>
@@ -144,9 +143,9 @@ const Landing = () => {
                             ))}
                             {losers.slice(0, 3).map(stock => (
                                 <div key={stock.symbol} className="flex items-center gap-2 sm:gap-3 whitespace-nowrap text-xs sm:text-sm">
-                                    <span className="font-bold text-zinc-900">{stock.symbol}</span>
-                                    <span className="text-zinc-500 font-medium">Rs. {stock.lastPrice?.toFixed(2)}</span>
-                                    <span className="text-rose-600 font-bold flex items-center gap-0.5">
+                                    <span className="font-bold text-zinc-900 dark:text-zinc-100">{stock.symbol}</span>
+                                    <span className="text-zinc-500 dark:text-zinc-400 font-medium">Rs. {stock.lastPrice?.toFixed(2)}</span>
+                                    <span className="text-rose-600 dark:text-rose-400 font-bold flex items-center gap-0.5">
                                         <TrendingDown className="h-3 w-3" />
                                         {stock.changePercent?.toFixed(2)}%
                                     </span>
@@ -157,34 +156,34 @@ const Landing = () => {
                 </section>
             )}
 
-            {/* Stats - Better mobile layout */}
+            {/* Stats */}
             <section className="py-16 sm:py-24 lg:py-32">
                 <div className="container mx-auto px-4 sm:px-6">
                     <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-6 lg:gap-8">
                         {stats.map((stat, index) => (
                             <div
                                 key={stat.label}
-                                className={`p-4 sm:p-6 lg:p-8 rounded-2xl sm:rounded-3xl bg-white border border-zinc-100 shadow-sm text-center animate-fade-in-up stagger-${index + 1}`}
+                                className={`p-4 sm:p-6 lg:p-8 rounded-2xl sm:rounded-3xl bg-white dark:bg-zinc-900 border border-zinc-100 dark:border-zinc-800 shadow-sm text-center animate-fade-in-up stagger-${index + 1} transition-all duration-300`}
                             >
-                                <div className="flex items-center justify-center mb-2 sm:mb-4 text-zinc-400">
+                                <div className="flex items-center justify-center mb-2 sm:mb-4 text-zinc-400 dark:text-zinc-500">
                                     {stat.icon}
                                 </div>
-                                <p className="text-xl sm:text-2xl lg:text-4xl font-black text-zinc-900 mb-1 sm:mb-2 tracking-tighter">{stat.value}</p>
-                                <p className="text-[10px] sm:text-xs font-bold text-zinc-400 uppercase tracking-widest">{stat.label}</p>
+                                <p className="text-xl sm:text-2xl lg:text-4xl font-black text-zinc-900 dark:text-zinc-100 mb-1 sm:mb-2 tracking-tighter">{stat.value}</p>
+                                <p className="text-[10px] sm:text-xs font-bold text-zinc-400 dark:text-zinc-500 uppercase tracking-widest">{stat.label}</p>
                             </div>
                         ))}
                     </div>
                 </div>
             </section>
 
-            {/* Features - Improved mobile cards */}
-            <section className="py-16 sm:py-24 lg:py-32 bg-white">
+            {/* Features - FIXED: Added dark:bg-zinc-950 */}
+            <section className="py-16 sm:py-24 lg:py-32 bg-white dark:bg-zinc-950">
                 <div className="container mx-auto px-4 sm:px-6">
                     <div className="text-center mb-12 sm:mb-16 lg:mb-24">
-                        <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-6xl font-black text-zinc-900 mb-4 sm:mb-6 tracking-tight">
-                            Everything to <span className="text-zinc-500">Invest Smarter.</span>
+                        <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-6xl font-black text-zinc-900 dark:text-zinc-100 mb-4 sm:mb-6 tracking-tight">
+                            Everything to <span className="text-zinc-500 dark:text-zinc-400">Invest Smarter.</span>
                         </h2>
-                        <p className="text-zinc-500 text-base sm:text-lg lg:text-xl max-w-2xl mx-auto font-medium leading-relaxed px-4 sm:px-0">
+                        <p className="text-zinc-500 dark:text-zinc-400 text-base sm:text-lg lg:text-xl max-w-2xl mx-auto font-medium leading-relaxed px-4 sm:px-0">
                             Sophisticated tools and real-time insights to help you manage your NEPSE portfolio with unparalleled clarity.
                         </p>
                     </div>
@@ -193,53 +192,54 @@ const Landing = () => {
                         {features.map((feature, index) => (
                             <div
                                 key={feature.title}
-                                className={`p-6 sm:p-8 lg:p-10 rounded-2xl sm:rounded-3xl border border-zinc-100 bg-zinc-50/30 hover:bg-white hover:shadow-xl hover:border-transparent transition-all duration-500 animate-fade-in-up stagger-${index + 1}`}
+                                className={`p-6 sm:p-8 lg:p-10 rounded-2xl sm:rounded-3xl border border-zinc-100 dark:border-zinc-800 bg-zinc-50/30 dark:bg-zinc-900/30 hover:bg-white dark:hover:bg-zinc-900 hover:shadow-xl dark:hover:shadow-zinc-950/50 hover:border-transparent dark:hover:border-transparent transition-all duration-500 animate-fade-in-up stagger-${index + 1}`}
                             >
-                                <div className={`w-12 h-12 sm:w-14 sm:h-14 lg:w-16 lg:h-16 rounded-xl sm:rounded-2xl ${feature.color} flex items-center justify-center mb-4 sm:mb-6 lg:mb-8`}>
+                                <div className={`w-12 h-12 sm:w-14 sm:h-14 lg:w-16 lg:h-16 rounded-xl sm:rounded-2xl ${feature.color} dark:bg-zinc-800 dark:text-zinc-400 flex items-center justify-center mb-4 sm:mb-6 lg:mb-8`}>
                                     {feature.icon}
                                 </div>
-                                <h3 className="text-lg sm:text-xl lg:text-2xl font-bold text-zinc-900 mb-2 sm:mb-4 tracking-tight">{feature.title}</h3>
-                                <p className="text-zinc-500 leading-relaxed text-sm sm:text-base lg:text-lg font-medium">{feature.description}</p>
+                                <h3 className="text-lg sm:text-xl lg:text-2xl font-bold text-zinc-900 dark:text-zinc-100 mb-2 sm:mb-4 tracking-tight">{feature.title}</h3>
+                                <p className="text-zinc-500 dark:text-zinc-400 leading-relaxed text-sm sm:text-base lg:text-lg font-medium">{feature.description}</p>
                             </div>
                         ))}
                     </div>
                 </div>
             </section>
 
-            {/* Market Preview - Better mobile cards */}
+            {/* Market Preview - FIXED: Added dark mode classes */}
             {gainers.length > 0 && (
                 <section className="py-16 sm:py-24 lg:py-32">
                     <div className="container mx-auto px-4 sm:px-6">
                         <div className="text-center mb-8 sm:mb-12 lg:mb-16">
-                            <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-black text-zinc-900 mb-4 sm:mb-6 tracking-tight">
-                                Today's <span className="text-zinc-500">Market Dynamics.</span>
+                            <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-black text-zinc-900 dark:text-zinc-100 mb-4 sm:mb-6 tracking-tight">
+                                Today&apos;s <span className="text-zinc-500 dark:text-zinc-400">Market Dynamics.</span>
                             </h2>
-                            <p className="text-zinc-500 text-sm sm:text-base lg:text-lg font-medium">Real-time performance of NEPSE's active securities.</p>
+                            <p className="text-zinc-500 dark:text-zinc-400 text-sm sm:text-base lg:text-lg font-medium">Real-time performance of NEPSE&apos;s active securities.</p>
                         </div>
 
                         <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6 lg:gap-8 max-w-5xl mx-auto">
-                            {/* Top Gainers */}
-                            <div className="p-4 sm:p-6 lg:p-8 rounded-2xl sm:rounded-3xl bg-white border border-zinc-100 shadow-sm relative overflow-hidden">
-                                <div className="absolute top-0 right-0 w-24 h-24 sm:w-32 sm:h-32 bg-emerald-50 rounded-full blur-2xl sm:blur-3xl opacity-40 -mr-8 -mt-8 sm:-mr-10 sm:-mt-10" />
+                            {/* Top Gainers - FIXED: Added dark mode */}
+                            <div className="p-4 sm:p-6 lg:p-8 rounded-2xl sm:rounded-3xl bg-white dark:bg-zinc-900 border border-zinc-100 dark:border-zinc-800 shadow-sm relative overflow-hidden">
+                                <div className="absolute top-0 right-0 w-24 h-24 sm:w-32 sm:h-32 bg-emerald-50 dark:bg-emerald-900/10 rounded-full blur-2xl sm:blur-3xl opacity-40 -mr-8 -mt-8 sm:-mr-10 sm:-mt-10" />
                                 <div className="flex items-center gap-2 sm:gap-3 mb-4 sm:mb-8 relative z-10">
-                                    <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-lg sm:rounded-xl bg-emerald-100 flex items-center justify-center">
-                                        <TrendingUp className="h-4 w-4 sm:h-5 sm:w-5 text-emerald-600" />
+                                    <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-lg sm:rounded-xl bg-emerald-100 dark:bg-emerald-900/30 flex items-center justify-center">
+                                        <TrendingUp className="h-4 w-4 sm:h-5 sm:w-5 text-emerald-600 dark:text-emerald-400" />
                                     </div>
-                                    <h3 className="text-lg sm:text-xl font-bold text-zinc-900">Top Gainers</h3>
+                                    <h3 className="text-lg sm:text-xl font-bold text-zinc-900 dark:text-zinc-100">Top Gainers</h3>
                                 </div>
                                 <div className="space-y-2 sm:space-y-4 relative z-10">
                                     {gainers.map((stock, i) => (
-                                        <div key={stock.symbol} className="flex items-center justify-between p-3 sm:p-4 rounded-xl sm:rounded-2xl bg-zinc-50 hover:bg-zinc-100 transition-colors">
+                                        <div key={stock.symbol} className="flex items-center justify-between p-3 sm:p-4 rounded-xl sm:rounded-2xl bg-zinc-50 dark:bg-zinc-800/50 hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-colors">
                                             <div className="flex items-center gap-2 sm:gap-4 min-w-0">
-                                                <span className="text-[10px] sm:text-xs font-black text-zinc-300 w-3 sm:w-4">{i + 1}</span>
+                                                <span className="text-[10px] font-black text-zinc-300 dark:text-zinc-600 w-3 sm:w-4">{i + 1}</span>
                                                 <div className="min-w-0">
-                                                    <p className="font-bold text-zinc-900 text-sm sm:text-base">{stock.symbol}</p>
-                                                    <p className="text-[10px] sm:text-[10px] font-bold text-zinc-400 uppercase tracking-wider truncate max-w-[100px] sm:max-w-[150px]">{stock.name}</p>
+                                                    <p className="font-bold text-zinc-900 dark:text-zinc-100 text-sm sm:text-base">{stock.symbol}</p>
+                                                    {/* FIXED: Removed redundant sm:text-[10px] */}
+                                                    <p className="text-[10px] font-bold text-zinc-400 dark:text-zinc-500 uppercase tracking-wider truncate max-w-[100px] sm:max-w-[150px]">{stock.name}</p>
                                                 </div>
                                             </div>
                                             <div className="text-right flex-shrink-0">
-                                                <p className="font-bold text-zinc-900 text-sm sm:text-base">Rs. {stock.lastPrice?.toFixed(2)}</p>
-                                                <p className="text-xs sm:text-sm font-black text-emerald-600">+{stock.changePercent?.toFixed(2)}%</p>
+                                                <p className="font-bold text-zinc-900 dark:text-zinc-100 text-sm sm:text-base">Rs. {stock.lastPrice?.toFixed(2)}</p>
+                                                <p className="text-xs sm:text-sm font-black text-emerald-600 dark:text-emerald-400">+{stock.changePercent?.toFixed(2)}%</p>
                                             </div>
                                         </div>
                                     ))}
@@ -247,27 +247,28 @@ const Landing = () => {
                             </div>
 
                             {/* Top Losers */}
-                            <div className="p-4 sm:p-6 lg:p-8 rounded-2xl sm:rounded-3xl bg-white border border-zinc-100 shadow-sm relative overflow-hidden">
-                                <div className="absolute top-0 right-0 w-24 h-24 sm:w-32 sm:h-32 bg-rose-50 rounded-full blur-2xl sm:blur-3xl opacity-40 -mr-8 -mt-8 sm:-mr-10 sm:-mt-10" />
+                            <div className="p-4 sm:p-6 lg:p-8 rounded-2xl sm:rounded-3xl bg-white dark:bg-zinc-900 border border-zinc-100 dark:border-zinc-800 shadow-sm relative overflow-hidden transition-all duration-300">
+                                <div className="absolute top-0 right-0 w-24 h-24 sm:w-32 sm:h-32 bg-rose-50 dark:bg-rose-900/10 rounded-full blur-2xl sm:blur-3xl opacity-40 -mr-8 -mt-8 sm:-mr-10 sm:-mt-10" />
                                 <div className="flex items-center gap-2 sm:gap-3 mb-4 sm:mb-8 relative z-10">
-                                    <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-lg sm:rounded-xl bg-rose-100 flex items-center justify-center">
-                                        <TrendingDown className="h-4 w-4 sm:h-5 sm:w-5 text-rose-600" />
+                                    <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-lg sm:rounded-xl bg-rose-100 dark:bg-rose-900/30 flex items-center justify-center transition-colors">
+                                        <TrendingDown className="h-4 w-4 sm:h-5 sm:w-5 text-rose-600 dark:text-rose-400" />
                                     </div>
-                                    <h3 className="text-lg sm:text-xl font-bold text-zinc-900">Top Losers</h3>
+                                    <h3 className="text-lg sm:text-xl font-bold text-zinc-900 dark:text-zinc-100">Top Losers</h3>
                                 </div>
                                 <div className="space-y-2 sm:space-y-4 relative z-10">
                                     {losers.map((stock, i) => (
-                                        <div key={stock.symbol} className="flex items-center justify-between p-3 sm:p-4 rounded-xl sm:rounded-2xl bg-zinc-50 hover:bg-zinc-100 transition-colors">
+                                        <div key={stock.symbol} className="flex items-center justify-between p-3 sm:p-4 rounded-xl sm:rounded-2xl bg-zinc-50 dark:bg-zinc-800/50 hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-colors">
                                             <div className="flex items-center gap-2 sm:gap-4 min-w-0">
-                                                <span className="text-[10px] sm:text-xs font-black text-zinc-300 w-3 sm:w-4">{i + 1}</span>
+                                                <span className="text-[10px] font-black text-zinc-300 dark:text-zinc-600 w-3 sm:w-4">{i + 1}</span>
                                                 <div className="min-w-0">
-                                                    <p className="font-bold text-zinc-900 text-sm sm:text-base">{stock.symbol}</p>
-                                                    <p className="text-[10px] sm:text-[10px] font-bold text-zinc-400 uppercase tracking-wider truncate max-w-[100px] sm:max-w-[150px]">{stock.name}</p>
+                                                    <p className="font-bold text-zinc-900 dark:text-zinc-100 text-sm sm:text-base">{stock.symbol}</p>
+                                                    {/* FIXED: Removed redundant sm:text-[10px] */}
+                                                    <p className="text-[10px] font-bold text-zinc-400 dark:text-zinc-500 uppercase tracking-wider truncate max-w-[100px] sm:max-w-[150px]">{stock.name}</p>
                                                 </div>
                                             </div>
                                             <div className="text-right flex-shrink-0">
-                                                <p className="font-bold text-zinc-900 text-sm sm:text-base">Rs. {stock.lastPrice?.toFixed(2)}</p>
-                                                <p className="text-xs sm:text-sm font-black text-rose-600">{stock.changePercent?.toFixed(2)}%</p>
+                                                <p className="font-bold text-zinc-900 dark:text-zinc-100 text-sm sm:text-base">Rs. {stock.lastPrice?.toFixed(2)}</p>
+                                                <p className="text-xs sm:text-sm font-black text-rose-600 dark:text-rose-400">{stock.changePercent?.toFixed(2)}%</p>
                                             </div>
                                         </div>
                                     ))}
@@ -276,7 +277,7 @@ const Landing = () => {
                         </div>
 
                         <div className="text-center mt-8 sm:mt-12">
-                            <Link to="/market" className="px-6 sm:px-8 py-3 sm:py-3.5 bg-zinc-50 border border-zinc-200 text-zinc-700 rounded-lg sm:rounded-xl font-bold text-xs sm:text-sm hover:bg-zinc-100 transition-all no-underline inline-flex items-center gap-2 sm:gap-3">
+                            <Link to="/market" className="px-6 sm:px-8 py-3 sm:py-3.5 bg-zinc-50 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 text-zinc-700 dark:text-zinc-300 rounded-lg sm:rounded-xl font-bold text-xs sm:text-sm hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-all no-underline inline-flex items-center gap-2 sm:gap-3">
                                 View Full Market
                                 <ChevronRight className="h-3 w-3 sm:h-4 sm:w-4" />
                             </Link>
@@ -285,7 +286,7 @@ const Landing = () => {
                 </section>
             )}
 
-            {/* CTA - Reduced padding and font sizes */}
+            {/* CTA - FIXED: Removed unnecessary dark: variants since bg is always dark */}
             <section className="py-24 sm:py-32 lg:py-48 px-4 sm:px-6 bg-zinc-950">
                 <div className="container mx-auto">
                     <div className="max-w-4xl mx-auto text-center">
@@ -308,28 +309,28 @@ const Landing = () => {
                 </div>
             </section>
 
-            {/* Footer - Stacked on mobile */}
-            <footer className="bg-white py-12 sm:py-16 lg:py-24 border-t border-zinc-100">
+            {/* Footer */}
+            <footer className="bg-white dark:bg-zinc-950 py-12 sm:py-16 lg:py-24 border-t border-zinc-100 dark:border-zinc-900 transition-colors">
                 <div className="container mx-auto px-4 sm:px-6">
                     <div className="flex flex-col items-center gap-6 sm:gap-8 lg:gap-12">
                         <div className="flex items-center gap-3">
-                            <div className="w-8 h-8 sm:w-10 sm:h-10 bg-white border border-zinc-100 p-1 sm:p-1.5 rounded-xl flex items-center justify-center shadow-sm">
+                            <div className="w-8 h-8 sm:w-10 sm:h-10 bg-white dark:bg-zinc-900 border border-zinc-100 dark:border-zinc-800 p-1 sm:p-1.5 rounded-xl flex items-center justify-center shadow-sm">
                                 <img src="/favicon.png" alt="" className="w-full h-full object-contain" />
                             </div>
-                            <span className="text-lg sm:text-xl font-black text-zinc-900 tracking-tighter">NEPSE Tracker</span>
+                            <span className="text-lg sm:text-xl font-black text-zinc-900 dark:text-zinc-100 tracking-tighter">NEPSE Tracker</span>
                         </div>
                         <div className="flex flex-wrap items-center justify-center gap-6 sm:gap-10">
-                            <Link to="/market" className="text-xs sm:text-sm font-bold text-zinc-400 hover:text-zinc-900 transition-colors no-underline uppercase tracking-widest">Market</Link>
-                            <Link to="/login" className="text-xs sm:text-sm font-bold text-zinc-400 hover:text-zinc-900 transition-colors no-underline uppercase tracking-widest">Login</Link>
-                            <Link to="/register" className="text-xs sm:text-sm font-bold text-zinc-400 hover:text-zinc-900 transition-colors no-underline uppercase tracking-widest">Register</Link>
+                            <Link to="/market" className="text-xs sm:text-sm font-bold text-zinc-400 dark:text-zinc-500 hover:text-zinc-900 dark:hover:text-zinc-100 transition-colors no-underline uppercase tracking-widest">Market</Link>
+                            <Link to="/login" className="text-xs sm:text-sm font-bold text-zinc-400 dark:text-zinc-500 hover:text-zinc-900 dark:hover:text-zinc-100 transition-colors no-underline uppercase tracking-widest">Login</Link>
+                            <Link to="/register" className="text-xs sm:text-sm font-bold text-zinc-400 dark:text-zinc-500 hover:text-zinc-900 dark:hover:text-zinc-100 transition-colors no-underline uppercase tracking-widest">Register</Link>
                         </div>
-                        <p className="text-[10px] sm:text-xs font-bold text-zinc-300 uppercase tracking-widest text-center">
+                        <p className="text-[10px] sm:text-xs font-bold text-zinc-300 dark:text-zinc-700 uppercase tracking-widest text-center">
                             © {new Date().getFullYear()} NEPSE Tracker. Digital precision.
                         </p>
                     </div>
                 </div>
             </footer>
-        </div >
+        </div>
     )
 }
 

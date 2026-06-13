@@ -1,11 +1,15 @@
 import { useEffect, useRef, useState } from 'react'
 import { createChart, ColorType, CrosshairMode, CandlestickSeries, HistogramSeries, LineSeries } from 'lightweight-charts'
-import { Activity, BarChart3, TrendingUp, Zap, Layers } from 'lucide-react'
+import { Activity, BarChart3, TrendingUp, Zap } from 'lucide-react'
+import { useTheme } from '../../contexts/ThemeContext'
 
 const StockChart = ({ data, symbol }) => {
   const chartContainerRef = useRef(null)
   const chartRef = useRef(null)
   const seriesRef = useRef({})
+  const { theme } = useTheme()
+
+  const isDark = theme === 'dark'
 
   const [showVolume, setShowVolume] = useState(true)
   const [showEMA20, setShowEMA20] = useState(true)
@@ -14,46 +18,50 @@ const StockChart = ({ data, symbol }) => {
   useEffect(() => {
     if (!chartContainerRef.current || !data || data.length === 0) return
 
+    const backgroundColor = isDark ? '#09090b' : '#ffffff'
+    const textColor = isDark ? '#a1a1aa' : '#52525b'
+    const gridColor = isDark ? 'rgba(39, 39, 42, 0.3)' : 'rgba(228, 228, 231, 0.3)'
+    const borderColor = isDark ? 'rgba(39, 39, 42, 0.8)' : 'rgba(228, 228, 231, 1)'
+
     const chart = createChart(chartContainerRef.current, {
       layout: {
-        background: { type: ColorType.Solid, color: '#09090b' }, // zinc-950
-        textColor: '#a1a1aa', // zinc-400
-        fontSize: 10, // Smaller font for mobile
+        background: { type: ColorType.Solid, color: backgroundColor },
+        textColor: textColor,
+        fontSize: 10,
         fontFamily: 'Instrument Sans, Inter, system-ui, sans-serif',
       },
       grid: {
-        vertLines: { color: 'rgba(39, 39, 42, 0.3)' }, // zinc-800
-        horzLines: { color: 'rgba(39, 39, 42, 0.3)' }, // zinc-800
+        vertLines: { color: gridColor },
+        horzLines: { color: gridColor },
       },
       crosshair: {
         mode: CrosshairMode.Normal,
         vertLine: {
-          color: '#52525b',
+          color: isDark ? '#52525b' : '#a1a1aa',
           width: 1,
           style: 3,
-          labelBackgroundColor: '#18181b'
+          labelBackgroundColor: isDark ? '#18181b' : '#27272a'
         },
         horzLine: {
-          color: '#52525b',
+          color: isDark ? '#52525b' : '#a1a1aa',
           width: 1,
           style: 3,
-          labelBackgroundColor: '#18181b'
+          labelBackgroundColor: isDark ? '#18181b' : '#27272a'
         },
       },
       rightPriceScale: {
-        borderColor: 'rgba(39, 39, 42, 0.8)',
-        textColor: '#a1a1aa',
+        borderColor: borderColor,
+        textColor: textColor,
         scaleMargins: {
           top: 0.1,
           bottom: 0.25,
         },
       },
       timeScale: {
-        borderColor: 'rgba(39, 39, 42, 0.8)',
+        borderColor: borderColor,
         timeVisible: true,
-        textColor: '#a1a1aa',
+        textColor: textColor,
         tickMarkFormatter: (time) => {
-          // Shorter date format for mobile
           const date = new Date(time);
           return `${date.getMonth() + 1}/${date.getDate()}`;
         },
@@ -97,7 +105,7 @@ const StockChart = ({ data, symbol }) => {
     });
 
     const volumeSeries = chart.addSeries(HistogramSeries, {
-      color: '#27272a',
+      color: isDark ? '#27272a' : '#f4f4f5',
       priceFormat: {
         type: 'volume',
       },
@@ -123,7 +131,9 @@ const StockChart = ({ data, symbol }) => {
     const volumeData = data.map(item => ({
       time: item.date,
       value: item.volume,
-      color: item.close >= item.open ? 'rgba(16, 185, 129, 0.25)' : 'rgba(244, 63, 94, 0.25)',
+      color: item.close >= item.open
+        ? (isDark ? 'rgba(16, 185, 129, 0.25)' : 'rgba(16, 185, 129, 0.15)')
+        : (isDark ? 'rgba(244, 63, 94, 0.25)' : 'rgba(244, 63, 94, 0.15)'),
     }))
 
     // Calculate EMAs
@@ -181,7 +191,7 @@ const StockChart = ({ data, symbol }) => {
       resizeObserver.disconnect()
       chart.remove()
     }
-  }, [data])
+  }, [data, isDark])
 
   // Single effect to handle visibility toggles without full re-render of chart object
   useEffect(() => {
@@ -194,12 +204,12 @@ const StockChart = ({ data, symbol }) => {
     if (seriesRef.current.ema50Series) {
       seriesRef.current.ema50Series.applyOptions({ visible: showEMA50 })
     }
-  }, [showVolume, showEMA20, showEMA50])
+  }, [showVolume, showEMA20, showEMA50, isDark])
 
   return (
-    <div className="bg-zinc-950 rounded-2xl sm:rounded-[32px] p-1.5 sm:p-2 h-full flex flex-col overflow-hidden border border-zinc-800 shadow-2xl relative">
+    <div className="bg-white dark:bg-zinc-950 rounded-2xl sm:rounded-[32px] p-1.5 sm:p-2 h-full flex flex-col overflow-hidden border border-zinc-100 dark:border-zinc-800 shadow-2xl relative transition-all duration-300">
       {/* Chart Header / Toolbar - Responsive layout */}
-      <div className="flex flex-col sm:flex-row justify-between sm:items-center px-3 sm:px-4 lg:px-6 py-2.5 sm:py-3 lg:py-4 border-b border-zinc-800/50 bg-zinc-950/50 backdrop-blur-sm z-10 gap-2 sm:gap-3">
+      <div className="flex flex-col sm:flex-row justify-between sm:items-center px-3 sm:px-4 lg:px-6 py-2.5 sm:py-3 lg:py-4 border-b border-zinc-100 dark:border-zinc-800/50 bg-white/50 dark:bg-zinc-950/50 backdrop-blur-sm z-10 gap-2 sm:gap-3 transition-colors">
         <div className="flex items-center gap-2 sm:gap-3">
           <h3 className="text-[10px] sm:text-[11px] lg:text-xs font-black text-zinc-500 uppercase tracking-wider sm:tracking-[0.2em]">
             {symbol} <span className="text-zinc-700 mx-1 sm:mx-2">/</span> <span className="hidden sm:inline">MARKET PRO</span>
@@ -214,26 +224,26 @@ const StockChart = ({ data, symbol }) => {
         <div className="flex flex-wrap items-center gap-1 sm:gap-1.5 lg:gap-2">
           <button
             onClick={() => setShowEMA20(!showEMA20)}
-            className={`px-2 sm:px-2.5 lg:px-3 py-1 sm:py-1.5 rounded-md sm:rounded-lg border text-[9px] sm:text-[10px] font-black uppercase tracking-wider transition-all flex items-center gap-1 sm:gap-1.5 ${showEMA20 ? 'bg-blue-500/10 border-blue-500/50 text-blue-500' : 'bg-zinc-900 border-zinc-800 text-zinc-600'}`}
+            className={`px-2 sm:px-2.5 lg:px-3 py-1 sm:py-1.5 rounded-md sm:rounded-lg border text-[9px] sm:text-[10px] font-black uppercase tracking-wider transition-all flex items-center gap-1 sm:gap-1.5 ${showEMA20 ? 'bg-blue-500/10 border-blue-500/50 text-blue-500' : 'bg-zinc-50 dark:bg-zinc-900 border-zinc-100 dark:border-zinc-800 text-zinc-400 dark:text-zinc-600'}`}
           >
             <Zap className="h-3 w-3 sm:h-3.5 sm:w-3.5" /> <span className="hidden xs:inline">EMA</span> 20
           </button>
           <button
             onClick={() => setShowEMA50(!showEMA50)}
-            className={`px-2 sm:px-2.5 lg:px-3 py-1 sm:py-1.5 rounded-md sm:rounded-lg border text-[9px] sm:text-[10px] font-black uppercase tracking-wider transition-all flex items-center gap-1 sm:gap-1.5 ${showEMA50 ? 'bg-violet-500/10 border-violet-500/50 text-violet-500' : 'bg-zinc-900 border-zinc-800 text-zinc-600'}`}
+            className={`px-2 sm:px-2.5 lg:px-3 py-1 sm:py-1.5 rounded-md sm:rounded-lg border text-[9px] sm:text-[10px] font-black uppercase tracking-wider transition-all flex items-center gap-1 sm:gap-1.5 ${showEMA50 ? 'bg-violet-500/10 border-violet-500/50 text-violet-500' : 'bg-zinc-50 dark:bg-zinc-900 border-zinc-100 dark:border-zinc-800 text-zinc-400 dark:text-zinc-600'}`}
           >
             <Zap className="h-3 w-3 sm:h-3.5 sm:w-3.5" /> <span className="hidden xs:inline">EMA</span> 50
           </button>
           <button
             onClick={() => setShowVolume(!showVolume)}
-            className={`px-2 sm:px-2.5 lg:px-3 py-1 sm:py-1.5 rounded-md sm:rounded-lg border text-[9px] sm:text-[10px] font-black uppercase tracking-wider transition-all flex items-center gap-1 sm:gap-1.5 ${showVolume ? 'bg-zinc-100 border-zinc-200 text-zinc-900' : 'bg-zinc-900 border-zinc-800 text-zinc-600'}`}
+            className={`px-2 sm:px-2.5 lg:px-3 py-1 sm:py-1.5 rounded-md sm:rounded-lg border text-[9px] sm:text-[10px] font-black uppercase tracking-wider transition-all flex items-center gap-1 sm:gap-1.5 ${showVolume ? 'bg-zinc-900 dark:bg-zinc-100 border-zinc-900 dark:border-zinc-200 text-white dark:text-zinc-900' : 'bg-zinc-50 dark:bg-zinc-900 border-zinc-100 dark:border-zinc-800 text-zinc-400 dark:text-zinc-600'}`}
           >
             <BarChart3 className="h-3 w-3 sm:h-3.5 sm:w-3.5" /> <span className="hidden sm:inline">Vol</span>
           </button>
-          <div className="h-3 w-px bg-zinc-800 mx-1 hidden sm:block" />
-          <div className="px-2 sm:px-2.5 py-1 sm:py-1.5 bg-zinc-900 rounded-md sm:rounded-lg border border-zinc-800 flex items-center gap-1 sm:gap-1.5">
+          <div className="h-3 w-px bg-zinc-100 dark:bg-zinc-800 mx-1 hidden sm:block" />
+          <div className="px-2 sm:px-2.5 py-1 sm:py-1.5 bg-zinc-50 dark:bg-zinc-900 rounded-md sm:rounded-lg border border-zinc-100 dark:border-zinc-800 flex items-center gap-1 sm:gap-1.5 transition-colors">
             <Activity className="h-3 w-3 sm:h-3.5 sm:w-3.5 text-emerald-500" />
-            <span className="text-[9px] sm:text-[10px] font-black text-zinc-400 uppercase tracking-wider">D1</span>
+            <span className="text-[9px] sm:text-[10px] font-black text-zinc-400 dark:text-zinc-500 uppercase tracking-wider">D1</span>
           </div>
         </div>
       </div>
@@ -242,21 +252,21 @@ const StockChart = ({ data, symbol }) => {
       <div ref={chartContainerRef} className="w-full flex-grow relative min-h-[200px] sm:min-h-[250px] lg:min-h-[300px]" />
 
       {/* Chart Footer - Responsive padding and text */}
-      <div className="px-3 sm:px-4 lg:px-6 py-2 sm:py-2.5 lg:py-3 border-t border-zinc-800/50 bg-zinc-950 flex justify-between items-center gap-2 sm:gap-4">
+      <div className="px-3 sm:px-4 lg:px-6 py-2 sm:py-2.5 lg:py-3 border-t border-zinc-100 dark:border-zinc-800/50 bg-white dark:bg-zinc-950 flex justify-between items-center gap-2 sm:gap-4 transition-colors">
         <div className="flex items-center gap-2 sm:gap-3 lg:gap-4">
-          <p className="text-[9px] sm:text-[10px] font-bold text-zinc-600 uppercase tracking-wider">TV v4.0</p>
-          <span className="text-[9px] sm:text-[10px] font-bold text-zinc-800 hidden sm:inline">|</span>
-          <p className="text-[9px] sm:text-[10px] font-bold text-zinc-600 uppercase tracking-wider">{data.length} Pts</p>
+          <p className="text-[9px] sm:text-[10px] font-bold text-zinc-400 dark:text-zinc-600 uppercase tracking-wider">TV v4.0</p>
+          <span className="text-[9px] sm:text-[10px] font-bold text-zinc-100 dark:text-zinc-800 hidden sm:inline">|</span>
+          <p className="text-[9px] sm:text-[10px] font-bold text-zinc-400 dark:text-zinc-600 uppercase tracking-wider">{data.length} Pts</p>
         </div>
 
         <div className="flex items-center gap-2 sm:gap-3 lg:gap-4">
           <div className="hidden sm:flex items-center gap-1.5 sm:gap-2">
             <div className="w-2 h-2 rounded-[2px] bg-emerald-500/20 border border-emerald-500/50" />
-            <span className="text-[9px] sm:text-[10px] font-bold text-zinc-500 uppercase tracking-tighter">Bull</span>
+            <span className="text-[9px] sm:text-[10px] font-bold text-zinc-400 dark:text-zinc-500 uppercase tracking-tighter">Bull</span>
           </div>
           <div className="hidden sm:flex items-center gap-1.5 sm:gap-2">
             <div className="w-2 h-2 rounded-[2px] bg-rose-500/20 border border-rose-500/50" />
-            <span className="text-[9px] sm:text-[10px] font-bold text-zinc-500 uppercase tracking-tighter">Bear</span>
+            <span className="text-[9px] sm:text-[10px] font-bold text-zinc-400 dark:text-zinc-500 uppercase tracking-tighter">Bear</span>
           </div>
           <div className="flex items-center gap-1 sm:gap-1.5 px-1.5 sm:px-2 py-0.5 sm:py-1 bg-emerald-500/10 rounded border border-emerald-500/20">
             <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
