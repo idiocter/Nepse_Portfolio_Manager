@@ -42,7 +42,7 @@ const Profile = () => {
     const Toggle = ({ on, onClick, disabled }) => (
         <button onClick={onClick} disabled={disabled}
             className={`relative inline-flex h-5 w-9 items-center rounded-[3px] border transition-colors flex-shrink-0 ${on ? 'bg-ink border-ink' : 'bg-sunk border-line'} ${disabled ? 'opacity-50' : ''}`}>
-            <span className={`inline-block h-3.5 w-3.5 transform transition-transform ${on ? 'translate-x-4.5 bg-paper' : 'translate-x-0.5 bg-faint'}`} />
+            <span className={`inline-block h-3.5 w-3.5 transform transition-transform ${on ? 'translate-x-[18px] bg-paper' : 'translate-x-[2px] bg-faint'}`} />
         </button>
     )
 
